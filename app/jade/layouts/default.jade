@@ -1,0 +1,37 @@
+include ../meta/configs
+include ../meta/mixins
+include ../meta/variables
+
+doctype html
+
+html
+	//- Application cache
+	//- html(manifest="assets/cache.manifest")
+	head
+		block head
+		include ../partials/head
+		if layoutSetters.responsive
+			+responsiveMeta()
+
+	body
+		block header
+
+		block content
+
+		block footer
+
+		block additionalCSS
+
+		block scripts
+
+		block script
+			script(src='' + configs.js async)
+
+		//- check is browser support webp format
+		include ../partials/webp
+		//- font loading in localStorage
+		include ../partials/fonts
+		//- svg loading in localStorage and after write it in html
+		include ../partials/svg
+
+
