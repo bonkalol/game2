@@ -10,6 +10,10 @@
 			action: [],
 			json: {}
 		};
+		this.settings = {
+			rubribcs: [],
+			repeatContent: false
+		};
 	};
 
 	Game.prototype.check = function() {
@@ -30,7 +34,7 @@
 
 	Game.prototype.save = function() {
 		// Save game state.
-		Storage.set('Game', Game.props);
+		Storage.set('Game', Game);
 	};
 
 	window.Game = new Game();
