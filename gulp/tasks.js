@@ -17,7 +17,7 @@ gulp.task('build', function(callback) {
 	// start task
 	runSequence(
 		'clean',
-		'jade',
+		'template',
 		'sprite',
 		'sass',
 		'concat',
@@ -41,7 +41,7 @@ gulp.task('build-sprite', function(callback) {
 
 gulp.task('compile', function() {
 
-	gulp.start('jade', 'sass', 'concat');
+	gulp.start('template', 'sass', 'concat');
 
 });
 

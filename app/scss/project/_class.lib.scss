@@ -4,3 +4,62 @@ body > svg:first-of-type {
 	position: absolute;
 	left: -9999px;
 }
+
+%shadow-2dp {
+	box-shadow: 0 2px 2px 0 rgba(0,0,0,.14),0 3px 1px -2px rgba(0,0,0,.2),0 1px 5px 0 rgba(0,0,0,.12);
+}
+
+%shadow-6dp {
+	box-shadow: 0 6px 10px 0 rgba(0,0,0,.14),0 1px 18px 0 rgba(0,0,0,.12),0 3px 5px -1px rgba(0,0,0,.2);
+}
+
+.hidden-checkbox {
+	position: absolute;
+	left: -9999px;
+}
+
+.button {
+	@include reset-btn();
+	display: block;
+	line-height: 40px;
+	text-align: center;
+	@include size(150px, 40px);
+	background-color: #e8e8e8;
+	color: #5e5e5e;
+	@extend %shadow-2dp;
+	font-weight: 700;
+	text-transform: uppercase;
+	font-size: 18px;
+	transition: background-color .2s;
+	will-change: background-color;
+	transform: translate3d(0, 0, 0);
+
+	&.js-disabled {
+		pointer-events: none;
+		background-color: #ddd;
+		color: #bbb;
+	}
+
+	&:active {
+		background-color: darken(#e8e8e8, 10%);
+	}
+}
+
+.input {
+	border: 0;
+	border-bottom: 1px solid #ddd;
+	background-color: transparent;
+	font-size: 16px;
+	outline: none;
+	font-family: inherit;
+	padding: 4px 0;
+	width: 100%;
+	position: relative;
+	transition: border-color .2s;
+	will-change: border-color;
+	transform: translate3d(0, 0, 0);
+
+	&:focus {
+		border-color: #9c27b0;
+	}
+}

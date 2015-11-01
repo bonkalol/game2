@@ -1,5 +1,78 @@
-<!DOCTYPE html><html><head><meta charset="utf-8"><title>Wall-e template engine</title><link rel="stylesheet" href="css/app.css"><meta name="description" content="Page Desc"><meta name="keywords" content="Page keywords"><meta property="og:title" content="Wall-e template engine"><meta property="og:url" content="Open Graph url.ru"><meta property="og:image" content="Open Graph image.png"><meta property="og:locale" content="ru_RU"><meta property="og:locale:alternate" content="en_EN"><meta property="og:description" content="Open Graph Description"><meta property="og:site_name" content="Open Graph SiteName"><meta name="viewport" content="width=device-width, initial-scale=1"></head><body><h1 class="walle_welcome">Hello my friend. Wall-e greetings you.</h1><script src="js/app.js" async></script><script>window.Modernizr=function(e,t,n){function b(e){a.cssText=e}function w(e,t){return b(prefixes.join(e+";")+(t||""))}function E(e,t){return typeof e===t}function S(e,t){return!!~(""+e).indexOf(t)}function x(e,t,r){for(var i in e){var s=t[e[i]];if(s!==n){if(r===false)return e[i];if(E(s,"function")){return s.bind(r||t)}return s}}return false}var r="2.8.3",i={},s=t.documentElement,o="modernizr",u=t.createElement(o),a=u.style,f,l={}.toString,c={},h={},p={},d=[],v=d.slice,m,g={}.hasOwnProperty,y;if(!E(g,"undefined")&&!E(g.call,"undefined")){y=function(e,t){return g.call(e,t)}}else{y=function(e,t){return t in e&&E(e.constructor.prototype[t],"undefined")}}if(!Function.prototype.bind){Function.prototype.bind=function(t){var n=this;if(typeof n!="function"){throw new TypeError}var r=v.call(arguments,1),i=function(){if(this instanceof i){var e=function(){};e.prototype=n.prototype;var s=new e;var o=n.apply(s,r.concat(v.call(arguments)));if(Object(o)===o){return o}return s}else{return n.apply(t,r.concat(v.call(arguments)))}};return i}}c["canvas"]=function(){var e=t.createElement("canvas");return!!(e.getContext&&e.getContext("2d"))};c["canvastext"]=function(){return!!(i["canvas"]&&E(t.createElement("canvas").getContext("2d").fillText,"function"))};for(var T in c){if(y(c,T)){m=T.toLowerCase();i[m]=c[T]();d.push((i[m]?"":"no-")+m)}}i.addTest=function(e,t){if(typeof e=="object"){for(var r in e){if(y(e,r)){i.addTest(r,e[r])}}}else{e=e.toLowerCase();if(i[e]!==n){return i}t=typeof t=="function"?t():t;if(typeof enableClasses!=="undefined"&&enableClasses){s.className+=" "+(t?"":"no-")+e}i[e]=t}return i};b("");u=f=null;i._version=r;return i}(this,this.document);(function(){var e=new Image;e.onerror=function(){Modernizr.addTest("webp",false)};e.onload=function(){Modernizr.addTest("webp",function(){return e.width==1})};e.src="data:image/webp;base64,UklGRiwAAABXRUJQVlA4ICAAAAAUAgCdASoBAAEAL/3+/3+CAB/AAAFzrNsAAP5QAAAAAA=="})();
-;(function (){ window.addEventListener('load', function(){
-	 if (Modernizr.webp) { document.querySelector('body').classList.add('webp'); } else { document.querySelector('body').classList.add('nowebp'); }
-	}, false) })();</script><script>!function(){"use strict";function e(e,t,n){e.addEventListener?e.addEventListener(t,n,!1):e.attachEvent&&e.attachEvent("on"+t,n)}function t(e){return window.localStorage&&localStorage.font_css_cache&&localStorage.font_css_cache_file===e}function n(){if(window.localStorage&&window.XMLHttpRequest)if(t(o))c(localStorage.font_css_cache);else{var n=new XMLHttpRequest;n.open("GET",o,!0),e(n,"load",function(){4===n.readyState&&(c(n.responseText),localStorage.font_css_cache=n.responseText,localStorage.font_css_cache_file=o)}),n.send()}else{var a=document.createElement("link");a.href=o,a.rel="stylesheet",a.type="text/css",document.getElementsByTagName("head")[0].appendChild(a),document.cookie="font_css_cache"}}function c(e){var t=document.createElement("style");t.innerHTML=e,document.getElementsByTagName("head")[0].appendChild(t)}var o="assets/font.css";window.localStorage&&localStorage.font_css_cache||document.cookie.indexOf("font_css_cache")>-1?n():e(window,"load",n)}();</script><script>!function(e,t){"use strict";var n="img/symbol/svg/sprite.symbol.svg",
-a=1;if(!t.createElementNS||!t.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect)return!0;var o,r,l="localStorage"in e&&null!==e.localStorage,i=function(){t.body.insertAdjacentHTML("afterbegin",r)},s=function(){t.body?i():t.addEventListener("DOMContentLoaded",i)};if(l&&localStorage.getItem("inlineSVGrev")==a&&(r=localStorage.getItem("inlineSVGdata")))return s(),!0;try{o=new XMLHttpRequest,o.open("GET",n,!0),o.onload=function(){o.status>=200&&o.status<400&&(r=o.responseText,s(),l&&(localStorage.setItem("inlineSVGdata",r),localStorage.setItem("inlineSVGrev",a)))},o.send()}catch(c){}}(window,document);</script></body></html>
+<!DOCTYPE html>
+<html>
+<head>
+	<link rel="shortcut icon" type="image/png" href="img/favicon.png">
+<meta charset="utf-8">
+<title>Правда или Действие</title>
+<link rel="stylesheet" href="css/app.css">
+<meta name="HandheldFriendly" content="True">
+<meta name="description" content="Правда или Действия игра для компании друзей, она не даст вам заскучать, а разнообразие вопросов и действий будет увлекать, удивлять и давать шанс узнать друг друга поближе.">
+<meta name="keywords" content="игра, компания, игра для компании друзей, правда, действие, фанты, правда или действие, поиграть с друзьями, правда или действие играть онлайн на компьютере, правда или действие 16+, правда или действие 18+, правда или действие 21+">
+<meta property="og:title" content="Правда или Действие">
+<meta property="og:url" content="http://truthoraction.com">
+<meta property="og:image" content="img/avatar.png">
+<meta property="og:locale" content="RU_ru">
+<meta property="og:description" content="Правда или Действия игра для компании друзей, она не даст вам заскучать, а разнообразие вопросов и действий будет увлекать, удивлять и давать шанс узнать друг друга поближе.">
+<meta property="og:site_name" content="truthoraction.com">
+<link rel="apple-touch-startup-image" href="img/touch-icon-ipad-retina.png">
+<link rel="apple-touch-icon" href="img/touch-icon-iphone.png">
+<link rel="apple-touch-icon" sizes="72x72" href="img/touch-icon-ipad.png">
+<link rel="apple-touch-icon" sizes="114x114" href="img/touch-icon-iphone-retina.png">
+<link rel="apple-touch-icon" sizes="144x144" href="img/touch-icon-ipad-retina.png">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
+	<script>
+	!function(e,t){"use strict";var n="img/symbol/svg/sprite.symbol.svg",
+a=10;if(!t.createElementNS||!t.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect)return!0;var o,r,l="localStorage"in e&&null!==e.localStorage,i=function(){t.body.insertAdjacentHTML("afterbegin",r)},s=function(){t.body?i():t.addEventListener("DOMContentLoaded",i)};if(l&&localStorage.getItem("inlineSVGrev")==a&&(r=localStorage.getItem("inlineSVGdata")))return s(),!0;try{o=new XMLHttpRequest,o.open("GET",n,!0),o.onload=function(){o.status>=200&&o.status<400&&(r=o.responseText,s(),l&&(localStorage.setItem("inlineSVGdata",r),localStorage.setItem("inlineSVGrev",a)))},o.send()}catch(c){}}(window,document);
+	function loadFont(t,e,n){function a(){if(!window.FontFace)return!1;var t=new FontFace("t",'url("data:application/font-woff2,") format("woff2")',{});return t.load(),"loading"===t.status}var o=navigator.userAgent,r=!window.addEventListener||o.match(/(Android (2|3|4.0|4.1|4.2|4.3))|(Opera (Mini|Mobi))/)&&!o.match(/Chrome/);if(!r){var i={};try{i=localStorage||{}}catch(s){}var d="x-font-"+t,c=d+"url",l=d+"css",u=i[c],f=i[l],p=document.createElement("style");if(p.rel="stylesheet",document.head.appendChild(p),!f||u!==e&&u!==n){var w=n&&a()?n:e,h=new XMLHttpRequest;h.open("GET",w),h.onload=function(){h.status>=200&&h.status<400&&(i[c]=w,i[l]=p.textContent=h.responseText)},h.send()}else p.textContent=f}}
+loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
+	
+</script>
+	<script src="js/app.js" async></script>
+</head>
+<body>
+
+	<div class="startgame_overlay" data-modals-view></div>
+	<script type="text/template" id="modal_players">
+	<div class="modal">
+		<h2 class="modal_title">Добавить игроков</h2>
+		<section class="modal_content">
+			<p class="modal_hint" for="player_name">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
+			<div class="players_pick">
+				<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+				<div class="players_gender">
+					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
+					<label for="gender_m" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#male">
+						</svg>
+					</label>
+					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
+					<label for="gender_f" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#female">
+						</svg>
+					</label>
+					<div class="players_gender_switcher"></div>
+				</div>
+			</div>
+			<div class="players_list" data-playerlist-view>
+				{{~it.players :player:index}}
+					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+				{{~}}
+			</div>
+		</section>
+		<footer class="modal_action modal_action--single">
+			{{? it.started === true }}
+				<button type="button" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+					<span class="button_text">Сохранить</span>
+				</button>
+			{{??}}
+				<button type="button" class="button js-disabled">
+					<span class="button_text">Далее</span>
+				</button>
+			{{?}}
+		</footer>
+	</div>
+</script>;
+</body>
+</html>

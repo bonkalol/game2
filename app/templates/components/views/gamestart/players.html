@@ -1,0 +1,42 @@
+<script type="text/template" id="modal_players">
+	<div class="modal">
+		<h2 class="modal_title">Добавить игроков</h2>
+		<section class="modal_content">
+			<p class="modal_hint" for="player_name">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
+			<div class="players_pick">
+				<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+				<div class="players_gender">
+					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
+					<label for="gender_m" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#male">
+						</svg>
+					</label>
+					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
+					<label for="gender_f" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#female">
+						</svg>
+					</label>
+					<div class="players_gender_switcher"></div>
+				</div>
+			</div>
+			<div class="players_list" data-playerlist-view>
+				{{~it.players :player:index}}
+					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+				{{~}}
+			</div>
+		</section>
+		<footer class="modal_action modal_action--single">
+			{{? it.started === true }}
+				<button type="button" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+					<span class="button_text">Сохранить</span>
+				</button>
+			{{??}}
+				<button type="button" class="button js-disabled">
+					<span class="button_text">Далее</span>
+				</button>
+			{{?}}
+		</footer>
+	</div>
+</script>

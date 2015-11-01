@@ -27,7 +27,7 @@ module.exports = {
 	paths: {
 
 		srcPaths: {
-			jade: 'app/jade/*.jade',
+			jade: 'app/templates/index.html',
 			html: 'dist/*.html',
 			scss: 'app/scss/app.scss',
 			js: ['./app/js/**/*'],
@@ -58,7 +58,7 @@ module.exports = {
 		},
 
 		watchPaths: {
-			jade: 'app/jade/*.jade',
+			jade: ['app/templates/*.html', 'app/templates/**/*.html'],
 			jadePartials: ['app/jade/partials/*.jade', 'app/jade/layouts/*.jade', 'app/jade/blocks/*.jade'],
 			scss: 'app/scss/**/*.scss',
 			js: ['app/js/**/*.*+(js|coffee)', '!app/js/libs/'],

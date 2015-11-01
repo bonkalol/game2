@@ -1,0 +1,98 @@
+.players {
+
+	&_input {
+		margin-top: 20px;
+
+		@include media('height') {
+			margin-top: 5px;
+		}
+	}
+
+	&_gender {
+		margin-top: 12px;
+		@include size(100%, auto);
+		@extend %shadow-2dp;
+		@include clearfix();
+		position: relative;
+		overflow: hidden;
+	}
+
+	&_gender_label {
+		cursor: pointer;
+		width: 50%;
+		float: left;
+		padding: 10px;
+		text-align: center;
+
+		svg {
+			transition: fill .3s;
+			will-change: fill;
+			transform: translate3d(0, 0, 0);
+			fill: #4c4c4c;
+		}
+	}
+
+	&_gender_switcher {
+		transition: transform .3s, background-color .3s;
+		will-change: transform, width;
+		@include size(50%, 100%);
+		position: absolute;
+		left: 0;
+		transform: translate3d(-100%, 0, 0);
+		z-index: -1;
+
+		@at-root {
+			#gender_m:checked ~ &,
+			#gender_f:checked ~ & {
+				width: 50%;
+			}
+
+			#gender_m:checked + label svg,
+			#gender_f:checked + label svg {
+				fill: #fff;
+			}
+
+			#gender_m:checked ~ & {
+				transform: translate3d(0, 0, 0);
+				background-color: #03a9f4;
+			}
+
+			#gender_m:checked ~ svg {}
+
+			#gender_f:checked ~ & {
+				transform: translate3d(100%, 0, 0);
+				background-color: #e91e63;
+			}
+		}
+	}
+
+	&_list {
+		margin-top: 12px;
+		padding: 0 12px;
+		@extend %shadow-2dp;
+		white-space: nowrap;
+		overflow-x: auto;
+		overflow-y: hidden;
+		max-height: 62px;
+	}
+
+	&_player {
+		padding: 7px;
+		display: inline-block;
+		margin: 12px 0;
+		margin-left: 5px;
+		@extend %shadow-2dp;
+		color: #fafafa;
+		position: relative;
+		cursor: pointer;
+
+		&--f {
+			background-color: #e91e63;
+		}
+
+		&--m {
+			background-color: #03a9f4;
+		}
+	}
+}
+

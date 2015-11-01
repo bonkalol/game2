@@ -1,19 +1,26 @@
-(function () {
+/*
 
-	window.Storage.prototype.get = function(name, type) {
-		if (this.getItem(name) !== null && typeof this.getItem(name) !== 'undefined') {
+	Wrapper for localStorage
+
+*/
+class Storage {
+
+	get(name, type) {
+		if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
 			if (type && type !== 'str') {
-				return JSON.parse(this.getItem(name));
+				return JSON.parse(localStorage.getItem(name));
 			} else {
-				return this.getItem(name);
+				return localStorage.getItem(name);
 			}
 		} else {
 			return false;
 		}
-	};
+	}
 
-	window.Storage.prototype.set = function(name, value) {
-		this.setItem(name, value);
-	};
+	set(name, value) {
+		localStorage.setItem(name, value);
+	}
 
-})();
+}
+
+window.storage = new Storage();

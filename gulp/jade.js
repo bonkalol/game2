@@ -16,18 +16,13 @@ var gulp = require('gulp'),
 	useref = require('gulp-useref'),
 	uglify = require('gulp-uglify'),
 	cssmin = require('gulp-cssmin'),
-	gulpif = require('gulp-if');
+	gulpif = require('gulp-if'),
+	include = require('gulp-file-include');
 
-gulp.task('jade', function() {
-
+gulp.task('template', function() {
 	return gulp.src(paths.srcPaths.jade)
 		.pipe(plumber({errorHandler: log}))
-		.pipe(jade())
-		.pipe(notify('File changed: dev/jade/<%= file.relative %>! Starting Jade.'))
-		.pipe(duration('Finished jade task in'))
-		.pipe(configs.htmlValidator ? htmlvalidator({doctype: 'HTML5', charset: 'utf-8'}) : gutil.noop())
-		.pipe(duration('Finished prettify task in'))
-		.pipe(notify('File created: ' + paths.destPaths.html + '<%= file.relative %>! Jade Finished.'))
+		.pipe(include())
 		.pipe(gulp.dest(paths.destPaths.html))
 		.pipe(reload({stream: true}));
 });

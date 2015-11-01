@@ -12,7 +12,7 @@ gulp.task('watch', function () {
 	});
 	// jade watcher
 	watch(watchPath.jade, function () {
-		gulp.start('jade');
+		gulp.start('template');
 	});
 	watch(watchPath.jadePartials, function () {
 		gulp.start('jade');

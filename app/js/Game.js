@@ -1,42 +1,48 @@
+/*
+	game.settings.gender
+	0 - Игрок мужского пола может попасть только на игрока женского пола
+	1 - Игрок мужского пола может попасть на игрока женского и мужского пола
+*/
 
-(function () {
+class Game {
 
-	var Game = function () {
+	constructor() {
 		this.props = {
 			started: null,
 			players: [],
-			content: [],
-			truth: [],
-			action: [],
-			json: {}
+			rubribcs: []
 		};
 		this.settings = {
-			rubribcs: [],
-			repeatContent: false
+			repeatContent: false,
+			gender: 0,
+			streak: 2
 		};
-	};
+	}
 
-	Game.prototype.check = function() {
-		if (localStorage.get('Game') !== false) {
+	check() {
+		if (storage.get('Game') !== false) {
 			// Show screen 0.
+			render.renderContinue();
 		} else {
 			// Show screen 1.
+			render.renderStart();
 		}
-	};
+	}
 
-	Game.prototype.init = function() {
+	init() {
 		// Start game cycle.
-	};
+	}
 
-	Game.prototype.load = function() {
+	load() {
 		// Load game.
-	};
+	}
 
-	Game.prototype.save = function() {
-		// Save game state.
-		Storage.set('Game', Game);
-	};
+	save() {
+		storage.set('Game.props', this.props);
+		storage.set('Game.settings', this.settings);
+	}
 
-	window.Game = new Game();
+}
 
-})();
+window.game = new Game();
+

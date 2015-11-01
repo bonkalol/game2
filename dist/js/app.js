@@ -2,9 +2,49 @@
 (function () {
 
 	window.addEventListener('load', function (event) {
-		Game.check();
+		game.check();
+		content.check();
 	}, false);
+
+	document.addEventListener('mousedown', function (event) {
+		// eventRouter(event.target);
+	});
 })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Content = (function () {
+	function Content() {
+		_classCallCheck(this, Content);
+
+		this.content = [];
+		this.truth = [];
+		this.action = [];
+		this.json = {};
+	}
+
+	_createClass(Content, [{
+		key: "check",
+		value: function check() {
+			// Check is content loaded.
+		}
+	}, {
+		key: "load",
+		value: function load() {
+			// Load json.
+		}
+	}, {
+		key: "get",
+		value: function get(type) {
+			// Get truth or action.
+		}
+	}]);
+
+	return Content;
+})();
+
+window.content = new Content();
 (function (e) {
   "use strict";function t() {
     return l.createDocumentFragment();
@@ -122,69 +162,264 @@
     })(e.CustomEvent ? "CustomEvent" : "Event", { bubbles: !1, cancelable: !1, detail: null });
   }
 })(window);
-
+/* Laura Doktorova https://github.com/olado/doT */
 (function () {
+  function p(b, a, d) {
+    return ("string" === typeof a ? a : a.toString()).replace(b.define || h, function (a, c, e, g) {
+      0 === c.indexOf("def.") && (c = c.substring(4));c in d || (":" === e ? (b.defineParams && g.replace(b.defineParams, function (a, b, l) {
+        d[c] = { arg: b, text: l };
+      }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
+    }).replace(b.use || h, function (a, c) {
+      b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
+        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
+      }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
+    });
+  }function k(b) {
+    return b.replace(/\\('|\\)/g, "$1").replace(/[\r\t\n]/g, " ");
+  }var f = { version: "1.0.3", templateSettings: { evaluate: /\{\{([\s\S]+?(\}?)+)\}\}/g, interpolate: /\{\{=([\s\S]+?)\}\}/g, encode: /\{\{!([\s\S]+?)\}\}/g, use: /\{\{#([\s\S]+?)\}\}/g, useParams: /(^|[^\w$])def(?:\.|\[[\'\"])([\w$\.]+)(?:[\'\"]\])?\s*\:\s*([\w$\.]+|\"[^\"]+\"|\'[^\']+\'|\{[^\}]+\})/g,
+      define: /\{\{##\s*([\w\.$]+)\s*(\:|=)([\s\S]+?)#\}\}/g, defineParams: /^\s*([\w$]+):([\s\S]+)/, conditional: /\{\{\?(\?)?\s*([\s\S]*?)\s*\}\}/g, iterate: /\{\{~\s*(?:\}\}|([\s\S]+?)\s*\:\s*([\w$]+)\s*(?:\:\s*([\w$]+))?\s*\}\})/g, varname: "it", strip: !0, append: !0, selfcontained: !1, doNotSkipEncoded: !1 }, template: void 0, compile: void 0 },
+      m;f.encodeHTMLSource = function (b) {
+    var a = { "&": "&#38;", "<": "&#60;", ">": "&#62;", '"': "&#34;", "'": "&#39;", "/": "&#47;" },
+        d = b ? /[&<>"'\/]/g : /&(?!#?\w+;)|<|>|"|'|\//g;return function (b) {
+      return b ? b.toString().replace(d, function (b) {
+        return a[b] || b;
+      }) : "";
+    };
+  };m = (function () {
+    return this || (0, eval)("this");
+  })();"undefined" !== typeof module && module.exports ? module.exports = f : "function" === typeof define && define.amd ? define(function () {
+    return f;
+  }) : m.doT = f;var r = { start: "'+(", end: ")+'", startencode: "'+encodeHTML(" },
+      s = { start: "';out+=(", end: ");out+='", startencode: "';out+=encodeHTML(" },
+      h = /$^/;f.template = function (b, a, d) {
+    a = a || f.templateSettings;var n = a.append ? r : s,
+        c,
+        e = 0,
+        g;b = a.use || a.define ? p(a, b, d || {}) : b;b = ("var out='" + (a.strip ? b.replace(/(^|\r|\n)\t* +| +\t*(\r|\n|$)/g, " ").replace(/\r|\n|\t|\/\*[\s\S]*?\*\//g, "") : b).replace(/'|\\/g, "\\$&").replace(a.interpolate || h, function (b, a) {
+      return n.start + k(a) + n.end;
+    }).replace(a.encode || h, function (b, a) {
+      c = !0;return n.startencode + k(a) + n.end;
+    }).replace(a.conditional || h, function (b, a, c) {
+      return a ? c ? "';}else if(" + k(c) + "){out+='" : "';}else{out+='" : c ? "';if(" + k(c) + "){out+='" : "';}out+='";
+    }).replace(a.iterate || h, function (b, a, c, d) {
+      if (!a) return "';} } out+='";e += 1;g = d || "i" + e;a = k(a);return "';var arr" + e + "=" + a + ";if(arr" + e + "){var " + c + "," + g + "=-1,l" + e + "=arr" + e + ".length-1;while(" + g + "<l" + e + "){" + c + "=arr" + e + "[" + g + "+=1];out+='";
+    }).replace(a.evaluate || h, function (a, b) {
+      return "';" + k(b) + "out+='";
+    }) + "';return out;").replace(/\n/g, "\\n").replace(/\t/g, "\\t").replace(/\r/g, "\\r").replace(/(\s|;|\}|^|\{)out\+='';/g, "$1").replace(/\+''/g, "");c && (a.selfcontained || !m || m._encodeHTML || (m._encodeHTML = f.encodeHTMLSource(a.doNotSkipEncoded)), b = "var encodeHTML = typeof _encodeHTML !== 'undefined' ? _encodeHTML : (" + f.encodeHTMLSource.toString() + "(" + (a.doNotSkipEncoded || "") + "));" + b);try {
+      return new Function(a.varname, b);
+    } catch (q) {
+      throw ("undefined" !== typeof console && console.log("Could not create a template function: " + b), q);
+    }
+  };f.compile = function (b, a) {
+    return f.template(b, null, a);
+  };
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	var Game = function Game() {
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var EventRouter = (function () {
+	function EventRouter() {
+		_classCallCheck(this, EventRouter);
+	}
+
+	_createClass(EventRouter, [{
+		key: "modalNext",
+		value: function modalNext(element) {}
+	}, {
+		key: "modalBack",
+		value: function modalBack(element) {}
+	}]);
+
+	return EventRouter;
+})();
+
+window.eventRouter = new EventRouter();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+/*
+	game.settings.gender
+	0 - Игрок мужского пола может попасть только на игрока женского пола
+	1 - Игрок мужского пола может попасть на игрока женского и мужского пола
+*/
+
+var Game = (function () {
+	function Game() {
+		_classCallCheck(this, Game);
+
 		this.props = {
 			started: null,
 			players: [],
-			content: [],
-			truth: [],
-			action: [],
-			json: {}
+			rubribcs: []
 		};
-	};
+		this.settings = {
+			repeatContent: false,
+			gender: 0,
+			streak: 2
+		};
+	}
 
-	Game.prototype.check = function () {
-		if (localStorage.get('Game') !== false) {
-			// Show screen 0.
-		} else {
-				// Show screen 1.
-			}
-	};
-
-	Game.prototype.init = function () {
-		// Start game cycle.
-	};
-
-	Game.prototype.load = function () {
-		// Load game.
-	};
-
-	Game.prototype.save = function () {
-		// Save game state.
-		Storage.set('Game', Game.props);
-	};
-
-	window.Game = new Game();
-})();
-function getRandomInt(min, max) {
-	return Math.floor(Math.random() * (max + 1 - min)) + min;
-}
-(function () {
-
-	window.Storage.prototype.get = function (name, type) {
-		if (this.getItem(name) !== null && typeof this.getItem(name) !== 'undefined') {
-			if (type && type !== 'str') {
-				return JSON.parse(this.getItem(name));
+	_createClass(Game, [{
+		key: 'check',
+		value: function check() {
+			if (storage.get('Game') !== false) {
+				// Show screen 0.
+				render.renderContinue();
 			} else {
-				return this.getItem(name);
+				// Show screen 1.
+				render.renderStart();
 			}
-		} else {
-			return false;
 		}
-	};
+	}, {
+		key: 'init',
+		value: function init() {
+			// Start game cycle.
+		}
+	}, {
+		key: 'load',
+		value: function load() {
+			// Load game.
+		}
+	}, {
+		key: 'save',
+		value: function save() {
+			storage.set('Game.props', this.props);
+			storage.set('Game.settings', this.settings);
+		}
+	}]);
 
-	window.Storage.prototype.set = function (name, value) {
-		this.setItem(name, value);
-	};
+	return Game;
 })();
 
+window.game = new Game();
+var random = function random(min, max) {
+	return Math.floor(Math.random() * (max + 1 - min)) + min;
+};
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+/*
+
+	Wrapper for localStorage
+
+*/
+
+var Storage = (function () {
+	function Storage() {
+		_classCallCheck(this, Storage);
+	}
+
+	_createClass(Storage, [{
+		key: 'get',
+		value: function get(name, type) {
+			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
+				if (type && type !== 'str') {
+					return JSON.parse(localStorage.getItem(name));
+				} else {
+					return localStorage.getItem(name);
+				}
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'set',
+		value: function set(name, value) {
+			localStorage.setItem(name, value);
+		}
+	}]);
+
+	return Storage;
+})();
+
+window.storage = new Storage();
+
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+
+	State
+	0 - не активный игрок
+	1 - активный игрок
+
+	PickRate
+	Как часто игра выбирала игрока как ассистента текущему игроку
+
+*/
+
+var Player = (function () {
+	function Player(props) {
+		_classCallCheck(this, Player);
+
+		this.name = props.name;
+		this.gender = props.gender;
+		this.state = props.state;
+		this.pickRate = props.pickRate;
+		this.score = props.score;
+		this.streak = {
+			action: props.streak.action,
+			truth: props.streak.truth
+		};
+	}
+
+	_createClass(Player, [{
+		key: "get",
+		value: function get(prop) {
+			return this[prop];
+		}
+	}]);
+
+	return Player;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Render = (function () {
+	function Render() {
+		_classCallCheck(this, Render);
+
+		this.views = {
+			modals: document.querySelector('[data-modals-view]')
+		};
+		this.templates = {
+			players: document.querySelector('#modal_players')
+		};
+	}
+
+	_createClass(Render, [{
+		key: 'render',
+		value: function render(template, object) {
+			var view = template.innerHTML;
+			view = doT.template(view);
+			view = view(object);
+			return view;
+		}
+	}, {
+		key: 'renderStart',
+		value: function renderStart() {
+			var rendered = '',
+			    players = this.render(this.templates.players, game.props);
+
+			rendered += players;
+			this.views.modals.innerHTML = rendered;
+		}
+	}, {
+		key: 'renderContinue',
+		value: function renderContinue() {}
+	}]);
+
+	return Render;
+})();
+
+window.render = new Render();
 
 
 
-
-
-
-//# sourceMappingURL=/maps/app.js.map
+//# sourceMappingURL=maps/app.js.map
