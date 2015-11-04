@@ -266,10 +266,10 @@ var Game = (function () {
 		value: function check() {
 			if (storage.get('Game') !== false) {
 				// Show screen 0.
-				render.renderContinue();
+				render._screen0();
 			} else {
 				// Show screen 1.
-				render.renderStart();
+				render._screen1();
 			}
 		}
 	}, {
@@ -386,7 +386,8 @@ var Render = (function () {
 		_classCallCheck(this, Render);
 
 		this.views = {
-			modals: document.querySelector('[data-modals-view]')
+			modals: document.querySelector('[data-modals-view]'),
+			main: null
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players')
@@ -401,18 +402,42 @@ var Render = (function () {
 			view = view(object);
 			return view;
 		}
+
+		/*
+  	Parts
+  */
 	}, {
-		key: 'renderStart',
-		value: function renderStart() {
+		key: 'renderPlayers',
+		value: function renderPlayers() {
 			var rendered = '',
 			    players = this.render(this.templates.players, game.props);
 
-			rendered += players;
-			this.views.modals.innerHTML = rendered;
+			return players;
 		}
 	}, {
 		key: 'renderContinue',
 		value: function renderContinue() {}
+
+		/*
+  	Screens
+  */
+	}, {
+		key: '_screen0',
+		value: function _screen0() {
+			var rendered = '';
+			view = this.renderContinue();
+			this.views.modals.innerHTML = view;
+		}
+	}, {
+		key: '_screen1',
+		value: function _screen1() {
+			var rendered = '';
+			views = [this.renderPlayers()];
+			views.forEach(function (view) {
+				rendered += view;
+			});
+			this.views.modals.innerHTML = rendered;
+		}
 	}]);
 
 	return Render;

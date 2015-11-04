@@ -2,7 +2,8 @@ class Render {
 
 	constructor() {
 		this.views = {
-			modals: document.querySelector('[data-modals-view]')
+			modals: document.querySelector('[data-modals-view]'),
+			main: null
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players')
@@ -16,16 +17,36 @@ class Render {
 		return view;
 	}
 
-	renderStart() {
+	/*
+		Parts
+	*/
+	renderPlayers() {
 		let rendered = '',
 			players = this.render(this.templates.players, game.props);
 
-		rendered += players;
-		this.views.modals.innerHTML = rendered;
+		return players;
 	}
 
 	renderContinue() {
 
+	}
+
+	/*
+		Screens
+	*/
+	_screen0() {
+		let rendered = '';
+			view = this.renderContinue();
+		this.views.modals.innerHTML = view;
+	}
+
+	_screen1() {
+		let rendered = '';
+			views = [this.renderPlayers()];
+		views.forEach((view) => {
+			rendered += view;
+		});
+		this.views.modals.innerHTML = rendered;
 	}
 
 }

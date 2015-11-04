@@ -22,10 +22,10 @@ class Game {
 	check() {
 		if (storage.get('Game') !== false) {
 			// Show screen 0.
-			render.renderContinue();
+			render._screen0();
 		} else {
 			// Show screen 1.
-			render.renderStart();
+			render._screen1();
 		}
 	}
 
