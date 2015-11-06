@@ -390,7 +390,8 @@ var Render = (function () {
 			main: null
 		};
 		this.templates = {
-			players: document.querySelector('#modal_players')
+			players: document.querySelector('#modal_players'),
+			rubrics: document.querySelector('#modal_rubrics')
 		};
 	}
 
@@ -411,8 +412,14 @@ var Render = (function () {
 		value: function renderPlayers() {
 			var rendered = '',
 			    players = this.render(this.templates.players, game.props);
-
 			return players;
+		}
+	}, {
+		key: 'renderRubrics',
+		value: function renderRubrics() {
+			var rendered = '',
+			    rubrics = this.render(this.templates.rubrics, game.props);
+			return rubrics;
 		}
 	}, {
 		key: 'renderContinue',
@@ -431,8 +438,8 @@ var Render = (function () {
 	}, {
 		key: '_screen1',
 		value: function _screen1() {
-			var rendered = '';
-			views = [this.renderPlayers()];
+			var rendered = '',
+			    views = [this.renderPlayers(), this.renderRubrics()];
 			views.forEach(function (view) {
 				rendered += view;
 			});

@@ -1,0 +1,45 @@
+<script type="text/template" id="modal_rubrics">
+	<div class="modal modal_rubrics">
+		<h2 class="modal_title">Выбрать рубрику</h2>
+		<section class="modal_content">
+			<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
+			<div class="rubrics">
+				<input type="checkbox" value="16" class="rubrics_input hidden-checkbox" id="16">
+				<label class="rubrics_label" for="16">
+					<span class="rubrics_text">16+</span>
+					<svg width="40" height="40px">
+							<use xlink:href="#16">
+					</svg>
+				</label>
+				<input type="checkbox" value="18" class="rubrics_input hidden-checkbox" id="18">
+				<label class="rubrics_label" for="18">
+					<span class="rubrics_text">18+</span>
+					<svg width="40" height="40px">
+							<use xlink:href="#18">
+					</svg>
+				</label>
+				<input type="checkbox" value="18" class="rubrics_input hidden-checkbox" id="21">
+				<label class="rubrics_label" for="21">
+					<span class="rubrics_text">21+</span>
+					<svg width="40" height="40px">
+							<use xlink:href="#21">
+					</svg>
+				</label>
+			</div>
+		</section>
+		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
+			{{? it.started === true }}
+				<button type="button" data-rubrics-save class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+					<span class="button_text">Сохранить</span>
+				</button>
+			{{??}}
+				<button type="button" data-prevmodal class="button js-disabled">
+					<span class="button_text">Назад</span>
+				</button>
+				<button type="button" data-rubrics-save data-nextmodal class="button js-disabled">
+					<span class="button_text">Далее</span>
+				</button>
+			{{?}}
+		</footer>
+	</div>
+</script>
