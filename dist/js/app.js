@@ -391,7 +391,8 @@ var Render = (function () {
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics')
+			rubrics: document.querySelector('#modal_rubrics'),
+			settings: document.querySelector('#modal_settings')
 		};
 	}
 
@@ -410,16 +411,20 @@ var Render = (function () {
 	}, {
 		key: 'renderPlayers',
 		value: function renderPlayers() {
-			var rendered = '',
-			    players = this.render(this.templates.players, game.props);
+			var players = this.render(this.templates.players, game.props);
 			return players;
 		}
 	}, {
 		key: 'renderRubrics',
 		value: function renderRubrics() {
-			var rendered = '',
-			    rubrics = this.render(this.templates.rubrics, game.props);
+			var rubrics = this.render(this.templates.rubrics, game.props);
 			return rubrics;
+		}
+	}, {
+		key: 'renderSettings',
+		value: function renderSettings() {
+			var settings = this.render(this.templates.settings, game.settings);
+			return settings;
 		}
 	}, {
 		key: 'renderContinue',
@@ -431,15 +436,14 @@ var Render = (function () {
 	}, {
 		key: '_screen0',
 		value: function _screen0() {
-			var rendered = '';
-			view = this.renderContinue();
+			var view = this.renderContinue();
 			this.views.modals.innerHTML = view;
 		}
 	}, {
 		key: '_screen1',
 		value: function _screen1() {
 			var rendered = '',
-			    views = [this.renderPlayers(), this.renderRubrics()];
+			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings()];
 			views.forEach(function (view) {
 				rendered += view;
 			});

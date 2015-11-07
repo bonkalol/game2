@@ -7,7 +7,8 @@ class Render {
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics')
+			rubrics: document.querySelector('#modal_rubrics'),
+			settings: document.querySelector('#modal_settings')
 		};
 	}
 
@@ -22,15 +23,18 @@ class Render {
 		Parts
 	*/
 	renderPlayers() {
-		let rendered = '',
-			players = this.render(this.templates.players, game.props);
+		let players = this.render(this.templates.players, game.props);
 		return players;
 	}
 
 	renderRubrics() {
-		let rendered = '',
-			rubrics = this.render(this.templates.rubrics, game.props);
+		let rubrics = this.render(this.templates.rubrics, game.props);
 		return rubrics;
+	}
+
+	renderSettings() {
+		let settings = this.render(this.templates.settings, game.settings);
+		return settings;
 	}
 
 	renderContinue() {
@@ -41,8 +45,7 @@ class Render {
 		Screens
 	*/
 	_screen0() {
-		let rendered = '';
-			view = this.renderContinue();
+		let view = this.renderContinue();
 		this.views.modals.innerHTML = view;
 	}
 
@@ -50,7 +53,8 @@ class Render {
 		let rendered = '',
 			views = [
 				this.renderPlayers(),
-				this.renderRubrics()
+				this.renderRubrics(),
+				this.renderSettings()
 			];
 		views.forEach((view) => {
 			rendered += view;
