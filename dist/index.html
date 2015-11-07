@@ -80,26 +80,29 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<section class="modal_content">
 			<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
 			<div class="rubrics">
-				<input type="checkbox" value="16" class="rubrics_input hidden-checkbox" id="16">
-				<label class="rubrics_label" for="16">
+				<input type="checkbox" name="rubrics" value="16" class="rubrics_input hidden-checkbox" id="rubric-16">
+				<label for="rubric-16" class="rubrics_label">
 					<span class="rubrics_text">16+</span>
 					<svg width="40" height="40px">
 							<use xlink:href="#16">
 					</svg>
+					<span class="rubrics_desc"><b>Например:</b> Спеть песню.</span>
 				</label>
-				<input type="checkbox" value="18" class="rubrics_input hidden-checkbox" id="18">
-				<label class="rubrics_label" for="18">
+				<input type="checkbox" name="rubrics" value="18" class="rubrics_input hidden-checkbox" id="rubric-18">
+				<label for="rubric-18" class="rubrics_label">
 					<span class="rubrics_text">18+</span>
 					<svg width="40" height="40px">
 							<use xlink:href="#18">
 					</svg>
+					<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока в губы.</span>
 				</label>
-				<input type="checkbox" value="18" class="rubrics_input hidden-checkbox" id="21">
-				<label class="rubrics_label" for="21">
+				<input type="checkbox" name="rubrics" value="21" class="rubrics_input hidden-checkbox" id="rubric-21">
+				<label for="rubric-21" class="rubrics_label">
 					<span class="rubrics_text">21+</span>
 					<svg width="40" height="40px">
 							<use xlink:href="#21">
 					</svg>
+					<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока «По французски».</span>
 				</label>
 			</div>
 		</section>
@@ -109,7 +112,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}
-				<button type="button" data-prevmodal class="button js-disabled">
+				<button type="button" data-prevmodal class="button">
 					<span class="button_text">Назад</span>
 				</button>
 				<button type="button" data-rubrics-save data-nextmodal class="button js-disabled">

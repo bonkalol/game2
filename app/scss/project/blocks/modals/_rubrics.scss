@@ -1,0 +1,85 @@
+.rubrics {
+	@extend %shadow-2dp;
+	flex: 1;
+	display: flex;
+	flex-direction: column;
+	align-items: stretch;
+	margin-top: 15px;
+
+	&_input {
+
+		&:checked + label {
+			color: #fafafa;
+			svg {
+				fill: #fafafa;
+			}
+		}
+
+		&[id="rubric-16"]:checked + label {
+			background-color: #ef5350;
+		}
+
+		&[id="rubric-18"]:checked + label {
+			background-color: #d32f2f;
+		}
+
+		&[id="rubric-21"]:checked + label {
+			background-color: #b71c1c;
+		}
+	}
+
+
+
+	&_label {
+		flex: 1;
+		cursor: pointer;
+		border-bottom: 1px solid #d4d4d4;
+		display: flex;
+		align-items: center;
+		padding-left: 20px;
+		will-change: background-color, color;
+		transform: translate3d(0, 0, 0);
+		transition: background-color .3s, color .3s;
+
+		svg {
+			margin-left: 20px;
+			fill: #4c4c4c;
+			flex-shrink: 0;
+			will-change: fill;
+			transform: translate3d(0, 0, 0);
+			transition: fill .3s;
+		}
+
+		&:nth-of-type(3) {
+			border-bottom: 0;
+		}
+	}
+
+	&_text {
+		font-size: 18px;
+	}
+
+	&_desc {
+		margin-left: 10px;
+
+		b {
+			display: block;
+			padding-bottom: 4px;
+			font-weight: 700;
+		}
+
+		@include media ('<tablet') {
+			font-size: 12px;
+		}
+	}
+
+}
+
+.modal_rubrics {
+
+	.modal_content {
+		display: flex;
+		flex-direction: column;
+		align-items: stretch;
+	}
+}
