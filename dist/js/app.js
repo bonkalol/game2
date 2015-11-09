@@ -239,25 +239,26 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-/*
-	game.settings.gender
-	0 - Игрок мужского пола может попасть только на игрока женского пола
-	1 - Игрок мужского пола может попасть на игрока женского и мужского пола
-*/
-
 var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
 		this.props = {
-			started: null,
+			started: false,
 			players: [],
 			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
-			gender: 0,
-			streak: 2
+			heterosexuality: true,
+			alcohol: false,
+			scoreboard: true,
+			streak: 2,
+			cards: {
+				gray: true,
+				yellow: true,
+				special: true
+			}
 		};
 	}
 
@@ -423,7 +424,7 @@ var Render = (function () {
 	}, {
 		key: 'renderSettings',
 		value: function renderSettings() {
-			var settings = this.render(this.templates.settings, game.settings);
+			var settings = this.render(this.templates.settings, game);
 			return settings;
 		}
 	}, {

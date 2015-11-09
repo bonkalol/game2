@@ -127,6 +127,23 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
+			<div class="settings">
+				<span class="settings_name">Повторять вопросы:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					{{? it.props.started === true }}
+						<label class="settings_switcher_element" for="repeat-content-true">Да</label>
+						<input type="radio" name="repeat-content" id="repeat-content-true" value="true" {{? it.settings.repeatContent === true}}checked{{?}}>
+						<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
+						<input type="radio" name="repeat-content" id="repeat-content-false" value="false" {{? it.settings.repeatContent === false}}checked{{?}}>
+					{{??}}
+						<label class="settings_switcher_element" for="repeat-content-true">Да</label>
+						<input type="radio" name="repeat-content" id="repeat-content-true" value="true" checked>
+						<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
+						<input type="radio" name="repeat-content" id="repeat-content-false" value="false">
+					{{?}}
+					<div class="settings_switcher"></div>
+				</div>
+			</div>
 		</section>
 	</div>
 </script>

@@ -33,7 +33,7 @@ class Render {
 	}
 
 	renderSettings() {
-		let settings = this.render(this.templates.settings, game.settings);
+		let settings = this.render(this.templates.settings, game);
 		return settings;
 	}
 

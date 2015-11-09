@@ -1,21 +1,22 @@
-/*
-	game.settings.gender
-	0 - Игрок мужского пола может попасть только на игрока женского пола
-	1 - Игрок мужского пола может попасть на игрока женского и мужского пола
-*/
-
 class Game {
 
 	constructor() {
 		this.props = {
-			started: null,
+			started: false,
 			players: [],
 			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
-			gender: 0,
-			streak: 2
+			heterosexuality: true,
+			alcohol: false,
+			scoreboard: true,
+			streak: 2,
+			cards: {
+				gray: true,
+				yellow: true,
+				special: true
+			}
 		};
 	}
 
