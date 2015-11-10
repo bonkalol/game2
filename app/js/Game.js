@@ -1,17 +1,18 @@
 class Game {
 
 	constructor() {
+		this.started = false;
 		this.props = {
-			started: false,
 			players: [],
 			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
-			heterosexuality: true,
-			alcohol: false,
+			alcohol: true,
 			scoreboard: true,
 			streak: 2,
+			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+			smartPick: true,
 			cards: {
 				gray: true,
 				yellow: true,
@@ -39,8 +40,7 @@ class Game {
 	}
 
 	save() {
-		storage.set('Game.props', this.props);
-		storage.set('Game.settings', this.settings);
+		storage.set('Game', this);
 	}
 
 }

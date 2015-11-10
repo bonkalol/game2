@@ -243,17 +243,18 @@ var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
+		this.started = false;
 		this.props = {
-			started: false,
 			players: [],
 			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
-			heterosexuality: true,
-			alcohol: false,
+			alcohol: true,
 			scoreboard: true,
 			streak: 2,
+			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+			smartPick: true,
 			cards: {
 				gray: true,
 				yellow: true,
@@ -286,8 +287,7 @@ var Game = (function () {
 	}, {
 		key: 'save',
 		value: function save() {
-			storage.set('Game.props', this.props);
-			storage.set('Game.settings', this.settings);
+			storage.set('Game', this);
 		}
 	}]);
 
@@ -412,13 +412,13 @@ var Render = (function () {
 	}, {
 		key: 'renderPlayers',
 		value: function renderPlayers() {
-			var players = this.render(this.templates.players, game.props);
+			var players = this.render(this.templates.players, game);
 			return players;
 		}
 	}, {
 		key: 'renderRubrics',
 		value: function renderRubrics() {
-			var rubrics = this.render(this.templates.rubrics, game.props);
+			var rubrics = this.render(this.templates.rubrics, game);
 			return rubrics;
 		}
 	}, {

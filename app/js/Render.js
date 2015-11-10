@@ -23,12 +23,12 @@ class Render {
 		Parts
 	*/
 	renderPlayers() {
-		let players = this.render(this.templates.players, game.props);
+		let players = this.render(this.templates.players, game);
 		return players;
 	}
 
 	renderRubrics() {
-		let rubrics = this.render(this.templates.rubrics, game.props);
+		let rubrics = this.render(this.templates.rubrics, game);
 		return rubrics;
 	}
 

@@ -56,14 +56,14 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</div>
 			</div>
 			<div class="players_list" data-playerlist-view>
-				{{~it.players :player:index}}
+				{{~it.props.players :player:index}}
 					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
 				{{~}}
 			</div>
 		</section>
 		<footer class="modal_action modal_action--single">
 			{{? it.started === true }}
-				<button type="button" data-players-save class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-players-save class="button {{? !it.props.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}
@@ -108,7 +108,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rubrics-save class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-rubrics-save class="button {{? !it.props.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}
@@ -130,18 +130,71 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			<div class="settings">
 				<span class="settings_name">Повторять вопросы:</span>
 				<div class="settings_switcher settings_switcher--x2">
-					{{? it.props.started === true }}
-						<label class="settings_switcher_element" for="repeat-content-true">Да</label>
-						<input type="radio" name="repeat-content" id="repeat-content-true" value="true" {{? it.settings.repeatContent === true}}checked{{?}}>
-						<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
-						<input type="radio" name="repeat-content" id="repeat-content-false" value="false" {{? it.settings.repeatContent === false}}checked{{?}}>
-					{{??}}
-						<label class="settings_switcher_element" for="repeat-content-true">Да</label>
-						<input type="radio" name="repeat-content" id="repeat-content-true" value="true" checked>
-						<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
-						<input type="radio" name="repeat-content" id="repeat-content-false" value="false">
-					{{?}}
+					<input type="radio" name="repeat-content" id="repeat-content-true" value="true" {{? it.settings.repeatContent === true}}checked{{?}}>
+					<label class="settings_switcher_element" for="repeat-content-true">Да</label>
+					<input type="radio" name="repeat-content" id="repeat-content-false" value="false" {{? it.settings.repeatContent === false || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
 					<div class="settings_switcher"></div>
+				</div>
+			</div>
+			<div class="settigns">
+				<span class="settings_name">Алкоголь:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					<input type="radio" name="alcohol" id="alcohol-true" value="true" {{? it.settings.alcohol === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="alcohol-true">Да</label>
+					<input type="radio" name="alcohol" id="alcohol-false" value="herma" {{? it.settings.alcohol !== true }}checked{{?}}>
+					<label class="settings_switcher_element" for="alcohol-false">Нет</label>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Таблица очков:</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input type="radio" name="scoreboard" id="scoreboard-true" value="true" {{? it.settings.scoreboard === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="scoreboard-true">Да</label>
+					<input type="radio" name="scoreboard" id="scoreboard-false" value="herma" {{? it.settings.scoreboard !== true }}checked{{?}}>
+					<label class="settings_switcher_element" for="scoreboard-false">Нет</label>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Стрик (вопросов | действий):</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input type="radio" name="streak" id="streak-2" value="true" {{? it.settings.streak === 2 || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="streak-2">2</label>
+					<input type="radio" name="streak" id="streak-3" value="herma" {{? it.settings.streak === 3 }}checked{{?}}>
+					<label class="settings_switcher_element" for="streak-3">3</label>
+					<input type="radio" name="streak" id="streak-4" value="herma" {{? it.settings.streak === 4 }}checked{{?}}>
+					<label class="settings_switcher_element" for="streak-4">4</label>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Карточки:</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input type="checkbox" name="cards" id="cards-gray" value="cards-gray" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards-gray">Серая</label>
+					<input type="checkbox" name="cards" id="cards-yellow" value="cards-yellow" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards-yellow">Желтая</label>
+					<input type="checkbox" name="cards" id="cards-special" value="cards-special" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards-special">Специальная</label>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Умный выбор игроков-ассистентов:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					<input type="radio" name="smartpick" id="smartpick-true" value="smartpick-true" {{? it.settings.smartPick === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards-gray">Да</label>
+					<input type="radio" name="smartpick" id="smartpick-false" value="smartpick-false" {{? it.settings.smartPick !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards-yellow">Нет</label>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Ориентация:</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input type="radio" name="sex" id="sex-hetero" value="hetero" {{? it.settings.sex === 'hetero' || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="sex-hetero" checked>Гетеро</label>
+					<input type="radio" name="sex" id="sex-herma" value="herma" {{? it.settings.sex === 'homo'}}checked{{?}}>
+					<label class="settings_switcher_element" for="sex-herma">Би</label>
+					<input type="radio" name="sex" id="sex-homo" value="homo" {{? it.settings.sex === 'herma'}}checked{{?}}>
+					<label class="settings_switcher_element" for="sex-homo">Гомо</label>
 				</div>
 			</div>
 		</section>
