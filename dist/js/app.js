@@ -118,7 +118,7 @@ window.content = new Content();
       for (var t = 0, n; t < arguments.length; t++) n = arguments[t], this.contains(n) || F.push.call(this, o);this._isSVG ? this._.setAttribute("class", "" + this) : this._.className = "" + this;
     }, contains: (function (e) {
       return function (n) {
-        return (q = e.call(this, o = p(n)), -1 < q);
+        return q = e.call(this, o = p(n)), -1 < q;
       };
     })([].indexOf || function (e) {
       q = this.length;while (q-- && this[q] !== e);return q;
@@ -138,11 +138,11 @@ window.content = new Content();
       return s || (s = l.getElementsByTagName("head")[0]);
     } }), (function () {
     for (var t, n = e.requestAnimationFrame, r = e.cancelAnimationFrame, i = ["o", "ms", "moz", "webkit"], s = i.length; !r && s--;) n = n || e[i[s] + "RequestAnimationFrame"], r = e[i[s] + "CancelAnimationFrame"] || e[i[s] + "CancelRequestAnimationFrame"];r || (n ? (t = n, n = function (e) {
-      var n = !0;return (t(function () {
+      var n = !0;return t(function () {
         n && e.apply(this, arguments);
       }), function () {
         n = !1;
-      });
+      };
     }, r = function (e) {
       e();
     }) : (n = function (e) {
@@ -155,7 +155,7 @@ window.content = new Content();
   } catch (R) {
     e.CustomEvent = (function (e, t) {
       function n(n, i) {
-        var s = l.createEvent(e);if (typeof n != "string") throw new Error("An event name must be provided");return (e == "Event" && (s.initCustomEvent = r), i == null && (i = t), s.initCustomEvent(n, i.bubbles, i.cancelable, i.detail), s);
+        var s = l.createEvent(e);if (typeof n != "string") throw new Error("An event name must be provided");return e == "Event" && (s.initCustomEvent = r), i == null && (i = t), s.initCustomEvent(n, i.bubbles, i.cancelable, i.detail), s;
       }function r(e, t, n, r) {
         this.initEvent(e, t, n), this.detail = r;
       }return n;
@@ -171,7 +171,7 @@ window.content = new Content();
       }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
     }).replace(b.use || h, function (a, c) {
       b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
-        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
+        if (d[c] && d[c].arg && l) return a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']";
       }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
     });
   }function k(b) {
@@ -214,25 +214,131 @@ window.content = new Content();
     return f.template(b, null, a);
   };
 })();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
+if ("document" in self) {
+  if (!("classList" in document.createElement("_"))) {
+    (function (j) {
+      "use strict";if (!("Element" in j)) {
+        return;
+      }var a = "classList",
+          f = "prototype",
+          m = j.Element[f],
+          b = Object,
+          k = String[f].trim || function () {
+        return this.replace(/^\s+|\s+$/g, "");
+      },
+          c = Array[f].indexOf || function (q) {
+        var p = 0,
+            o = this.length;for (; p < o; p++) {
+          if (p in this && this[p] === q) {
+            return p;
+          }
+        }return -1;
+      },
+          n = function n(o, p) {
+        this.name = o;this.code = DOMException[o];this.message = p;
+      },
+          g = function g(p, o) {
+        if (o === "") {
+          throw new n("SYNTAX_ERR", "An invalid or illegal string was specified");
+        }if (/\s/.test(o)) {
+          throw new n("INVALID_CHARACTER_ERR", "String contains an invalid character");
+        }return c.call(p, o);
+      },
+          d = function d(s) {
+        var r = k.call(s.getAttribute("class") || ""),
+            q = r ? r.split(/\s+/) : [],
+            p = 0,
+            o = q.length;for (; p < o; p++) {
+          this.push(q[p]);
+        }this._updateClassName = function () {
+          s.setAttribute("class", this.toString());
+        };
+      },
+          e = d[f] = [],
+          i = function i() {
+        return new d(this);
+      };n[f] = Error[f];e.item = function (o) {
+        return this[o] || null;
+      };e.contains = function (o) {
+        o += "";return g(this, o) !== -1;
+      };e.add = function () {
+        var s = arguments,
+            r = 0,
+            p = s.length,
+            q,
+            o = false;do {
+          q = s[r] + "";if (g(this, q) === -1) {
+            this.push(q);o = true;
+          }
+        } while (++r < p);if (o) {
+          this._updateClassName();
+        }
+      };e.remove = function () {
+        var t = arguments,
+            s = 0,
+            p = t.length,
+            r,
+            o = false,
+            q;do {
+          r = t[s] + "";q = g(this, r);while (q !== -1) {
+            this.splice(q, 1);o = true;q = g(this, r);
+          }
+        } while (++s < p);if (o) {
+          this._updateClassName();
+        }
+      };e.toggle = function (p, q) {
+        p += "";var o = this.contains(p),
+            r = o ? q !== true && "remove" : q !== false && "add";if (r) {
+          this[r](p);
+        }if (q === true || q === false) {
+          return q;
+        } else {
+          return !o;
+        }
+      };e.toString = function () {
+        return this.join(" ");
+      };if (b.defineProperty) {
+        var l = { get: i, enumerable: true, configurable: true };try {
+          b.defineProperty(m, a, l);
+        } catch (h) {
+          if (h.number === -2146823252) {
+            l.enumerable = false;b.defineProperty(m, a, l);
+          }
+        }
+      } else {
+        if (b[f].__defineGetter__) {
+          m.__defineGetter__(a, i);
+        }
+      }
+    })(self);
+  } else {
+    (function () {
+      var b = document.createElement("_");b.classList.add("c1", "c2");if (!b.classList.contains("c2")) {
+        var c = function c(e) {
+          var d = DOMTokenList.prototype[e];DOMTokenList.prototype[e] = function (h) {
+            var g,
+                f = arguments.length;for (g = 0; g < f; g++) {
+              h = arguments[g];d.call(this, h);
+            }
+          };
+        };c("add");c("remove");
+      }b.classList.toggle("c3", false);if (b.classList.contains("c3")) {
+        var a = DOMTokenList.prototype.toggle;DOMTokenList.prototype.toggle = function (d, e) {
+          if (1 in arguments && !this.contains(d) === !e) {
+            return e;
+          } else {
+            return a.call(this, d);
+          }
+        };
+      }b = null;
+    })();
+  }
+};
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var EventRouter = (function () {
-	function EventRouter() {
-		_classCallCheck(this, EventRouter);
-	}
-
-	_createClass(EventRouter, [{
-		key: "modalNext",
-		value: function modalNext(element) {}
-	}, {
-		key: "modalBack",
-		value: function modalBack(element) {}
-	}]);
-
-	return EventRouter;
-})();
+var EventRouter = function EventRouter() {
+	_classCallCheck(this, EventRouter);
+};
 
 window.eventRouter = new EventRouter();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -243,9 +349,9 @@ var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
-		this.started = false;
+		this.started = true;
 		this.props = {
-			players: [],
+			players: [{ name: 'Mihail', gender: 'm' }, { name: 'Elena', gender: 'f' }],
 			rubribcs: []
 		};
 		this.settings = {
@@ -282,7 +388,10 @@ var Game = (function () {
 	}, {
 		key: 'load',
 		value: function load() {
-			// Load game.
+			var game = storage.get('Game');
+			this.started = game.started;
+			this.props = game.props;
+			this.settings = game.settings;
 		}
 	}, {
 		key: 'save',
@@ -318,9 +427,9 @@ var Storage = (function () {
 		value: function get(name, type) {
 			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
 				if (type && type !== 'str') {
-					return JSON.parse(localStorage.getItem(name));
-				} else {
 					return localStorage.getItem(name);
+				} else {
+					return JSON.parse(localStorage.getItem(name));
 				}
 			} else {
 				return false;
@@ -329,7 +438,7 @@ var Storage = (function () {
 	}, {
 		key: 'set',
 		value: function set(name, value) {
-			localStorage.setItem(name, value);
+			localStorage.setItem(name, JSON.stringify(value));
 		}
 	}]);
 
@@ -393,7 +502,9 @@ var Render = (function () {
 		this.templates = {
 			players: document.querySelector('#modal_players'),
 			rubrics: document.querySelector('#modal_rubrics'),
-			settings: document.querySelector('#modal_settings')
+			settings: document.querySelector('#modal_settings'),
+			rules: document.querySelector('#modal_rules'),
+			'continue': document.querySelector('#modal_continue')
 		};
 	}
 
@@ -428,8 +539,17 @@ var Render = (function () {
 			return settings;
 		}
 	}, {
+		key: 'renderRules',
+		value: function renderRules() {
+			var rules = this.render(this.templates.rules, game);
+			return rules;
+		}
+	}, {
 		key: 'renderContinue',
-		value: function renderContinue() {}
+		value: function renderContinue() {
+			var gameContinue = this.render(this.templates['continue'], storage.get('Game'));
+			return gameContinue;
+		}
 
 		/*
   	Screens
@@ -444,7 +564,7 @@ var Render = (function () {
 		key: '_screen1',
 		value: function _screen1() {
 			var rendered = '',
-			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings()];
+			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings(), this.renderRules()];
 			views.forEach(function (view) {
 				rendered += view;
 			});

@@ -1,0 +1,20 @@
+.rules {
+	overflow: auto;
+
+
+	&_content {
+		line-height: 1.2em;
+
+		strong {
+			font-weight: 700;
+		}
+
+		p {
+			padding-bottom: 10px;
+
+			&:last-child {
+				padding-bottom: 0;
+			}
+		}
+	}
+}

@@ -19,7 +19,6 @@ var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	sourcemaps = require('gulp-sourcemaps');
 
-
 // Concat all JS files into production/js/main.js
 // If coffee disabled
 gulp.task('concat', function() {
@@ -38,7 +37,7 @@ gulp.task('concat', function() {
 gulp.task('jshint', function() {
 
 	if ( configs.jshint ) {
-		var src = ['./app/js/**/*', '!./app/js/Dom4.js', '!./app/js/DotJs.js'];
+		var src = ['./app/js/**/*', '!./app/js/Dom4.js', '!./app/js/DotJs.js', '!./app/js/Element.classList.js'];
 		return gulp.src(src)
 			.pipe(jshint({esnext: true}))
 			.pipe(jshint.reporter(stylish));

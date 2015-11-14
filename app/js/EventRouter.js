@@ -4,14 +4,6 @@ class EventRouter {
 
 	}
 
-	modalNext(element) {
-
-	}
-
-	modalBack(element) {
-
-	}
-
 }
 
 window.eventRouter = new EventRouter();

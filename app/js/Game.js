@@ -1,9 +1,9 @@
 class Game {
 
 	constructor() {
-		this.started = false;
+		this.started = true;
 		this.props = {
-			players: [],
+			players: [{name: 'Mihail', gender: 'm'}, {name: 'Elena', gender: 'f'}],
 			rubribcs: []
 		};
 		this.settings = {
@@ -36,7 +36,10 @@ class Game {
 	}
 
 	load() {
-		// Load game.
+		let game = storage.get('Game');
+		this.started = game.started;
+		this.props = game.props;
+		this.settings = game.settings;
 	}
 
 	save() {

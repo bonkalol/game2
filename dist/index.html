@@ -219,5 +219,59 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</footer>
 	</div>
 </script>
+	<script type="text/template" id="modal_rules">
+	<div class="modal modal_rubrics">
+		<h2 class="modal_title">Выбрать рубрику</h2>
+		<section class="modal_content rules">
+			<section class="rules_content">
+			<p>
+			<strong>Серая</strong> - карточка означает что вы должны прочитать задание про себя и выполнять его так, чтобы игроки не догадывались что это задание.</p>
+			<p><strong>Желтая</strong> - карточка означает коллективное задание, данное задание должны выполнять все. </p>
+			<p><strong>Специальная</strong> - карточка означает. </p>
+			<p> Носки, бижутерия не являются вещью. Один игрок не может выполнять действие или правду более 2ух раз подряд. Старайтесь выполнять все задачи и отвечать на все вопросы, иначе, игра будет не интересна. </p>
+			</section>
+		</section>
+		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
+			{{? it.started === true }}
+				<button type="button" data-rules-ok class="button">
+					<span class="button_text">Ок</span>
+				</button>
+			{{??}}
+				<button type="button" data-prevmodal class="button">
+					<span class="button_text">Назад</span>
+				</button>
+				<button type="button" data-rules-start class="button">
+					<span class="button_text">Начать</span>
+				</button>
+			{{?}}
+		</footer>
+	</div>
+</script>
+	<script type="text/template" id="modal_continue">
+	<div class="modal modal_rubrics">
+		<h2 class="modal_title">Продолжить игру</h2>
+		<section class="modal_content">
+			<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
+			<div class="continue">
+				<div class="continue_title">Игроки в предыидущей игре:</div>
+				<div class="continue_players">
+					<div class="players_list">
+						{{~it.props.players :player:index}}
+							<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+						{{~}}
+					</div>
+				</div>
+			</div>
+		</section>
+		<footer class="modal_action modal_action--double">
+			<button type="button" data-game-continue class="button button--small">
+				<span class="button_text">Новая</span>
+			</button>
+			<button type="button" data-game-continue class="button button--small">
+				<span class="button_text">Продолжить</span>
+			</button>
+		</footer>
+	</div>
+</script>
 </body>
 </html>

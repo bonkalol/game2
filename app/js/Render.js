@@ -6,9 +6,11 @@ class Render {
 			main: null
 		};
 		this.templates = {
-			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics'),
-			settings: document.querySelector('#modal_settings')
+			players:  document.querySelector('#modal_players'),
+			rubrics:  document.querySelector('#modal_rubrics'),
+			settings: document.querySelector('#modal_settings'),
+			rules:    document.querySelector('#modal_rules'),
+			continue: document.querySelector('#modal_continue')
 		};
 	}
 
@@ -37,8 +39,14 @@ class Render {
 		return settings;
 	}
 
-	renderContinue() {
+	renderRules() {
+		let rules = this.render(this.templates.rules, game);
+		return rules;
+	}
 
+	renderContinue() {
+		let gameContinue = this.render(this.templates.continue, storage.get('Game'));
+		return gameContinue;
 	}
 
 	/*
@@ -54,7 +62,8 @@ class Render {
 			views = [
 				this.renderPlayers(),
 				this.renderRubrics(),
-				this.renderSettings()
+				this.renderSettings(),
+				this.renderRules()
 			];
 		views.forEach((view) => {
 			rendered += view;

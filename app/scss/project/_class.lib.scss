@@ -45,6 +45,10 @@ body > svg:first-of-type {
 	&:active {
 		background-color: darken(#e8e8e8, 10%);
 	}
+
+	&--small {
+		font-size: 14px;
+	}
 }
 
 .input {
