@@ -349,7 +349,7 @@ var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
-		this.started = true;
+		this.started = false;
 		this.props = {
 			players: [{ name: 'Mihail', gender: 'm' }, { name: 'Elena', gender: 'f' }],
 			rubribcs: []

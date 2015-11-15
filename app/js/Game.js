@@ -1,7 +1,7 @@
 class Game {
 
 	constructor() {
-		this.started = true;
+		this.started = false;
 		this.props = {
 			players: [{name: 'Mihail', gender: 'm'}, {name: 'Elena', gender: 'f'}],
 			rubribcs: []
