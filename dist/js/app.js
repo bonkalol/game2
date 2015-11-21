@@ -349,10 +349,11 @@ var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
-		this.started = false;
+		this.started = true;
 		this.props = {
-			players: [{ name: 'Mihail', gender: 'm' }, { name: 'Elena', gender: 'f' }],
-			rubribcs: []
+			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
+			rubribcs: [],
+			currentPlayer: {} // current player should be picked form this var
 		};
 		this.settings = {
 			repeatContent: false,
@@ -361,6 +362,7 @@ var Game = (function () {
 			streak: 2,
 			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
 			smartPick: true,
+			randomPlayers: true,
 			cards: {
 				gray: true,
 				yellow: true,
@@ -472,6 +474,7 @@ var Player = (function () {
 		this.state = props.state;
 		this.pickRate = props.pickRate;
 		this.score = props.score;
+		this.view = props.view;
 		this.streak = {
 			action: props.streak.action,
 			truth: props.streak.truth

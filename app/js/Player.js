@@ -17,6 +17,7 @@ class Player {
 		this.state = props.state;
 		this.pickRate = props.pickRate;
 		this.score = props.score;
+		this.view = props.view;
 		this.streak = {
 			action: props.streak.action,
 			truth: props.streak.truth

@@ -1,10 +1,15 @@
 class Game {
 
 	constructor() {
-		this.started = false;
+		this.started = true;
 		this.props = {
-			players: [{name: 'Mihail', gender: 'm'}, {name: 'Elena', gender: 'f'}],
-			rubribcs: []
+			players: [
+				{name: 'Mihail', gender: 'm', score: 0},
+				{name: 'Elena', gender: 'f', score: 1},
+				{name: 'Timur', gender: 'm', score: -1}
+			],
+			rubribcs: [],
+			currentPlayer: {} // current player should be picked form this var
 		};
 		this.settings = {
 			repeatContent: false,
@@ -13,6 +18,7 @@ class Game {
 			streak: 2,
 			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
 			smartPick: true,
+			randomPlayers: true,
 			cards: {
 				gray: true,
 				yellow: true,

@@ -57,6 +57,16 @@
 				</div>
 			</div>
 			<div class="settings">
+				<span class="settings_name">Игроки ходят:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-true" value="randomPlayers-true" {{? it.settings.randomPlayers === false || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="randomPlayers-true">По очереди</label>
+					<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-false" value="randomPlayers-false" {{? it.settings.randomPlayers === true}}checked{{?}}>
+					<label class="settings_switcher_element" for="randomPlayers-false">Случайно</label>
+					<div class="settings_switcher_toggler"></div>
+				</div>
+			</div>
+			<div class="settings">
 				<span class="settings_name">Умный выбор игроков-ассистентов:</span>
 				<div class="settings_switcher settings_switcher--x2">
 					<input class="settings_switcher_input" type="radio" name="smartpick" id="smartpick-true" value="smartpick-true" {{? it.settings.smartPick === true || it.started !== true}}checked{{?}}>

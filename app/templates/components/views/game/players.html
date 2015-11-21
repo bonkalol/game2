@@ -1,0 +1,14 @@
+<scipt type="text/template" id="game_players">
+	{{~it.props.players :player:index}}
+		<div class="game_player">
+			<span class="game_player_name">{{=player.name}}</span>
+			{{? player.score === 0}}
+			<span class="game_player_score eq">{{=player.score}}</span>
+			{{?? player.score > 0}}
+			<span class="game_player_score more">{{=player.score}}</span>
+			{{?? player.score < 0}}
+			<span class="game_player_score lower">{{player.score}}</span>
+			{{?}}
+		</div>
+	{{~}}
+</scipt>
