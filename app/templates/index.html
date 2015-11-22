@@ -7,11 +7,16 @@
 </head>
 <body>
 
-	@@include('components/views/modals/start.html')
+	<div class="modals" data-modals-view></div>
+	<div class="game_view" data-game-view>
+		@@include('components/views/game/game.html')
+	</div>
+
 	@@include('components/views/modals/players.html')
 	@@include('components/views/modals/rubrics.html')
 	@@include('components/views/modals/settings.html')
 	@@include('components/views/modals/rules.html')
 	@@include('components/views/modals/continue.html')
+	@@include('components/views/game/players.html')
 </body>
 </html>

@@ -5,5 +5,3 @@ class EventRouter {
 	}
 
 }
-
-window.eventRouter = new EventRouter();

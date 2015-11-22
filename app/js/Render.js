@@ -2,15 +2,17 @@ class Render {
 
 	constructor() {
 		this.views = {
-			modals: document.querySelector('[data-modals-view]'),
+			modals:      document.querySelector('[data-modals-view]'),
+			gamePlayers: document.querySelector('[data-game-players]'),
 			main: null
 		};
 		this.templates = {
-			players:  document.querySelector('#modal_players'),
-			rubrics:  document.querySelector('#modal_rubrics'),
-			settings: document.querySelector('#modal_settings'),
-			rules:    document.querySelector('#modal_rules'),
-			continue: document.querySelector('#modal_continue')
+			players:     document.querySelector('#modal_players'),
+			rubrics:     document.querySelector('#modal_rubrics'),
+			settings:    document.querySelector('#modal_settings'),
+			rules:       document.querySelector('#modal_rules'),
+			continue:    document.querySelector('#modal_continue'),
+			gamePlayers: document.querySelector('#game_players')
 		};
 	}
 
@@ -49,6 +51,11 @@ class Render {
 		return gameContinue;
 	}
 
+	renderGamePlayers() {
+		let gamePlayers = this.render(this.templates.gamePlayers, game);
+		return gamePlayers;
+	}
+
 	/*
 		Screens
 	*/
@@ -68,9 +75,7 @@ class Render {
 		views.forEach((view) => {
 			rendered += view;
 		});
-		this.views.modals.innerHTML = rendered;
+		// this.views.modals.innerHTML = rendered;
 	}
 
 }
-
-window.render = new Render();

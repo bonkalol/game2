@@ -4,6 +4,7 @@
 	window.addEventListener('load', function (event) {
 		game.check();
 		content.check();
+		render.views.gamePlayers.innerHTML = render.renderGamePlayers();
 	}, false);
 
 	document.addEventListener('mousedown', function (event) {
@@ -162,6 +163,16 @@ window.content = new Content();
     })(e.CustomEvent ? "CustomEvent" : "Event", { bubbles: !1, cancelable: !1, detail: null });
   }
 })(window);
+
+(function () {
+	document.addEventListener('DOMContentLoaded', function () {
+		// Build classes
+		window.render = new Render();
+		window.eventRouter = new EventRouter();
+		window.storage = new Storage();
+		window.game = new Game();
+	}, false);
+})();
 /* Laura Doktorova https://github.com/olado/doT */
 (function () {
   function p(b, a, d) {
@@ -339,8 +350,6 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var EventRouter = function EventRouter() {
 	_classCallCheck(this, EventRouter);
 };
-
-window.eventRouter = new EventRouter();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -353,12 +362,12 @@ var Game = (function () {
 		this.props = {
 			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
 			rubribcs: [],
-			currentPlayer: {} // current player should be picked form this var
+			currentPlayer: null // current player should be picked form this var
 		};
 		this.settings = {
 			repeatContent: false,
 			alcohol: true,
-			scoreboard: true,
+			score: true,
 			streak: 2,
 			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
 			smartPick: true,
@@ -404,8 +413,6 @@ var Game = (function () {
 
 	return Game;
 })();
-
-window.game = new Game();
 var random = function random(min, max) {
 	return Math.floor(Math.random() * (max + 1 - min)) + min;
 };
@@ -446,8 +453,6 @@ var Storage = (function () {
 
 	return Storage;
 })();
-
-window.storage = new Storage();
 
 
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -500,6 +505,7 @@ var Render = (function () {
 
 		this.views = {
 			modals: document.querySelector('[data-modals-view]'),
+			gamePlayers: document.querySelector('[data-game-players]'),
 			main: null
 		};
 		this.templates = {
@@ -507,7 +513,8 @@ var Render = (function () {
 			rubrics: document.querySelector('#modal_rubrics'),
 			settings: document.querySelector('#modal_settings'),
 			rules: document.querySelector('#modal_rules'),
-			'continue': document.querySelector('#modal_continue')
+			'continue': document.querySelector('#modal_continue'),
+			gamePlayers: document.querySelector('#game_players')
 		};
 	}
 
@@ -553,6 +560,12 @@ var Render = (function () {
 			var gameContinue = this.render(this.templates['continue'], storage.get('Game'));
 			return gameContinue;
 		}
+	}, {
+		key: 'renderGamePlayers',
+		value: function renderGamePlayers() {
+			var gamePlayers = this.render(this.templates.gamePlayers, game);
+			return gamePlayers;
+		}
 
 		/*
   	Screens
@@ -571,14 +584,12 @@ var Render = (function () {
 			views.forEach(function (view) {
 				rendered += view;
 			});
-			this.views.modals.innerHTML = rendered;
+			// this.views.modals.innerHTML = rendered;
 		}
 	}]);
 
 	return Render;
 })();
-
-window.render = new Render();
 
 
 

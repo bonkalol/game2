@@ -1,0 +1,102 @@
+.game {
+	padding-top: 50px;
+
+	&_header {
+		position: absolute;
+		left: 0;
+		top: 0;
+		@include size(100%, 50px);
+		background-color: #9c27b0;
+		@extend %shadow-2dp;
+		padding-right: 50px;
+	}
+
+	&_players {
+		overflow: auto;
+		white-space: nowrap;
+		height: 100%;
+		text-align: center;
+		padding: 0 10px;
+	}
+
+	&_players_wrapper {
+		height: 100%;
+	}
+
+	&_player {
+		height: 32px;
+		position: relative;
+		background-color: #fafafa;
+		display: inline-block;
+		line-height: normal;
+		margin-top: 9px;
+		margin-right: 10px;
+		border-radius: 2px;
+		@include clearfix();
+		@extend %shadow-2dp;
+
+		&:last-child {
+			margin-right: 0;
+		}
+	}
+
+	&_player_icon {
+		float: left;
+		line-height: 32px;
+		height: 100%;
+		position: relative;
+		width: 30px;
+
+		svg {
+			position: absolute;
+			left: 50%;
+			top: 50%;
+			transform: translate(-50%, -50%);
+			fill: #333;
+		}
+
+		@include media ('<tablet') {
+			width: 20px;
+
+			svg {
+				@include size(15px);
+			}
+		}
+	}
+
+	&_player_name {
+		float: left;
+		padding: 0 7px;
+		line-height: 32px;
+
+		@include media ('<tablet') {
+			padding: 0 4px;
+			font-size: 12px;
+		}
+	}
+
+	&_player_score {
+		float: right;
+		@include size(35px, 100%);
+		text-align: center;
+		color: #fafafa;
+		line-height: 33px;
+
+		@include media ('<tablet') {
+			@include size(30px, 100%);
+			font-size: 12px;
+		}
+
+		&.eq {
+			background-color: #797777;
+		}
+
+		&.more {
+			background-color: #43a047;
+		}
+
+		&.less {
+			background-color: #e53935;
+		}
+	}
+}

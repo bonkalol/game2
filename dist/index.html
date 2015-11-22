@@ -31,7 +31,41 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 </head>
 <body>
 
-	<div class="startgame_overlay" data-modals-view></div>
+	<div class="modals" data-modals-view></div>
+	<div class="game_view" data-game-view>
+		<div class="game">
+	<div class="game_header">
+		<div class="game_players_wrapper">
+			<div class="game_players" data-game-players>
+				
+			</div>
+		</div>
+		<span class="game_sidebar_toggle" role="button" data-open-sidebar></span>
+	</div>
+	<div class="game_sidebar">
+		<ul class="game_sidebar_list">
+			<li class="game_sidebar_item"><a href="javascript:void(0);" data-new-game>Начать заново</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);" data-show-modal="modal_players">Игроки</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);" data-show-modal="modal_settings">Настройки</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);" data-show-modal="modal_rubrics">Изменить рубрику</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);" data-show-modal="modal_rules">Правила</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);">Нашел ошибку</a></li>
+			<li class="game_sidebar_item"><a href="javascript:void(0);">Поддержать проект</a></li>
+		</ul>
+	</div>
+	<div class="game_view">
+		<div class="game_view_container">
+			<div class="game_view_name" data-currentplayer>Mihail</div>
+			<div class="game_view_buttons">
+				<span role="button" class="game_view_button game_view_button--truth" data-game="truth">Правда</span>
+				<span class="game_view_buttons_separator">или</span>
+				<span role="button" class="game_view_button game_view_button--action" data-game="action">Действие</span>
+			</div>
+		</div>
+	</div>
+</div>
+	</div>
+
 	<script type="text/template" id="modal_players">
 	<div class="modal">
 		<h2 class="modal_title">Добавить игроков</h2>
@@ -148,12 +182,12 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</div>
 			</div>
 			<div class="settings">
-				<span class="settings_name">Таблица очков:</span>
+				<span class="settings_name">Игра на очки:</span>
 				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="scoreboard" id="scoreboard-true" value="true" {{? it.settings.scoreboard === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="scoreboard-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="scoreboard" id="scoreboard-false" value="herma" {{? it.settings.scoreboard !== true }}checked{{?}}>
-					<label class="settings_switcher_element" for="scoreboard-false">Нет</label>
+					<input class="settings_switcher_input" type="radio" name="score" id="score-true" value="true" {{? it.settings.score === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="score-true">Да</label>
+					<input class="settings_switcher_input" type="radio" name="score" id="score-false" value="herma" {{? it.settings.score !== true }}checked{{?}}>
+					<label class="settings_switcher_element" for="score-false">Нет</label>
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>
@@ -282,6 +316,35 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			</button>
 		</footer>
 	</div>
+</script>
+	<script type="text/template" id="game_players">
+	{{~it.props.players :player:index}}
+		<div class="game_player">
+			{{?player.gender === 'f'}}
+				<span class="game_player_icon game_player_icon--female">
+					<svg width="25" height="25">
+						<use xlink:href="#female">
+					</svg>
+				</span>
+			{{??}}
+				<span class="game_player_icon game_player_icon--male">
+					<svg width="25" height="25">
+						<use xlink:href="#male">
+					</svg>
+				</span>
+			{{?}}
+			<span class="game_player_name">{{=player.name}}</span>
+			{{?it.settings.score}}
+				{{? player.score === 0}}
+				<span class="game_player_score eq">{{=player.score}}</span>
+				{{?? player.score > 0}}
+				<span class="game_player_score more">{{=player.score}}</span>
+				{{?? player.score < 0}}
+				<span class="game_player_score less">{{=player.score}}</span>
+				{{?}}
+			{{?}}
+		</div>
+	{{~}}
 </script>
 </body>
 </html>

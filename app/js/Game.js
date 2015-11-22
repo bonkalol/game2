@@ -9,12 +9,12 @@ class Game {
 				{name: 'Timur', gender: 'm', score: -1}
 			],
 			rubribcs: [],
-			currentPlayer: {} // current player should be picked form this var
+			currentPlayer: null // current player should be picked form this var
 		};
 		this.settings = {
 			repeatContent: false,
 			alcohol: true,
-			scoreboard: true,
+			score: true,
 			streak: 2,
 			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
 			smartPick: true,
@@ -53,6 +53,4 @@ class Game {
 	}
 
 }
-
-window.game = new Game();
 

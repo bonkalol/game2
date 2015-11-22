@@ -24,12 +24,12 @@
 				</div>
 			</div>
 			<div class="settings">
-				<span class="settings_name">Таблица очков:</span>
+				<span class="settings_name">Игра на очки:</span>
 				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="scoreboard" id="scoreboard-true" value="true" {{? it.settings.scoreboard === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="scoreboard-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="scoreboard" id="scoreboard-false" value="herma" {{? it.settings.scoreboard !== true }}checked{{?}}>
-					<label class="settings_switcher_element" for="scoreboard-false">Нет</label>
+					<input class="settings_switcher_input" type="radio" name="score" id="score-true" value="true" {{? it.settings.score === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="score-true">Да</label>
+					<input class="settings_switcher_input" type="radio" name="score" id="score-false" value="herma" {{? it.settings.score !== true }}checked{{?}}>
+					<label class="settings_switcher_element" for="score-false">Нет</label>
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>

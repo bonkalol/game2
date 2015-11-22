@@ -22,5 +22,3 @@ class Storage {
 	}
 
 }
-
-window.storage = new Storage();
