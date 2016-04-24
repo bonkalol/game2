@@ -46,6 +46,359 @@ var Content = (function () {
 })();
 
 window.content = new Content();
+
+(function () {
+	document.addEventListener('DOMContentLoaded', function () {
+		// Build classes
+		window.render = new Render();
+		window.storage = new Storage();
+		window.game = new Game();
+	}, false);
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Game = (function () {
+	function Game() {
+		_classCallCheck(this, Game);
+
+		this.started = true;
+		this.props = {
+			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
+			rubribcs: [],
+			currentPlayer: null // current player should be picked form this var
+		};
+		this.settings = {
+			repeatContent: false,
+			alcohol: true,
+			score: true,
+			streak: 2,
+			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+			smartPick: true,
+			randomPlayers: true,
+			cards: {
+				gray: true,
+				yellow: true,
+				special: true
+			}
+		};
+	}
+
+	_createClass(Game, [{
+		key: 'check',
+		value: function check() {
+			if (storage.get('Game') !== false) {
+				// Show screen 0.
+				render._screen0();
+			} else {
+				// Show screen 1.
+				render._screen1();
+			}
+		}
+	}, {
+		key: 'init',
+		value: function init() {
+			// Start game cycle.
+		}
+	}, {
+		key: 'load',
+		value: function load() {
+			var game = storage.get('Game');
+			this.started = game.started;
+			this.props = game.props;
+			this.settings = game.settings;
+		}
+	}, {
+		key: 'save',
+		value: function save() {
+			storage.set('Game', this);
+		}
+	}]);
+
+	return Game;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+/*
+
+	Wrapper for localStorage
+
+*/
+
+var Storage = (function () {
+	function Storage() {
+		_classCallCheck(this, Storage);
+	}
+
+	_createClass(Storage, [{
+		key: 'get',
+		value: function get(name, type) {
+			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
+				if (type && type === 'str') {
+					return localStorage.getItem(name);
+				} else {
+					return JSON.parse(localStorage.getItem(name));
+				}
+			} else {
+				return false;
+			}
+		}
+	}, {
+		key: 'set',
+		value: function set(name, value) {
+			localStorage.setItem(name, JSON.stringify(value));
+		}
+	}]);
+
+	return Storage;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Overlay = (function () {
+	function Overlay() {
+		_classCallCheck(this, Overlay);
+
+		this.self = document.querySelector('[data-overlay]');
+		this.states = ['hidden', 'active'];
+		this.listener = null;
+		this.transition = 500;
+	}
+
+	_createClass(Overlay, [{
+		key: 'show',
+		value: function show() {
+			var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+			var onCloseCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+			var Overlay = this;
+			this.self.classList.remove(this.states[0]);
+			this.self.classList.add(this.states[1]);
+			if (onCloseCallback !== null && typeof onCloseCallback === 'function') {
+				this.self.addEventListener('mousedown', function (event) {
+					Overlay.close(null, onCloseCallback);
+					Overlay.listener = onCloseCallback;
+					Overlay.listener();
+				});
+			}
+			var timeout = setTimeout(function () {
+				if (callback && typeof callback === 'function') {
+					callback();
+				}
+			}, this.transition);
+		}
+	}, {
+		key: 'close',
+		value: function close() {
+			var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+			var onCloseCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+			this.self.classList.remove(this.states[1]);
+			if (this.listener !== null && typeof this.listener === 'function') {
+				this.self.removeEventListener('mousedown', onCloseCallback, false);
+				this.listener = null;
+			}
+			var timeout = setTimeout(function () {
+				overlay.self.classList.add(overlay.states[0]);
+				if (callback && typeof callback === 'function') {
+					callback();
+				}
+			}, this.transition);
+		}
+	}]);
+
+	return Overlay;
+})();
+
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+/*
+
+	State
+	0 - не активный игрок
+	1 - активный игрок
+
+	PickRate
+	Как часто игра выбирала игрока как ассистента текущему игроку
+
+*/
+
+var Player = (function () {
+	function Player(props) {
+		_classCallCheck(this, Player);
+
+		this.name = props.name;
+		this.gender = props.gender;
+		this.state = props.state;
+		this.pickRate = props.pickRate;
+		this.score = props.score;
+		this.views = props.views;
+		this.streak = {
+			action: props.streak.action,
+			truth: props.streak.truth
+		};
+	}
+
+	_createClass(Player, [{
+		key: "streak",
+		value: function streak(type) {}
+	}]);
+
+	return Player;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerController = (function () {
+	function PlayerController() {
+		_classCallCheck(this, PlayerController);
+
+		this.players = [];
+	}
+
+	_createClass(PlayerController, [{
+		key: "getScoreBoard",
+		value: function getScoreBoard() {
+			// return array of players sorted for scores
+		}
+	}, {
+		key: "getAssistent",
+		value: function getAssistent() {
+			// получить игрока ассисента (основываясь на пикрейт игроков)
+		}
+	}, {
+		key: "getCurrent",
+		value: function getCurrent() {}
+	}, {
+		key: "getNext",
+		value: function getNext() {}
+	}, {
+		key: "getPrevious",
+		value: function getPrevious() {}
+	}, {
+		key: "getRandom",
+		value: function getRandom() {
+			// Получить рандомного игрока
+		}
+	}, {
+		key: "getLeader",
+		value: function getLeader() {
+			// Получить лидера по скорборду
+		}
+	}, {
+		key: "getLast",
+		value: function getLast() {
+			// Получить послднего по скорборду
+		}
+	}]);
+
+	return PlayerController;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Render = (function () {
+	function Render() {
+		_classCallCheck(this, Render);
+
+		this.views = {
+			modals: document.querySelector('[data-modals-view]'),
+			gamePlayers: document.querySelector('[data-game-players]'),
+			main: null
+		};
+		this.templates = {
+			players: document.querySelector('#modal_players'),
+			rubrics: document.querySelector('#modal_rubrics'),
+			settings: document.querySelector('#modal_settings'),
+			rules: document.querySelector('#modal_rules'),
+			'continue': document.querySelector('#modal_continue'),
+			gamePlayers: document.querySelector('#game_players')
+		};
+	}
+
+	_createClass(Render, [{
+		key: 'render',
+		value: function render(template, object) {
+			var view = template.innerHTML;
+			view = doT.template(view);
+			view = view(object);
+			return view;
+		}
+
+		/*
+  	Parts
+  */
+	}, {
+		key: 'renderPlayers',
+		value: function renderPlayers() {
+			var players = this.render(this.templates.players, game);
+			return players;
+		}
+	}, {
+		key: 'renderRubrics',
+		value: function renderRubrics() {
+			var rubrics = this.render(this.templates.rubrics, game);
+			return rubrics;
+		}
+	}, {
+		key: 'renderSettings',
+		value: function renderSettings() {
+			var settings = this.render(this.templates.settings, game);
+			return settings;
+		}
+	}, {
+		key: 'renderRules',
+		value: function renderRules() {
+			var rules = this.render(this.templates.rules, game);
+			return rules;
+		}
+	}, {
+		key: 'renderContinue',
+		value: function renderContinue() {
+			var gameContinue = this.render(this.templates['continue'], storage.get('Game'));
+			return gameContinue;
+		}
+	}, {
+		key: 'renderGamePlayers',
+		value: function renderGamePlayers() {
+			var gamePlayers = this.render(this.templates.gamePlayers, game);
+			return gamePlayers;
+		}
+
+		/*
+  	Screens
+  */
+	}, {
+		key: '_screen0',
+		value: function _screen0() {
+			var view = this.renderContinue();
+			this.views.modals.innerHTML = view;
+		}
+	}, {
+		key: '_screen1',
+		value: function _screen1() {
+			var rendered = '',
+			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings(), this.renderRules()];
+			views.forEach(function (view) {
+				rendered += view;
+			});
+			// this.views.modals.innerHTML = rendered;
+		}
+	}]);
+
+	return Render;
+})();
+
+
+
 (function (e) {
   "use strict";function t() {
     return l.createDocumentFragment();
@@ -163,16 +516,6 @@ window.content = new Content();
     })(e.CustomEvent ? "CustomEvent" : "Event", { bubbles: !1, cancelable: !1, detail: null });
   }
 })(window);
-
-(function () {
-	document.addEventListener('DOMContentLoaded', function () {
-		// Build classes
-		window.render = new Render();
-		window.eventRouter = new EventRouter();
-		window.storage = new Storage();
-		window.game = new Game();
-	}, false);
-})();
 /* Laura Doktorova https://github.com/olado/doT */
 (function () {
   function p(b, a, d) {
@@ -345,252 +688,7 @@ if ("document" in self) {
     })();
   }
 };
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var EventRouter = function EventRouter() {
-	_classCallCheck(this, EventRouter);
-};
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var Game = (function () {
-	function Game() {
-		_classCallCheck(this, Game);
-
-		this.started = true;
-		this.props = {
-			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
-			rubribcs: [],
-			currentPlayer: null // current player should be picked form this var
-		};
-		this.settings = {
-			repeatContent: false,
-			alcohol: true,
-			score: true,
-			streak: 2,
-			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
-			smartPick: true,
-			randomPlayers: true,
-			cards: {
-				gray: true,
-				yellow: true,
-				special: true
-			}
-		};
-	}
-
-	_createClass(Game, [{
-		key: 'check',
-		value: function check() {
-			if (storage.get('Game') !== false) {
-				// Show screen 0.
-				render._screen0();
-			} else {
-				// Show screen 1.
-				render._screen1();
-			}
-		}
-	}, {
-		key: 'init',
-		value: function init() {
-			// Start game cycle.
-		}
-	}, {
-		key: 'load',
-		value: function load() {
-			var game = storage.get('Game');
-			this.started = game.started;
-			this.props = game.props;
-			this.settings = game.settings;
-		}
-	}, {
-		key: 'save',
-		value: function save() {
-			storage.set('Game', this);
-		}
-	}]);
-
-	return Game;
-})();
 var random = function random(min, max) {
 	return Math.floor(Math.random() * (max + 1 - min)) + min;
 };
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-/*
-
-	Wrapper for localStorage
-
-*/
-
-var Storage = (function () {
-	function Storage() {
-		_classCallCheck(this, Storage);
-	}
-
-	_createClass(Storage, [{
-		key: 'get',
-		value: function get(name, type) {
-			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
-				if (type && type !== 'str') {
-					return localStorage.getItem(name);
-				} else {
-					return JSON.parse(localStorage.getItem(name));
-				}
-			} else {
-				return false;
-			}
-		}
-	}, {
-		key: 'set',
-		value: function set(name, value) {
-			localStorage.setItem(name, JSON.stringify(value));
-		}
-	}]);
-
-	return Storage;
-})();
-
-
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-/*
-
-	State
-	0 - не активный игрок
-	1 - активный игрок
-
-	PickRate
-	Как часто игра выбирала игрока как ассистента текущему игроку
-
-*/
-
-var Player = (function () {
-	function Player(props) {
-		_classCallCheck(this, Player);
-
-		this.name = props.name;
-		this.gender = props.gender;
-		this.state = props.state;
-		this.pickRate = props.pickRate;
-		this.score = props.score;
-		this.view = props.view;
-		this.streak = {
-			action: props.streak.action,
-			truth: props.streak.truth
-		};
-	}
-
-	_createClass(Player, [{
-		key: "get",
-		value: function get(prop) {
-			return this[prop];
-		}
-	}]);
-
-	return Player;
-})();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-var Render = (function () {
-	function Render() {
-		_classCallCheck(this, Render);
-
-		this.views = {
-			modals: document.querySelector('[data-modals-view]'),
-			gamePlayers: document.querySelector('[data-game-players]'),
-			main: null
-		};
-		this.templates = {
-			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics'),
-			settings: document.querySelector('#modal_settings'),
-			rules: document.querySelector('#modal_rules'),
-			'continue': document.querySelector('#modal_continue'),
-			gamePlayers: document.querySelector('#game_players')
-		};
-	}
-
-	_createClass(Render, [{
-		key: 'render',
-		value: function render(template, object) {
-			var view = template.innerHTML;
-			view = doT.template(view);
-			view = view(object);
-			return view;
-		}
-
-		/*
-  	Parts
-  */
-	}, {
-		key: 'renderPlayers',
-		value: function renderPlayers() {
-			var players = this.render(this.templates.players, game);
-			return players;
-		}
-	}, {
-		key: 'renderRubrics',
-		value: function renderRubrics() {
-			var rubrics = this.render(this.templates.rubrics, game);
-			return rubrics;
-		}
-	}, {
-		key: 'renderSettings',
-		value: function renderSettings() {
-			var settings = this.render(this.templates.settings, game);
-			return settings;
-		}
-	}, {
-		key: 'renderRules',
-		value: function renderRules() {
-			var rules = this.render(this.templates.rules, game);
-			return rules;
-		}
-	}, {
-		key: 'renderContinue',
-		value: function renderContinue() {
-			var gameContinue = this.render(this.templates['continue'], storage.get('Game'));
-			return gameContinue;
-		}
-	}, {
-		key: 'renderGamePlayers',
-		value: function renderGamePlayers() {
-			var gamePlayers = this.render(this.templates.gamePlayers, game);
-			return gamePlayers;
-		}
-
-		/*
-  	Screens
-  */
-	}, {
-		key: '_screen0',
-		value: function _screen0() {
-			var view = this.renderContinue();
-			this.views.modals.innerHTML = view;
-		}
-	}, {
-		key: '_screen1',
-		value: function _screen1() {
-			var rendered = '',
-			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings(), this.renderRules()];
-			views.forEach(function (view) {
-				rendered += view;
-			});
-			// this.views.modals.innerHTML = rendered;
-		}
-	}]);
-
-	return Render;
-})();
-
-
-
 //# sourceMappingURL=maps/app.js.map

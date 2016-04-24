@@ -69,3 +69,27 @@ body > svg:first-of-type {
 		border-color: #9c27b0;
 	}
 }
+
+
+.overlay {
+	position: fixed;
+	top: 0;
+	left: 0;
+	@include size(100%);
+	opacity: 0;
+	background-color: rgba(0,0,0,.5);
+
+	will-change: opacity;
+	transform: translate3d(0, 0, 0);
+	transition: opacity .5s;
+	z-index: 9;
+
+	&.hidden {
+		visibility: hidden;
+	}
+
+	&.active {
+		opacity: 1;
+	}
+}
+

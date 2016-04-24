@@ -1,5 +1,11 @@
 .game {
 	padding-top: 50px;
+	@include size(100%);
+
+	&_view {
+		@include size(100%);
+		position: relative;
+	}
 
 	&_header {
 		position: absolute;
@@ -96,7 +102,88 @@
 		}
 
 		&.less {
-			background-color: #e53935;
+			background-color: tomato;
 		}
 	}
+
+	&_sidebar {
+		position: absolute;
+		right: 0;
+		top: 0;
+		@include size(200px, 100%);
+		background-color: #ddd;
+		@extend %shadow-6dp;
+		transform: translate(100%, 0);
+		transition: transform .3s;
+
+		&.visible {
+			transform: translate(0, 0);
+		}
+	}
+
+	&_sidebar_toggle {
+		position: absolute;
+		right: 0;
+		top: 0;
+		@include size(50px, 100%);
+		padding-top: 2px;
+		background-color: rgba(0, 0, 0, .15);
+		cursor: pointer;
+	}
+
+	&_sidebar_toggle_dot {
+		display: block;
+		@include size(24px, 3px);
+		background-color: #fff;
+		margin: 9px auto 0;
+	}
+
+	&_view_container {
+		@include alignCenter();
+		@include clearfix();
+	}
+
+	&_view_name {
+		clear: both;
+		display: block;
+		text-align: center;
+		margin-bottom: 10px;
+	}
+
+	&_view_inner-name {
+		background-color: #fafafa;
+		color: #222;
+		padding: 12px;
+		font-size: 22px;
+		@extend %shadow-2dp;
+		display: inline-block;
+	}
+
+	&_view_buttons_separator {
+		float: left;
+		height: 80px;
+		@include flex(center, center);
+		font-size: 18px;
+		padding: 0 10px;
+	}
+
+	&_view_button {
+		float: left;
+		@include size(120px, 80px);
+		line-height: 80px;
+		text-align: center;
+		color: #fff;
+		font-size: 20px;
+		cursor: pointer;
+
+		&--truth {
+			background-color: #3d9bff;
+		}
+
+		&--action {
+			background-color: tomato;
+		}
+	}
+
+
 }

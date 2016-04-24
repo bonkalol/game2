@@ -1,7 +1,0 @@
-class EventRouter {
-
-	constructor() {
-
-	}
-
-}

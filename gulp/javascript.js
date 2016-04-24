@@ -37,7 +37,7 @@ gulp.task('concat', function() {
 gulp.task('jshint', function() {
 
 	if ( configs.jshint ) {
-		var src = ['./app/js/**/*', '!./app/js/Dom4.js', '!./app/js/DotJs.js', '!./app/js/Element.classList.js'];
+		var src = ['./app/js/**/*', '!./app/js/Library/Dom4.js', '!./app/js/Library/DotJs.js', '!./app/js/Library/Element.classList.js'];
 		return gulp.src(src)
 			.pipe(jshint({esnext: true}))
 			.pipe(jshint.reporter(stylish));

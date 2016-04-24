@@ -10,22 +10,19 @@
 */
 
 class Player {
-
 	constructor(props) {
 		this.name = props.name;
 		this.gender = props.gender;
 		this.state = props.state;
 		this.pickRate = props.pickRate;
 		this.score = props.score;
-		this.view = props.view;
+		this.views = props.views;
 		this.streak = {
 			action: props.streak.action,
 			truth: props.streak.truth
 		};
 	}
-
-	get(prop) {
-		return this[prop];
+	streak(type) {
 	}
 
 }
