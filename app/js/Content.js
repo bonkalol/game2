@@ -20,5 +20,3 @@ class Content {
 	}
 
 }
-
-window.content = new Content();

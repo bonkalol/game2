@@ -1,15 +1,10 @@
 
 (function () {
-
 	window.addEventListener('load', function (event) {
-		game.check();
-		content.check();
-		render.views.gamePlayers.innerHTML = render.renderGamePlayers();
+		Game.check();
+		Game.Content.check();
+		Game.Render.views.gamePlayers.innerHTML = Game.Render.renderGamePlayers();
 	}, false);
-
-	document.addEventListener('mousedown', function (event) {
-		// eventRouter(event.target);
-	});
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -45,14 +40,20 @@ var Content = (function () {
 	return Content;
 })();
 
-window.content = new Content();
-
 (function () {
 	document.addEventListener('DOMContentLoaded', function () {
 		// Build classes
-		window.render = new Render();
-		window.storage = new Storage();
-		window.game = new Game();
+		Game = new Game();
+	}, false);
+})();
+(function mouseDown() {
+	var queue = function queue(node, e) {
+		if (node.closest('[' + Game.attr.getTruth + ']')) Game.getTruth();
+		if (node.closest('[' + Game.attr.getAction + ']')) Game.getAction();
+		if (node.closest('[' + Game.Sidebar.attr.button + ']')) Game.Sidebar.check();
+	};
+	document.addEventListener('mousedown', function (e) {
+		queue(e.target, e);
 	}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -65,9 +66,7 @@ var Game = (function () {
 
 		this.started = true;
 		this.props = {
-			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
-			rubribcs: [],
-			currentPlayer: null // current player should be picked form this var
+			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
@@ -83,17 +82,32 @@ var Game = (function () {
 				special: true
 			}
 		};
+		this.attr = {
+			game: 'data-game',
+			getTruth: 'data-game="truth"',
+			getAction: 'data-game="action"',
+			currentPlayer: 'data-currentplayer'
+		};
+		this.nodes = {
+			currentPlayer: document.querySelector('[' + this.attr.currentPlayer + ']')
+		};
+		this.PlayerController = new PlayerController();
+		this.Render = new Render();
+		this.Storage = new Storage();
+		this.Content = new Content();
+		this.Sidebar = new Sidebar();
 	}
 
 	_createClass(Game, [{
 		key: 'check',
 		value: function check() {
-			if (storage.get('Game') !== false) {
+			if (this.Storage.get('Game') !== false) {
+				this.load();
 				// Show screen 0.
-				render._screen0();
+				this.Render._screen0();
 			} else {
 				// Show screen 1.
-				render._screen1();
+				this.Render._screen1();
 			}
 		}
 	}, {
@@ -104,16 +118,23 @@ var Game = (function () {
 	}, {
 		key: 'load',
 		value: function load() {
-			var game = storage.get('Game');
+			var game = this.Storage.get('Game');
 			this.started = game.started;
 			this.props = game.props;
 			this.settings = game.settings;
+			this.PlayerController.players = game.PlayerController.players;
 		}
 	}, {
 		key: 'save',
 		value: function save() {
-			storage.set('Game', this);
+			this.Storage.set('Game', this);
 		}
+	}, {
+		key: 'getTruth',
+		value: function getTruth() {}
+	}, {
+		key: 'getAction',
+		value: function getAction() {}
 	}]);
 
 	return Game;
@@ -252,50 +273,50 @@ var Player = (function () {
 
 	return Player;
 })();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var PlayerController = (function () {
 	function PlayerController() {
 		_classCallCheck(this, PlayerController);
 
-		this.players = [];
+		this.players = [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }];
 	}
 
 	_createClass(PlayerController, [{
-		key: "getScoreBoard",
+		key: 'getScoreBoard',
 		value: function getScoreBoard() {
 			// return array of players sorted for scores
 		}
 	}, {
-		key: "getAssistent",
+		key: 'getAssistent',
 		value: function getAssistent() {
 			// получить игрока ассисента (основываясь на пикрейт игроков)
 		}
 	}, {
-		key: "getCurrent",
+		key: 'getCurrent',
 		value: function getCurrent() {}
 	}, {
-		key: "getNext",
+		key: 'getNext',
 		value: function getNext() {}
 	}, {
-		key: "getPrevious",
+		key: 'getPrevious',
 		value: function getPrevious() {}
 	}, {
-		key: "getRandom",
+		key: 'getRandom',
 		value: function getRandom() {
 			// Получить рандомного игрока
 		}
 	}, {
-		key: "getLeader",
+		key: 'getLeader',
 		value: function getLeader() {
 			// Получить лидера по скорборду
 		}
 	}, {
-		key: "getLast",
+		key: 'getLast',
 		value: function getLast() {
-			// Получить послднего по скорборду
+			// Получить последнего по скорборду
 		}
 	}]);
 
@@ -339,37 +360,37 @@ var Render = (function () {
 	}, {
 		key: 'renderPlayers',
 		value: function renderPlayers() {
-			var players = this.render(this.templates.players, game);
+			var players = this.render(this.templates.players, Game);
 			return players;
 		}
 	}, {
 		key: 'renderRubrics',
 		value: function renderRubrics() {
-			var rubrics = this.render(this.templates.rubrics, game);
+			var rubrics = this.render(this.templates.rubrics, Game);
 			return rubrics;
 		}
 	}, {
 		key: 'renderSettings',
 		value: function renderSettings() {
-			var settings = this.render(this.templates.settings, game);
+			var settings = this.render(this.templates.settings, Game);
 			return settings;
 		}
 	}, {
 		key: 'renderRules',
 		value: function renderRules() {
-			var rules = this.render(this.templates.rules, game);
+			var rules = this.render(this.templates.rules, Game);
 			return rules;
 		}
 	}, {
 		key: 'renderContinue',
 		value: function renderContinue() {
-			var gameContinue = this.render(this.templates['continue'], storage.get('Game'));
+			var gameContinue = this.render(this.templates['continue'], Game.Storage.get('Game'));
 			return gameContinue;
 		}
 	}, {
 		key: 'renderGamePlayers',
 		value: function renderGamePlayers() {
-			var gamePlayers = this.render(this.templates.gamePlayers, game);
+			var gamePlayers = this.render(this.templates.gamePlayers, Game);
 			return gamePlayers;
 		}
 
@@ -396,126 +417,82 @@ var Render = (function () {
 
 	return Render;
 })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Sidebar = (function () {
+	function Sidebar() {
+		_classCallCheck(this, Sidebar);
+
+		this.attr = {
+			self: 'data-sidebar',
+			button: 'data-open-sidebar'
+		};
+		this['enum'] = Object.freeze({
+			closed: 'closed',
+			opened: 'opened'
+		});
+		this.state = this['enum'].closed;
+	}
+
+	_createClass(Sidebar, [{
+		key: 'check',
+		value: function check() {
+			if (this.state === this['enum'].closed) {
+				this.state = this['enum'].opened;
+			} else {
+				this.state = this['enum'].closed;
+			}
+		}
+	}, {
+		key: 'open',
+		value: function open() {}
+	}, {
+		key: 'close',
+		value: function close() {}
+	}]);
+
+	return Sidebar;
+})();
 
 
+if (typeof Element.prototype.matches !== 'function') {
+	Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.webkitMatchesSelector || function matches(selector) {
+		var element = this;
+		var elements = (element.document || element.ownerDocument).querySelectorAll(selector);
+		var index = 0;
 
-(function (e) {
-  "use strict";function t() {
-    return l.createDocumentFragment();
-  }function n(e) {
-    return l.createElement(e);
-  }function r(e) {
-    if (e.length === 1) return i(e[0]);for (var n = t(), r = I.call(e), s = 0; s < e.length; s++) n.appendChild(i(r[s]));return n;
-  }function i(e) {
-    return typeof e == "string" ? l.createTextNode(e) : e;
-  }for (var s, o, u, a, f, l = e.document, c = Object.defineProperty || function (e, t, n) {
-    e.__defineGetter__(t, n.get);
-  }, h = [].indexOf || function (t) {
-    var n = this.length;while (n--) if (this[n] === t) break;return n;
-  }, p = function p(e) {
-    if (!e) throw "SyntaxError";if (y.test(e)) throw "InvalidCharacterError";return e;
-  }, d = function d(e) {
-    var t = e.className,
-        n = typeof t == "object",
-        r = (n ? t.baseVal : t).replace(g, "");r.length && F.push.apply(this, r.split(y)), this._isSVG = n, this._ = e;
-  }, v = { get: function get() {
-      return new d(this);
-    }, set: function set() {} }, m = "dom4-tmp-".concat(Math.random() * +new Date()).replace(".", "-"), g = /^\s+|\s+$/g, y = /\s+/, b = " ", w = "classList", E = function E(t, n) {
-    if (this.contains(t)) n || this.remove(t);else if (n === undefined || n) n = !0, this.add(t);return !!n;
-  }, S = e.DocumentFragment, x = e.Node, T = x && x.prototype, N = e.CharacterData || x, C = N && N.prototype, k = e.DocumentType, L = k && k.prototype, A = (e.Element || x || e.HTMLElement).prototype, O = e.HTMLSelectElement || n("select").constructor, M = O.prototype.remove, _ = e.ShadowRoot, D = e.SVGElement, P = / /g, H = "\\ ", B = function B(e) {
-    var t = e === "querySelectorAll";return function (n) {
-      var r,
-          i,
-          s,
-          o,
-          u,
-          a,
-          f = this.parentNode;if (f) {
-        for (s = this.getAttribute("id") || m, o = s === m ? s : s.replace(P, H), a = n.split(","), i = 0; i < a.length; i++) a[i] = "#" + o + " " + a[i];n = a.join(",");
-      }s === m && this.setAttribute("id", s), u = (f || this)[e](n), s === m && this.removeAttribute("id");if (t) {
-        i = u.length, r = new Array(i);while (i--) r[i] = u[i];
-      } else r = u;return r;
-    };
-  }, j = function j(e) {
-    "query" in e || (e.query = A.query), "queryAll" in e || (e.queryAll = A.queryAll);
-  }, F = ["matches", A.matchesSelector || A.webkitMatchesSelector || A.khtmlMatchesSelector || A.mozMatchesSelector || A.msMatchesSelector || A.oMatchesSelector || function (t) {
-    var n = this.parentNode;return !!n && -1 < h.call(n.querySelectorAll(t), this);
-  }, "closest", function (t) {
-    var n = this,
-        r;while ((r = n && n.matches) && !n.matches(t)) n = n.parentNode;return r ? n : null;
-  }, "prepend", function () {
-    var t = this.firstChild,
-        n = r(arguments);t ? this.insertBefore(n, t) : this.appendChild(n);
-  }, "append", function () {
-    this.appendChild(r(arguments));
-  }, "before", function () {
-    var t = this.parentNode;t && t.insertBefore(r(arguments), this);
-  }, "after", function () {
-    var t = this.parentNode,
-        n = this.nextSibling,
-        i = r(arguments);t && (n ? t.insertBefore(i, n) : t.appendChild(i));
-  }, "replace", function () {
-    this.replaceWith.apply(this, arguments);
-  }, "replaceWith", function () {
-    var t = this.parentNode;t && t.replaceChild(r(arguments), this);
-  }, "remove", function () {
-    var t = this.parentNode;t && t.removeChild(this);
-  }, "query", B("querySelector"), "queryAll", B("querySelectorAll")], I = F.slice, q = F.length; q; q -= 2) o = F[q - 2], o in A || (A[o] = F[q - 1]), o === "remove" && (O.prototype[o] = function () {
-    return 0 < arguments.length ? M.apply(this, arguments) : A.remove.call(this);
-  }), /before|after|replace|remove/.test(o) && (N && !(o in C) && (C[o] = F[q - 1]), k && !(o in L) && (L[o] = F[q - 1]));j(l);if (S) j(S.prototype);else try {
-    j(t().constructor.prototype);
-  } catch (R) {}_ && j(_.prototype), n("a").matches("a") || (A[o] = (function (e) {
-    return function (n) {
-      return e.call(this.parentNode ? this : t().appendChild(this), n);
-    };
-  })(A[o])), d.prototype = { length: 0, add: function add() {
-      for (var t = 0, n; t < arguments.length; t++) n = arguments[t], this.contains(n) || F.push.call(this, o);this._isSVG ? this._.setAttribute("class", "" + this) : this._.className = "" + this;
-    }, contains: (function (e) {
-      return function (n) {
-        return q = e.call(this, o = p(n)), -1 < q;
-      };
-    })([].indexOf || function (e) {
-      q = this.length;while (q-- && this[q] !== e);return q;
-    }), item: function item(t) {
-      return this[t] || null;
-    }, remove: function remove() {
-      for (var t = 0, n; t < arguments.length; t++) n = arguments[t], this.contains(n) && F.splice.call(this, q, 1);this._isSVG ? this._.setAttribute("class", "" + this) : this._.className = "" + this;
-    }, toggle: E, toString: function U() {
-      return F.join.call(this, b);
-    } }, D && !(w in D.prototype) && c(D.prototype, w, v), w in l.documentElement ? (a = n("div")[w], a.add("a", "b", "a"), "a b" != a && (u = a.constructor.prototype, "add" in u || (u = e.TemporaryTokenList.prototype), f = function (e) {
-    return function () {
-      var t = 0;while (t < arguments.length) e.call(this, arguments[t++]);
-    };
-  }, u.add = f(u.add), u.remove = f(u.remove), u.toggle = E)) : c(A, w, v), "contains" in T || c(T, "contains", { value: function value(e) {
-      while (e && e !== this) e = e.parentNode;return this === e;
-    } }), "head" in l || c(l, "head", { get: function get() {
-      return s || (s = l.getElementsByTagName("head")[0]);
-    } }), (function () {
-    for (var t, n = e.requestAnimationFrame, r = e.cancelAnimationFrame, i = ["o", "ms", "moz", "webkit"], s = i.length; !r && s--;) n = n || e[i[s] + "RequestAnimationFrame"], r = e[i[s] + "CancelAnimationFrame"] || e[i[s] + "CancelRequestAnimationFrame"];r || (n ? (t = n, n = function (e) {
-      var n = !0;return t(function () {
-        n && e.apply(this, arguments);
-      }), function () {
-        n = !1;
-      };
-    }, r = function (e) {
-      e();
-    }) : (n = function (e) {
-      return setTimeout(e, 15, 15);
-    }, r = function (e) {
-      clearTimeout(e);
-    })), e.requestAnimationFrame = n, e.cancelAnimationFrame = r;
-  })();try {
-    new e.CustomEvent("?");
-  } catch (R) {
-    e.CustomEvent = (function (e, t) {
-      function n(n, i) {
-        var s = l.createEvent(e);if (typeof n != "string") throw new Error("An event name must be provided");return e == "Event" && (s.initCustomEvent = r), i == null && (i = t), s.initCustomEvent(n, i.bubbles, i.cancelable, i.detail), s;
-      }function r(e, t, n, r) {
-        this.initEvent(e, t, n), this.detail = r;
-      }return n;
-    })(e.CustomEvent ? "CustomEvent" : "Event", { bubbles: !1, cancelable: !1, detail: null });
-  }
-})(window);
+		while (elements[index] && elements[index] !== element) {
+			++index;
+		}
+
+		return Boolean(elements[index]);
+	};
+}
+if (typeof Element.prototype.closest !== 'function') {
+	Element.prototype.closest = function closest(selector) {
+		var element = this;
+
+		while (element && element.nodeType === 1) {
+			if (element.matches(selector)) {
+				return element;
+			}
+
+			element = element.parentNode;
+		}
+
+		return null;
+	};
+}
+
+if (typeof Element.prototype.remove !== 'function') {
+	Element.prototype.remove = function () {
+		if (this.parentNode) {
+			this.parentNode.removeChild(this);
+		}
+	};
+}
 /* Laura Doktorova https://github.com/olado/doT */
 (function () {
   function p(b, a, d) {
@@ -525,7 +502,7 @@ var Render = (function () {
       }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
     }).replace(b.use || h, function (a, c) {
       b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
-        if (d[c] && d[c].arg && l) return a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']";
+        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
       }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
     });
   }function k(b) {

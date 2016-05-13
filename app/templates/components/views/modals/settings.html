@@ -91,7 +91,7 @@
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rubrics-save class="button {{? !it.props.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-rubrics-save class="button {{? !it.PlayerController.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}

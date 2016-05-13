@@ -57,7 +57,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</div>
 	</div>
 </div>
-<div class="game_sidebar">
+<div class="game_sidebar" data-sidebar>
 	<ul class="game_sidebar_list">
 		<li class="game_sidebar_item"><a href="javascript:void(0);" data-new-game>Начать заново</a></li>
 		<li class="game_sidebar_item"><a href="javascript:void(0);" data-show-modal="modal_players">Игроки</a></li>
@@ -95,14 +95,14 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</div>
 			</div>
 			<div class="players_list" data-playerlist-view>
-				{{~it.props.players :player:index}}
+				{{~it.PlayerController.players :player:index}}
 					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
 				{{~}}
 			</div>
 		</section>
 		<footer class="modal_action modal_action--single">
 			{{? it.started === true }}
-				<button type="button" data-players-save class="button {{? !it.props.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-players-save class="button {{? !it.PlayerController.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}
@@ -254,7 +254,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rubrics-save class="button {{? !it.props.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-rubrics-save class="button {{? !it.PlayerController.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}
@@ -305,7 +305,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				<div class="continue_title">Игроки в предыидущей игре:</div>
 				<div class="continue_players">
 					<div class="players_list">
-						{{~it.props.players :player:index}}
+						{{~it.PlayerController.players :player:index}}
 							<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
 						{{~}}
 					</div>
@@ -323,7 +323,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 	<script type="text/template" id="game_players">
-	{{~it.props.players :player:index}}
+	{{~it.PlayerController.players :player:index}}
 		<div class="game_player">
 			{{?player.gender === 'f'}}
 				<span class="game_player_icon game_player_icon--female">

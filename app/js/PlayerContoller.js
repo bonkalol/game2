@@ -1,6 +1,10 @@
 class PlayerController {
 	constructor() {
-		this.players = [];
+		this.players = [
+			{name: 'Mihail', gender: 'm', score: 0},
+			{name: 'Elena', gender: 'f', score: 1},
+			{name: 'Timur', gender: 'm', score: -1}
+		];
 	}
 	getScoreBoard() {
 		// return array of players sorted for scores
@@ -24,6 +28,6 @@ class PlayerController {
 		// Получить лидера по скорборду
 	}
 	getLast() {
-		// Получить послднего по скорборду
+		// Получить последнего по скорборду
 	}
 }

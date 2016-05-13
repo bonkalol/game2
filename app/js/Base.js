@@ -1,14 +1,8 @@
 
 (function () {
-
 	window.addEventListener('load', (event) => {
-		game.check();
-		content.check();
-		render.views.gamePlayers.innerHTML = render.renderGamePlayers();
+		Game.check();
+		Game.Content.check();
+		Game.Render.views.gamePlayers.innerHTML = Game.Render.renderGamePlayers();
 	}, false);
-
-	document.addEventListener('mousedown', (event) => {
-		// eventRouter(event.target);
-	});
-
 })();

@@ -3,13 +3,7 @@ class Game {
 	constructor() {
 		this.started = true;
 		this.props = {
-			players: [
-				{name: 'Mihail', gender: 'm', score: 0},
-				{name: 'Elena', gender: 'f', score: 1},
-				{name: 'Timur', gender: 'm', score: -1}
-			],
-			rubribcs: [],
-			currentPlayer: null // current player should be picked form this var
+			rubribcs: []
 		};
 		this.settings = {
 			repeatContent: false,
@@ -25,15 +19,30 @@ class Game {
 				special: true
 			}
 		};
+		this.attr = {
+			game: 'data-game',
+			getTruth: 'data-game="truth"',
+			getAction: 'data-game="action"',
+			currentPlayer: 'data-currentplayer'
+		};
+		this.nodes = {
+			currentPlayer: document.querySelector(`[${this.attr.currentPlayer}]`)
+		};
+		this.PlayerController = new PlayerController();
+		this.Render = new Render();
+		this.Storage = new Storage();
+		this.Content = new Content();
+		this.Sidebar = new Sidebar();
 	}
 
 	check() {
-		if (storage.get('Game') !== false) {
+		if (this.Storage.get('Game') !== false) {
+			this.load();
 			// Show screen 0.
-			render._screen0();
+			this.Render._screen0();
 		} else {
 			// Show screen 1.
-			render._screen1();
+			this.Render._screen1();
 		}
 	}
 
@@ -42,14 +51,23 @@ class Game {
 	}
 
 	load() {
-		let game = storage.get('Game');
+		let game = this.Storage.get('Game');
 		this.started = game.started;
 		this.props = game.props;
 		this.settings = game.settings;
+		this.PlayerController.players = game.PlayerController.players;
 	}
 
 	save() {
-		storage.set('Game', this);
+		this.Storage.set('Game', this);
+	}
+
+	getTruth() {
+
+	}
+
+	getAction() {
+
 	}
 
 }
