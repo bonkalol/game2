@@ -1,6 +1,7 @@
 
 (function () {
 	window.addEventListener('load', function (event) {
+		window.Game = new Game();
 		Game.check();
 		Game.Content.check();
 		Game.Render.views.gamePlayers.innerHTML = Game.Render.renderGamePlayers();
@@ -39,18 +40,11 @@ var Content = (function () {
 
 	return Content;
 })();
-
-(function () {
-	document.addEventListener('DOMContentLoaded', function () {
-		// Build classes
-		Game = new Game();
-	}, false);
-})();
 (function mouseDown() {
 	var queue = function queue(node, e) {
 		if (node.closest('[' + Game.attr.getTruth + ']')) Game.getTruth();
 		if (node.closest('[' + Game.attr.getAction + ']')) Game.getAction();
-		if (node.closest('[' + Game.Sidebar.attr.button + ']')) Game.Sidebar.check();
+		if (node.closest('[' + Game.manager.Sidebar.attr.button + ']')) Game.manager.Sidebar.check();
 	};
 	document.addEventListener('mousedown', function (e) {
 		queue(e.target, e);
@@ -64,22 +58,23 @@ var Game = (function () {
 	function Game() {
 		_classCallCheck(this, Game);
 
-		this.started = true;
-		this.props = {
-			rubribcs: []
-		};
-		this.settings = {
-			repeatContent: false,
-			alcohol: true,
-			score: true,
-			streak: 2,
-			sex: 'hetero', // possible 'hetero', 'homo', 'herma'
-			smartPick: true,
-			randomPlayers: true,
-			cards: {
-				gray: true,
-				yellow: true,
-				special: true
+		this.data = {
+			started: true,
+			rubribcs: [],
+			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
+			settings: {
+				repeatContent: false,
+				alcohol: true,
+				score: true,
+				streak: 2,
+				sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+				smartPick: true,
+				randomPlayers: true,
+				cards: {
+					gray: true,
+					yellow: true,
+					special: true
+				}
 			}
 		};
 		this.attr = {
@@ -91,23 +86,27 @@ var Game = (function () {
 		this.nodes = {
 			currentPlayer: document.querySelector('[' + this.attr.currentPlayer + ']')
 		};
-		this.PlayerController = new PlayerController();
-		this.Render = new Render();
-		this.Storage = new Storage();
-		this.Content = new Content();
-		this.Sidebar = new Sidebar();
+		debugger;
+		this.manager = {
+			PlayerController: new PlayerController(),
+			Render: new Render(),
+			Storage: new Storage(),
+			Content: new Content(),
+			Overlay: new Overlay(),
+			Sidebar: new Sidebar()
+		};
 	}
 
 	_createClass(Game, [{
 		key: 'check',
 		value: function check() {
-			if (this.Storage.get('Game') !== false) {
+			if (this.manager.Storage.get('Game') !== false) {
 				this.load();
 				// Show screen 0.
-				this.Render._screen0();
+				this.manager.Render._screen0();
 			} else {
 				// Show screen 1.
-				this.Render._screen1();
+				this.manager.Render._screen1();
 			}
 		}
 	}, {
@@ -118,16 +117,13 @@ var Game = (function () {
 	}, {
 		key: 'load',
 		value: function load() {
-			var game = this.Storage.get('Game');
-			this.started = game.started;
-			this.props = game.props;
-			this.settings = game.settings;
-			this.PlayerController.players = game.PlayerController.players;
+			var game = this.manager.Storage.get('Game');
+			this.data = game;
 		}
 	}, {
 		key: 'save',
 		value: function save() {
-			this.Storage.set('Game', this);
+			this.manager.Storage.set('Game', this.data);
 		}
 	}, {
 		key: 'getTruth',
@@ -184,7 +180,7 @@ var Overlay = (function () {
 	function Overlay() {
 		_classCallCheck(this, Overlay);
 
-		this.self = document.querySelector('[data-overlay]');
+		this['enum'] = this.self = document.querySelector('[data-overlay]');
 		this.states = ['hidden', 'active'];
 		this.listener = null;
 		this.transition = 500;
@@ -199,7 +195,7 @@ var Overlay = (function () {
 			var Overlay = this;
 			this.self.classList.remove(this.states[0]);
 			this.self.classList.add(this.states[1]);
-			if (onCloseCallback !== null && typeof onCloseCallback === 'function') {
+			if (isFunc(onCloseCallback)) {
 				this.self.addEventListener('mousedown', function (event) {
 					Overlay.close(null, onCloseCallback);
 					Overlay.listener = onCloseCallback;
@@ -207,7 +203,7 @@ var Overlay = (function () {
 				});
 			}
 			var timeout = setTimeout(function () {
-				if (callback && typeof callback === 'function') {
+				if (isFunc(callback)) {
 					callback();
 				}
 			}, this.transition);
@@ -215,17 +211,19 @@ var Overlay = (function () {
 	}, {
 		key: 'close',
 		value: function close() {
+			var _this = this;
+
 			var callback = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 			var onCloseCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 			this.self.classList.remove(this.states[1]);
-			if (this.listener !== null && typeof this.listener === 'function') {
+			if (isFunc(this.listener)) {
 				this.self.removeEventListener('mousedown', onCloseCallback, false);
 				this.listener = null;
 			}
 			var timeout = setTimeout(function () {
-				overlay.self.classList.add(overlay.states[0]);
-				if (callback && typeof callback === 'function') {
+				_this.self.classList.add(_this.states[0]);
+				if (isFunc(callback)) {
 					callback();
 				}
 			}, this.transition);
@@ -254,6 +252,11 @@ var Player = (function () {
 	function Player(props) {
 		_classCallCheck(this, Player);
 
+		this["enum"] = Object.frezee({
+			awaiting: 0,
+			playing: 1
+		});
+
 		this.name = props.name;
 		this.gender = props.gender;
 		this.state = props.state;
@@ -273,48 +276,50 @@ var Player = (function () {
 
 	return Player;
 })();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var PlayerController = (function () {
 	function PlayerController() {
 		_classCallCheck(this, PlayerController);
-
-		this.players = [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }];
 	}
 
 	_createClass(PlayerController, [{
-		key: 'getScoreBoard',
+		key: "getScoreBoard",
+
+		// console.trace();
+		// debugger;
+		// this.players = Game.data.players;
 		value: function getScoreBoard() {
 			// return array of players sorted for scores
 		}
 	}, {
-		key: 'getAssistent',
+		key: "getAssistent",
 		value: function getAssistent() {
 			// получить игрока ассисента (основываясь на пикрейт игроков)
 		}
 	}, {
-		key: 'getCurrent',
+		key: "getCurrent",
 		value: function getCurrent() {}
 	}, {
-		key: 'getNext',
+		key: "getNext",
 		value: function getNext() {}
 	}, {
-		key: 'getPrevious',
+		key: "getPrevious",
 		value: function getPrevious() {}
 	}, {
-		key: 'getRandom',
+		key: "getRandom",
 		value: function getRandom() {
 			// Получить рандомного игрока
 		}
 	}, {
-		key: 'getLeader',
+		key: "getLeader",
 		value: function getLeader() {
 			// Получить лидера по скорборду
 		}
 	}, {
-		key: 'getLast',
+		key: "getLast",
 		value: function getLast() {
 			// Получить последнего по скорборду
 		}
@@ -360,25 +365,25 @@ var Render = (function () {
 	}, {
 		key: 'renderPlayers',
 		value: function renderPlayers() {
-			var players = this.render(this.templates.players, Game);
+			var players = this.render(this.templates.players, Game.data);
 			return players;
 		}
 	}, {
 		key: 'renderRubrics',
 		value: function renderRubrics() {
-			var rubrics = this.render(this.templates.rubrics, Game);
+			var rubrics = this.render(this.templates.rubrics, Game.data);
 			return rubrics;
 		}
 	}, {
 		key: 'renderSettings',
 		value: function renderSettings() {
-			var settings = this.render(this.templates.settings, Game);
+			var settings = this.render(this.templates.settings, Game.data);
 			return settings;
 		}
 	}, {
 		key: 'renderRules',
 		value: function renderRules() {
-			var rules = this.render(this.templates.rules, Game);
+			var rules = this.render(this.templates.rules, Game.data);
 			return rules;
 		}
 	}, {
@@ -390,7 +395,7 @@ var Render = (function () {
 	}, {
 		key: 'renderGamePlayers',
 		value: function renderGamePlayers() {
-			var gamePlayers = this.render(this.templates.gamePlayers, Game);
+			var gamePlayers = this.render(this.templates.gamePlayers, Game.data);
 			return gamePlayers;
 		}
 
@@ -433,6 +438,7 @@ var Sidebar = (function () {
 			closed: 'closed',
 			opened: 'opened'
 		});
+		this.self = document.querySelector('[' + this.attr.self + ']');
 		this.state = this['enum'].closed;
 	}
 
@@ -440,17 +446,24 @@ var Sidebar = (function () {
 		key: 'check',
 		value: function check() {
 			if (this.state === this['enum'].closed) {
-				this.state = this['enum'].opened;
+				this.open();
 			} else {
-				this.state = this['enum'].closed;
+				this.close();
 			}
 		}
 	}, {
 		key: 'open',
-		value: function open() {}
+		value: function open() {
+			this.state = this['enum'].opened;
+			Game.manager.Overlay.show(null, this.close.bind(this));
+			this.self.classList.add(this['enum'].opened);
+		}
 	}, {
 		key: 'close',
-		value: function close() {}
+		value: function close() {
+			this.state = this['enum'].closed;
+			this.self.classList.remove(this['enum'].opened);
+		}
 	}]);
 
 	return Sidebar;
@@ -502,7 +515,7 @@ if (typeof Element.prototype.remove !== 'function') {
       }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
     }).replace(b.use || h, function (a, c) {
       b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
-        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
+        if (d[c] && d[c].arg && l) return a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']";
       }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
     });
   }function k(b) {
@@ -667,5 +680,9 @@ if ("document" in self) {
 };
 var random = function random(min, max) {
 	return Math.floor(Math.random() * (max + 1 - min)) + min;
+};
+
+var isFunc = function isFunc(func) {
+	return typeof func === 'function';
 };
 //# sourceMappingURL=maps/app.js.map

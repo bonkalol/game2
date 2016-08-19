@@ -1,10 +1,8 @@
 class PlayerController {
 	constructor() {
-		this.players = [
-			{name: 'Mihail', gender: 'm', score: 0},
-			{name: 'Elena', gender: 'f', score: 1},
-			{name: 'Timur', gender: 'm', score: -1}
-		];
+		// console.trace();
+		// debugger;
+		// this.players = Game.data.players;
 	}
 	getScoreBoard() {
 		// return array of players sorted for scores

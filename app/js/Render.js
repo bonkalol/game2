@@ -27,22 +27,22 @@ class Render {
 		Parts
 	*/
 	renderPlayers() {
-		let players = this.render(this.templates.players, Game);
+		let players = this.render(this.templates.players, Game.data);
 		return players;
 	}
 
 	renderRubrics() {
-		let rubrics = this.render(this.templates.rubrics, Game);
+		let rubrics = this.render(this.templates.rubrics, Game.data);
 		return rubrics;
 	}
 
 	renderSettings() {
-		let settings = this.render(this.templates.settings, Game);
+		let settings = this.render(this.templates.settings, Game.data);
 		return settings;
 	}
 
 	renderRules() {
-		let rules = this.render(this.templates.rules, Game);
+		let rules = this.render(this.templates.rules, Game.data);
 		return rules;
 	}
 
@@ -52,7 +52,7 @@ class Render {
 	}
 
 	renderGamePlayers() {
-		let gamePlayers = this.render(this.templates.gamePlayers, Game);
+		let gamePlayers = this.render(this.templates.gamePlayers, Game.data);
 		return gamePlayers;
 	}
 

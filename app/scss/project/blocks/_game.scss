@@ -7,6 +7,10 @@
 		position: relative;
 	}
 
+	&_views_buttons {
+		@include clearfix();
+	}
+
 	&_header {
 		position: absolute;
 		left: 0;
@@ -111,12 +115,14 @@
 		right: 0;
 		top: 0;
 		@include size(200px, 100%);
-		background-color: #ddd;
+		background-color: #252525;
 		@extend %shadow-6dp;
 		transform: translate(100%, 0);
 		transition: transform .3s;
+		will-change: transform;
+		z-index: 10;
 
-		&.visible {
+		&.opened {
 			transform: translate(0, 0);
 		}
 	}
@@ -138,9 +144,33 @@
 		margin: 9px auto 0;
 	}
 
+	&_sidebar_link {
+		display: block;
+		font-size: 14px;
+		padding: 8px 12px;
+		text-decoration: none;
+		color: #fff;
+		cursor: pointer;
+
+		&:hover,
+		&:focus {
+
+		}
+	}
+
 	&_view_container {
 		@include alignCenter();
 		@include clearfix();
+
+		@include media('<tablet') {
+			top: 0;
+			left: 0;
+			transform: none;
+			@include size(100%);
+			display: flex;
+			flex-direction: column;
+			align-items: stretch;
+		}
 	}
 
 	&_view_name {
@@ -148,6 +178,11 @@
 		display: block;
 		text-align: center;
 		margin-bottom: 10px;
+
+		@include media('<tablet') {
+			clear: none;
+			margin: 0;
+		}
 	}
 
 	&_view_inner-name {
@@ -157,6 +192,10 @@
 		font-size: 22px;
 		@extend %shadow-2dp;
 		display: inline-block;
+
+		@include media('<tablet') {
+			display: block;
+		}
 	}
 
 	&_view_buttons_separator {
@@ -165,6 +204,17 @@
 		@include flex(center, center);
 		font-size: 18px;
 		padding: 0 10px;
+
+		@include media('<tablet') {
+			display: none;
+		}
+	}
+
+	&_view_buttons {
+		display: flex;
+		flex: 2;
+		flex-direction: column;
+		align-items: stretch;
 	}
 
 	&_view_button {
@@ -182,6 +232,15 @@
 
 		&--action {
 			background-color: tomato;
+		}
+
+		@include media('<tablet') {
+			display: block;
+			float: none;
+			@include size(auto);
+			flex: 1;
+			@include flex(center, center);
+			flex-direction: column;
 		}
 	}
 

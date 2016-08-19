@@ -3,6 +3,9 @@
 <head>
 	@@include('components/head.html')
 	@@include('components/scripts.html')
+	<script>var JV = 1;</script>
+	<!-- make gulp task "gulp release -patch. if -patch key exist, update JV version"-->
+	<!-- make gulp task "gulp release -cache. if -cache key exist, update manifest version"-->
 	<script src="js/app.js" async></script>
 </head>
 <body>
@@ -12,7 +15,7 @@
 		@@include('components/views/game/game.html')
 	</div>
 	<div class="overlay hidden" data-overlay></div>
-
+	@@include('components/views/game/sidebar.html')
 	@@include('components/views/modals/players.html')
 	@@include('components/views/modals/rubrics.html')
 	@@include('components/views/modals/settings.html')

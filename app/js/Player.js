@@ -11,6 +11,11 @@
 
 class Player {
 	constructor(props) {
+		this.enum = Object.frezee({
+			awaiting: 0,
+			playing: 1
+		});
+
 		this.name = props.name;
 		this.gender = props.gender;
 		this.state = props.state;
@@ -22,6 +27,7 @@ class Player {
 			truth: props.streak.truth
 		};
 	}
+
 	streak(type) {
 	}
 
