@@ -1,20 +1,20 @@
 class PlayerController {
 	constructor() {
-		// console.trace();
-		// debugger;
-		// this.players = Game.data.players;
 	}
 	getScoreBoard() {
-		// return array of players sorted for scores
+		// return array of Players sorted by scores
 	}
 	getAssistent() {
 		// получить игрока ассисента (основываясь на пикрейт игроков)
 	}
 	getCurrent() {
-
+		// получить текущего игрока
+		// return instanceof Player
 	}
 	getNext() {
-
+		// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
+		// случайно
+		// return instanceof Player
 	}
 	getPrevious() {
 
@@ -27,5 +27,8 @@ class PlayerController {
 	}
 	getLast() {
 		// Получить последнего по скорборду
+	}
+	getWinner() {
+		
 	}
 }

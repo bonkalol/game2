@@ -3,8 +3,8 @@
 	window.addEventListener('load', function (event) {
 		window.Game = new Game();
 		Game.check();
-		Game.Content.check();
-		Game.Render.views.gamePlayers.innerHTML = Game.Render.renderGamePlayers();
+		Game.manager.Content.check();
+		Game.manager.Render.views.gamePlayers.innerHTML = Game.manager.Render.GamePlayers();
 	}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -61,7 +61,7 @@ var Game = (function () {
 		this.data = {
 			started: true,
 			rubribcs: [],
-			players: [{ name: 'Mihail', gender: 'm', score: 0 }, { name: 'Elena', gender: 'f', score: 1 }, { name: 'Timur', gender: 'm', score: -1 }],
+			players: [{ name: 'Соня', gender: 'f', score: 1 }, { name: 'Лена', gender: 'f', score: 0 }, { name: 'Богдан', gender: 'm', score: -1 }, { name: 'Тимур', gender: 'm', score: -1 }],
 			settings: {
 				repeatContent: false,
 				alcohol: true,
@@ -86,7 +86,6 @@ var Game = (function () {
 		this.nodes = {
 			currentPlayer: document.querySelector('[' + this.attr.currentPlayer + ']')
 		};
-		debugger;
 		this.manager = {
 			PlayerController: new PlayerController(),
 			Render: new Render(),
@@ -287,12 +286,8 @@ var PlayerController = (function () {
 
 	_createClass(PlayerController, [{
 		key: "getScoreBoard",
-
-		// console.trace();
-		// debugger;
-		// this.players = Game.data.players;
 		value: function getScoreBoard() {
-			// return array of players sorted for scores
+			// return array of Players sorted by scores
 		}
 	}, {
 		key: "getAssistent",
@@ -301,10 +296,17 @@ var PlayerController = (function () {
 		}
 	}, {
 		key: "getCurrent",
-		value: function getCurrent() {}
+		value: function getCurrent() {
+			// получить текущего игрока
+			// return instanceof Player
+		}
 	}, {
 		key: "getNext",
-		value: function getNext() {}
+		value: function getNext() {
+			// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
+			// случайно
+			// return instanceof Player
+		}
 	}, {
 		key: "getPrevious",
 		value: function getPrevious() {}
@@ -323,6 +325,9 @@ var PlayerController = (function () {
 		value: function getLast() {
 			// Получить последнего по скорборду
 		}
+	}, {
+		key: "getWinner",
+		value: function getWinner() {}
 	}]);
 
 	return PlayerController;
@@ -363,38 +368,38 @@ var Render = (function () {
   	Parts
   */
 	}, {
-		key: 'renderPlayers',
-		value: function renderPlayers() {
+		key: 'modalPlayers',
+		value: function modalPlayers() {
 			var players = this.render(this.templates.players, Game.data);
 			return players;
 		}
 	}, {
-		key: 'renderRubrics',
-		value: function renderRubrics() {
+		key: 'modalRubrics',
+		value: function modalRubrics() {
 			var rubrics = this.render(this.templates.rubrics, Game.data);
 			return rubrics;
 		}
 	}, {
-		key: 'renderSettings',
-		value: function renderSettings() {
+		key: 'modalSettings',
+		value: function modalSettings() {
 			var settings = this.render(this.templates.settings, Game.data);
 			return settings;
 		}
 	}, {
-		key: 'renderRules',
-		value: function renderRules() {
+		key: 'modalRules',
+		value: function modalRules() {
 			var rules = this.render(this.templates.rules, Game.data);
 			return rules;
 		}
 	}, {
-		key: 'renderContinue',
-		value: function renderContinue() {
-			var gameContinue = this.render(this.templates['continue'], Game.Storage.get('Game'));
+		key: 'modalContinue',
+		value: function modalContinue() {
+			var gameContinue = this.render(this.templates['continue'], Game.manager.Storage.get('Game'));
 			return gameContinue;
 		}
 	}, {
-		key: 'renderGamePlayers',
-		value: function renderGamePlayers() {
+		key: 'GamePlayers',
+		value: function GamePlayers() {
 			var gamePlayers = this.render(this.templates.gamePlayers, Game.data);
 			return gamePlayers;
 		}
@@ -405,14 +410,14 @@ var Render = (function () {
 	}, {
 		key: '_screen0',
 		value: function _screen0() {
-			var view = this.renderContinue();
+			var view = this.modalContinue();
 			this.views.modals.innerHTML = view;
 		}
 	}, {
 		key: '_screen1',
 		value: function _screen1() {
 			var rendered = '',
-			    views = [this.renderPlayers(), this.renderRubrics(), this.renderSettings(), this.renderRules()];
+			    views = [this.modalPlayers(), this.modalRubrics(), this.modalSettings(), this.modalRules()];
 			views.forEach(function (view) {
 				rendered += view;
 			});
@@ -515,7 +520,7 @@ if (typeof Element.prototype.remove !== 'function') {
       }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
     }).replace(b.use || h, function (a, c) {
       b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
-        if (d[c] && d[c].arg && l) return a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']";
+        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
       }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
     });
   }function k(b) {

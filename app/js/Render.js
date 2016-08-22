@@ -26,32 +26,32 @@ class Render {
 	/*
 		Parts
 	*/
-	renderPlayers() {
+	modalPlayers() {
 		let players = this.render(this.templates.players, Game.data);
 		return players;
 	}
 
-	renderRubrics() {
+	modalRubrics() {
 		let rubrics = this.render(this.templates.rubrics, Game.data);
 		return rubrics;
 	}
 
-	renderSettings() {
+	modalSettings() {
 		let settings = this.render(this.templates.settings, Game.data);
 		return settings;
 	}
 
-	renderRules() {
+	modalRules() {
 		let rules = this.render(this.templates.rules, Game.data);
 		return rules;
 	}
 
-	renderContinue() {
-		let gameContinue = this.render(this.templates.continue, Game.Storage.get('Game'));
+	modalContinue() {
+		let gameContinue = this.render(this.templates.continue, Game.manager.Storage.get('Game'));
 		return gameContinue;
 	}
 
-	renderGamePlayers() {
+	GamePlayers() {
 		let gamePlayers = this.render(this.templates.gamePlayers, Game.data);
 		return gamePlayers;
 	}
@@ -60,17 +60,17 @@ class Render {
 		Screens
 	*/
 	_screen0() {
-		let view = this.renderContinue();
+		let view = this.modalContinue();
 		this.views.modals.innerHTML = view;
 	}
 
 	_screen1() {
 		let rendered = '',
 			views = [
-				this.renderPlayers(),
-				this.renderRubrics(),
-				this.renderSettings(),
-				this.renderRules()
+				this.modalPlayers(),
+				this.modalRubrics(),
+				this.modalSettings(),
+				this.modalRules()
 			];
 		views.forEach((view) => {
 			rendered += view;

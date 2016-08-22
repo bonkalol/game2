@@ -32,7 +32,7 @@
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rubrics-save class="button {{? !(it.props.rubribcs.length >= 1) }} js-disabled {{?}}">
+				<button type="button" data-rubrics-save class="button {{? !(it.rubribcs.length >= 1) }} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
 			{{??}}

@@ -3,7 +3,7 @@
 	window.addEventListener('load', (event) => {
 		window.Game = new Game();
 		Game.check();
-		Game.Content.check();
-		Game.Render.views.gamePlayers.innerHTML = Game.Render.renderGamePlayers();
+		Game.manager.Content.check();
+		Game.manager.Render.views.gamePlayers.innerHTML = Game.manager.Render.GamePlayers();
 	}, false);
 })();

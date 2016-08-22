@@ -4,9 +4,12 @@ class Game {
 		this.data = {
 			started: true,
 			rubribcs: [],
-			players: [{name: 'Mihail', gender: 'm', score: 0},
-					{name: 'Elena', gender: 'f', score: 1},
-					{name: 'Timur', gender: 'm', score: -1}],
+			players: [
+						{name: 'Соня', gender: 'f', score: 1},
+						{name: 'Лена', gender: 'f', score: 0},
+						{name: 'Богдан', gender: 'm', score: -1},
+						{name: 'Тимур', gender: 'm', score: -1},
+					],
 			settings: {
 				repeatContent: false,
 				alcohol: true,
@@ -31,7 +34,6 @@ class Game {
 		this.nodes = {
 			currentPlayer: document.querySelector(`[${this.attr.currentPlayer}]`)
 		};
-		debugger;
 		this.manager = {
 			PlayerController: new PlayerController(),
 			Render: new Render(),
@@ -39,7 +41,7 @@ class Game {
 			Content: new Content(),
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar()
-		}
+		};
 	}
 
 	check() {
