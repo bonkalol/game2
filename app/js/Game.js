@@ -25,6 +25,7 @@ class Game {
 				}
 			}
 		};
+		this.online = navigator.onLine;
 		this.attr = {
 			game: 'data-game',
 			getTruth: 'data-game="truth"',
@@ -40,7 +41,8 @@ class Game {
 			Storage: new Storage(),
 			Content: new Content(),
 			Overlay: new Overlay(),
-			Sidebar: new Sidebar()
+			Sidebar: new Sidebar(),
+			VersionController: new VersionController()
 		};
 	}
 
@@ -52,6 +54,7 @@ class Game {
 		} else {
 			// Show screen 1.
 			this.manager.Render._screen1();
+			this.manager.VersionController.check();
 		}
 	}
 

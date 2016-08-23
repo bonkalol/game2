@@ -77,6 +77,7 @@ var Game = (function () {
 				}
 			}
 		};
+		this.online = navigator.onLine;
 		this.attr = {
 			game: 'data-game',
 			getTruth: 'data-game="truth"',
@@ -92,7 +93,8 @@ var Game = (function () {
 			Storage: new Storage(),
 			Content: new Content(),
 			Overlay: new Overlay(),
-			Sidebar: new Sidebar()
+			Sidebar: new Sidebar(),
+			VersionController: new VersionController()
 		};
 	}
 
@@ -106,6 +108,7 @@ var Game = (function () {
 			} else {
 				// Show screen 1.
 				this.manager.Render._screen1();
+				this.manager.VersionController.check();
 			}
 		}
 	}, {
@@ -475,6 +478,37 @@ var Sidebar = (function () {
 })();
 
 
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var VersionController = (function () {
+	function VersionController() {
+		_classCallCheck(this, VersionController);
+	}
+
+	_createClass(VersionController, [{
+		key: 'check',
+		value: function check() {
+			var version = Game.manager.Storage.get('JV', 'str');
+			if (version === false) {
+				this.load();
+				return;
+			}
+			if (Game.onLine === true && JV === version) {
+				// Don't update
+				Game.isUpdated = true;
+			} else if (Game.onLine === true && JV !== version) {
+				this.load();
+			}
+		}
+	}, {
+		key: 'load',
+		value: function load() {}
+	}]);
+
+	return VersionController;
+})();
 if (typeof Element.prototype.matches !== 'function') {
 	Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.webkitMatchesSelector || function matches(selector) {
 		var element = this;

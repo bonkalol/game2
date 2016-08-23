@@ -3,13 +3,13 @@
 <head>
 	@@include('components/head.html')
 	@@include('components/scripts.html')
-	<script>var JV = 1;</script>
+	<script>var JV = '1';</script>
 	<!-- make gulp task "gulp release -patch. if -patch key exist, update JV version"-->
 	<!-- make gulp task "gulp release -cache. if -cache key exist, update manifest version"-->
 	<script src="js/app.js" async></script>
 </head>
 <body>
-
+	@@include('components/preloader.html')
 	<div class="modals" data-modals-view></div>
 	<div class="game_view" data-game-view>
 		@@include('components/views/game/game.html')
