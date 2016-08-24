@@ -3,7 +3,7 @@ class VersionController {
 
 	}
 	check() {
-		let version = Game.manager.Storage.get('JV', 'str');
+		let version = Game.manager.Storage.get('JV' , 'str');
 		if (version === false) {
 			this.load();
 			return;
@@ -16,6 +16,6 @@ class VersionController {
 		}
 	}
 	load() {
-		
+
 	}
 }
