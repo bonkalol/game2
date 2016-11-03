@@ -27,32 +27,32 @@ class Render {
 		Parts
 	*/
 	modalPlayers() {
-		let players = this.render(this.templates.players, Game.data);
+		let players = this.render(this.templates.players, App.data);
 		return players;
 	}
 
 	modalRubrics() {
-		let rubrics = this.render(this.templates.rubrics, Game.data);
+		let rubrics = this.render(this.templates.rubrics, App.data);
 		return rubrics;
 	}
 
 	modalSettings() {
-		let settings = this.render(this.templates.settings, Game.data);
+		let settings = this.render(this.templates.settings, App.data);
 		return settings;
 	}
 
 	modalRules() {
-		let rules = this.render(this.templates.rules, Game.data);
+		let rules = this.render(this.templates.rules, App.data);
 		return rules;
 	}
 
 	modalContinue() {
-		let gameContinue = this.render(this.templates.continue, Game.manager.Storage.get('Game'));
+		let gameContinue = this.render(this.templates.continue, App.manager.Storage.get('Game'));
 		return gameContinue;
 	}
 
 	GamePlayers() {
-		let gamePlayers = this.render(this.templates.gamePlayers, Game.data);
+		let gamePlayers = this.render(this.templates.gamePlayers, App.data);
 		return gamePlayers;
 	}
 
@@ -75,7 +75,7 @@ class Render {
 		views.forEach((view) => {
 			rendered += view;
 		});
-		// this.views.modals.innerHTML = rendered;
+		this.views.modals.innerHTML = rendered;
 	}
 
 }

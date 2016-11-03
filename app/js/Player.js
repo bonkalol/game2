@@ -15,7 +15,6 @@ class Player {
 			awaiting: 0,
 			playing: 1
 		});
-
 		this.name = props.name;
 		this.gender = props.gender;
 		this.state = props.state;

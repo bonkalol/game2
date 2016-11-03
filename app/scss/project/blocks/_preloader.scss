@@ -4,7 +4,9 @@
 	top: 0;
 	@include size(100%);
 	background-color: $purple;
-	z-index: 10;
+	z-index: 100;
+	opacity: 1;
+	transition: opacity .3s;
 
 	&_text {
 		position: absolute;
@@ -15,6 +17,14 @@
 		margin-left: 5px;
 		font-size: 18px;
 		color: #fff;
+	}
+
+	&.opacity {
+		opacity: 0;
+	}
+
+	&.hidden {
+		display: none;
 	}
 }
 

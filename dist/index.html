@@ -39,7 +39,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	<div class="preloader_text">Загружаю...</div>
 </div>
 	<div class="modals" data-modals-view></div>
-	<div class="game_view" data-game-view>
+	<div class="game_view hidden" data-game-view>
 		<div class="game">
 	<div class="game_header">
 		<div class="game_players_wrapper">
@@ -83,7 +83,10 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<section class="modal_content">
 			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
 			<div class="players_pick">
-				<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+				<div class="players_field">
+					<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+					<span class="players_create">Добавить</span>
+				</div>
 				<div class="players_gender">
 					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
 					<label for="gender_m" class="players_gender_label">

@@ -5,6 +5,10 @@
 	&_view {
 		@include size(100%);
 		position: relative;
+
+		&.hidden {
+			display: none;
+		}
 	}
 
 	&_views_buttons {

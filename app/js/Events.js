@@ -1,10 +1,11 @@
 (function mouseDown() {
 	let queue = (node, e) => {
-		if (node.closest(`[${Game.attr.getTruth}]`)) Game.getTruth();
-		if (node.closest(`[${Game.attr.getAction}]`)) Game.getAction();
-		if (node.closest(`[${Game.manager.Sidebar.attr.button}]`)) Game.manager.Sidebar.check();
+		if (node.closest(`[${App.attr.getTruth}]`)) App.getTruth();
+		if (node.closest(`[${App.attr.getAction}]`)) App.getAction();
+		if (node.closest(`[${App.manager.Sidebar.attr.button}]`)) App.manager.Sidebar.check();
 	};
 	document.addEventListener('mousedown', (e) => {
 		queue(e.target, e);
 	}, false);
+	// Rewrite to events() in classes
 })();

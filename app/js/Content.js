@@ -1,18 +1,13 @@
 class Content {
 
 	constructor() {
-		this.content = [];
+		this.content = null;
 		this.truth = [];
 		this.action = [];
-		this.json = {};
 	}
 
-	check() {
-		// Check is content loaded.
-	}
-
-	load() {
-		// Load json.
+	set(data) {
+		this.content = data;
 	}
 
 	get(type) {

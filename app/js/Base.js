@@ -1,9 +1,9 @@
 
 (function () {
 	window.addEventListener('load', (event) => {
-		window.Game = new Game();
-		Game.check();
-		Game.manager.Content.check();
-		Game.manager.Render.views.gamePlayers.innerHTML = Game.manager.Render.GamePlayers();
+		window.App = new App();
+		App.check();
+		App.manager.Render.views.gamePlayers.innerHTML = App.manager.Render.GamePlayers();
+		App.manager.Preloader.hide();
 	}, false);
 })();

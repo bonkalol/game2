@@ -1,14 +1,9 @@
-class Game {
-
+class App {
 	constructor() {
 		this.data = {
-			started: true,
+			started: false,
 			rubribcs: [],
 			players: [
-						{name: 'Соня', gender: 'f', score: 1},
-						{name: 'Лена', gender: 'f', score: 0},
-						{name: 'Богдан', gender: 'm', score: -1},
-						{name: 'Тимур', gender: 'm', score: -1},
 					],
 			settings: {
 				repeatContent: false,
@@ -25,7 +20,6 @@ class Game {
 				}
 			}
 		};
-		this.online = navigator.onLine;
 		this.attr = {
 			game: 'data-game',
 			getTruth: 'data-game="truth"',
@@ -42,14 +36,20 @@ class Game {
 			Content: new Content(),
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
-			VersionController: new VersionController()
+			VersionController: new VersionController(),
+			Preloader: new Preloader()
 		};
+		this.online = navigator.onLine;
+		/*
+			Define is latest version of JSON loaded
+		*/
+		this.isUpdated = false;
 	}
 
 	check() {
 		if (this.manager.Storage.get('Game') !== false) {
-			this.load();
 			// Show screen 0.
+			this.load();
 			this.manager.Render._screen0();
 		} else {
 			// Show screen 1.

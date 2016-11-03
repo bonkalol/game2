@@ -22,7 +22,7 @@ class Sidebar {
 
 	open() {
 		this.state = this.enum.opened;
-		Game.manager.Overlay.show(null, this.close.bind(this));
+		App.manager.Overlay.show(null, this.close.bind(this));
 		this.self.classList.add(this.enum.opened);
 	}
 

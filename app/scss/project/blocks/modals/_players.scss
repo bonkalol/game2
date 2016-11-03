@@ -1,10 +1,35 @@
 .players {
 
+	&_field {
+		position: relative;
+		display: flex;
+		align-items: flex-end;
+	}
+
 	&_input {
 		margin-top: 20px;
 
 		@include media('height') {
 			margin-top: 5px;
+		}
+	}
+
+	&_create {
+		@include size(50%, 45px);
+		@include flex(center, center);
+		cursor: pointer;
+		background-color: $purple;
+		color: #fff;
+
+		@include media ('<tablet') {
+			@include size(35%, 35px);
+			font-size: 12px;
+		}
+
+		&.disabled {
+			pointer-events: none;
+			background-color: #ddd;
+			color: #bbb;
 		}
 	}
 
