@@ -3,7 +3,7 @@ var gutil = require('gulp-util');
 module.exports = {
 
 	isProduction: !gutil.env.debug,
-	jshint: true,
+	jshint: false,
 	// set this var to true if u wanna validate your html
 	// but be carefull, it takes a lot of compilation time
 	htmlValidator: false,

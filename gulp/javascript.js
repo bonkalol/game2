@@ -17,7 +17,8 @@ var gulp = require('gulp'),
 	babel = require('gulp-babel'),
 	argv = require('yargs').argv,
 	plumber = require('gulp-plumber'),
-	sourcemaps = require('gulp-sourcemaps');
+	sourcemaps = require('gulp-sourcemaps'),
+	ts = require('gulp-typescript');
 
 // Concat all JS files into production/js/main.js
 // If coffee disabled
@@ -25,7 +26,10 @@ gulp.task('concat', function() {
 	return gulp.src(paths.srcPaths.js)
 		.pipe(plumber({errorHandler: log}))
 		.pipe(sourcemaps.init())
-		.pipe(babel({blacklist: 'useStrict'}))
+		// .pipe(babel({blacklist: 'useStrict'}))
+		.pipe(ts({
+			noImplicitAny: true
+		}))
 		.pipe(concat('app.js'))
 		// .pipe(isProduction ? uglify() : gutil.noop())
 		.pipe(sourcemaps.write('/maps'))

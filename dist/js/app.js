@@ -1,3 +1,86 @@
+function Alert(type, message) {
+	var time = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+	var constant = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+	if (!type || !message) throw new Error('Define type and message');
+
+	var nodes = {
+		self: null,
+		message: null
+	},
+	    timeout;
+
+	function close() {}
+
+	function show() {}
+
+	nodes.listener('mousein', function () {});
+}
+
+// class Message {
+// 	constructor() {
+// 		this.canShowTimeout = 1000;
+// 		this.showTimeout = 2000;
+// 		this.canShow = true;
+// 		this.transition = 300;
+// 		this.nodes = {
+// 			self: document.querySelector('[data-message]'),
+// 			message: document.querySelector('[data-message-content]')
+// 		};
+// 		this.visible = 'visible';
+// 		this.closeTimeout = null;
+// 		this.mousein = false;
+// 		this._events();
+// 	}
+// 	_events() {
+// 		this.nodes.self.addEventListener('mouseenter', (e) => {
+// 			clearTimeout(this.closeTimeout);
+// 			this.mousein = true;
+// 			this.closeTimeout = null;
+// 		}, true);
+// 		this.nodes.self.addEventListener('mouseleave', (e) => {
+// 			this.mousein = false;
+// 			this.closeTimeout = setTimeout(() => {
+// 				this.mousein !== true ?
+// 					this.close(this.type) :
+// 					void(0);
+// 			}, this.showTimeout);
+// 		}, true);
+// 		this.nodes.self.addEventListener('click', (e) => {
+// 			this.close(this.type, true);
+// 		});
+// 	}
+// 	show(type = null, message = null, timeout = null, additionalTime = 0) {
+// 		if (this.canShow !== true) return;
+// 		if (type === null || message === null) throw new Error('type or message is not defined');
+// 		this.canShow = false;
+// 		this.nodes.self.classList.add(type);
+// 		this.nodes.self.classList.add(this.visible);
+// 		this.nodes.message.innerHTML = message;
+// 		let parsed = App.parser.parseFromString(message, 'text/html').querySelector('body').textContent;
+// 		this.showTimeout = (parsed.length * .06) * 1000;
+// 		this.type = type;
+// 		this.timeout = timeout;
+// 		this.additionalTime = additionalTime;
+// 		// prevent blinking
+// 		setTimeout(() => {
+// 			this.canShow = true;
+// 		}, timeout !== null ? timeout + this.showTimeout + this.additionalTime : this.canShowTimeout + this.showTimeout + this.additionalTime);
+// 		// close warning
+// 		this.closeTimeout = setTimeout(() => {
+// 			this.close(this.type);
+// 		}, this.showTimeout + additionalTime);
+// 	}
+// 	close(type, force = false) {
+// 		if (this.timeout === false && force !== true) return;
+// 		this.nodes.self.classList.remove(this.visible);
+// 		this.showTimeout = null;
+// 		this.additionalTime = 0;
+// 		setTimeout(() => {
+// 			this.nodes.self.classList.remove(this.type);
+// 		}, this.transition)
+// 	}
+// }
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -9,7 +92,7 @@ var App = (function () {
 		this.data = {
 			started: false,
 			rubribcs: [],
-			players: [],
+			players: [{ name: 'Соня', gender: 'f', score: 1 }, { name: 'Лена', gender: 'f', score: 0 }, { name: 'Богдан', gender: 'm', score: -1 }, { name: 'Тимур', gender: 'm', score: -1 }],
 			settings: {
 				repeatContent: false,
 				alcohol: true,
@@ -92,12 +175,12 @@ var App = (function () {
 })();
 
 (function () {
-	window.addEventListener('load', function (event) {
-		window.App = new App();
-		App.check();
-		App.manager.Render.views.gamePlayers.innerHTML = App.manager.Render.GamePlayers();
-		App.manager.Preloader.hide();
-	}, false);
+		window.addEventListener('load', function (event) {
+				window.App = new App();
+				App.check();
+				App.manager.Render.views.gamePlayers.innerHTML = App.manager.Render.GamePlayers();
+				App.manager.Preloader.hide();
+		}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -126,6 +209,7 @@ var Content = (function () {
 
 	return Content;
 })();
+
 (function mouseDown() {
 	var queue = function queue(node, e) {
 		if (node.closest('[' + App.attr.getTruth + ']')) App.getTruth();
@@ -785,5 +869,11 @@ var random = function random(min, max) {
 
 var isFunc = function isFunc(func) {
 	return typeof func === 'function';
+};
+
+var Listener = document.addEventListener;
+
+Node.prototype.listener = function (type, callback) {
+	this.addEventListener(type, callback);
 };
 //# sourceMappingURL=maps/app.js.map

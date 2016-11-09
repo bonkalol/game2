@@ -4,6 +4,10 @@ class App {
 			started: false,
 			rubribcs: [],
 			players: [
+						{name: 'Соня', gender: 'f', score: 1},
+						{name: 'Лена', gender: 'f', score: 0},
+						{name: 'Богдан', gender: 'm', score: -1},
+						{name: 'Тимур', gender: 'm', score: -1},
 					],
 			settings: {
 				repeatContent: false,
