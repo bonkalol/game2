@@ -26,10 +26,7 @@ gulp.task('concat', function() {
 	return gulp.src(paths.srcPaths.js)
 		.pipe(plumber({errorHandler: log}))
 		.pipe(sourcemaps.init())
-		// .pipe(babel({blacklist: 'useStrict'}))
-		.pipe(ts({
-			noImplicitAny: true
-		}))
+		.pipe(babel({blacklist: 'useStrict'}))
 		.pipe(concat('app.js'))
 		// .pipe(isProduction ? uglify() : gutil.noop())
 		.pipe(sourcemaps.write('/maps'))

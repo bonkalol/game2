@@ -1,0 +1,64 @@
+.alert {
+	padding: 15px;
+	padding-left: 50px;
+	border-radius: 3px;
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	color: #fff;
+	z-index: 3;
+	transition: transform .3s;
+	will-change: transform;
+	transform: translateY(-100%);
+	cursor: pointer;
+
+	&.js-visible {
+		transform: translateY(0)
+	}
+
+	&_inner {
+		padding-left: 20px;
+	}
+
+	&_icon {
+		position: absolute;
+		left: 0;
+		top: 0;
+		@include size(50px, 100%);
+		@include flex(center, center);
+		background-color: rgba(0, 0, 0, .2);
+		fill: #fff;
+	}
+
+	.alert_icon {
+		&_success,
+		&_warning,
+		&_error {
+			display: none;
+		}
+	}
+
+	&.success {
+		background: #2ee08a;
+
+		.alert_icon_success {
+			display: block;
+		}
+	}
+	&.warning {
+		background-color: #fbb323;
+
+		.alert_icon_warning {
+			display: block;
+		}
+	}
+
+	&.error {
+		background: #ef583e;
+
+		.alert_icon_error {
+			display: block;
+		}
+	}
+}

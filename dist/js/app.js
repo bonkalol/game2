@@ -1,86 +1,57 @@
-function Alert(type, message) {
-	var time = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-	var constant = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	if (!type || !message) throw new Error('Define type and message');
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-	var nodes = {
-		self: null,
-		message: null
-	},
-	    timeout;
+var Alert = (function () {
+	function Alert() {
+		_classCallCheck(this, Alert);
 
-	function close() {}
+		this.attr = {
+			self: 'data-alert',
+			content: 'data-alert-content'
+		};
+		this.nodes = {
+			self: document.querySelector('[' + this.attr.self + ']'),
+			content: document.querySelector('[' + this.attr.content + ']')
+		};
+		this.setTimeout = null;
+		this.type = null;
+		this.transition = 400;
+		this.classes = ['js-visible'];
+		this.events();
+	}
 
-	function show() {}
+	_createClass(Alert, [{
+		key: 'show',
+		value: function show(type, message) {
+			var time = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+			var constant = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
-	nodes.listener('mousein', function () {});
-}
+			this.type = type;
+			this.nodes.content.innerHTML = message;
+			this.nodes.self.classList.add(this.type);
+			this.nodes.self.classList.add(this.classes[0]);
+		}
+	}, {
+		key: 'close',
+		value: function close() {
+			var _this = this;
 
-// class Message {
-// 	constructor() {
-// 		this.canShowTimeout = 1000;
-// 		this.showTimeout = 2000;
-// 		this.canShow = true;
-// 		this.transition = 300;
-// 		this.nodes = {
-// 			self: document.querySelector('[data-message]'),
-// 			message: document.querySelector('[data-message-content]')
-// 		};
-// 		this.visible = 'visible';
-// 		this.closeTimeout = null;
-// 		this.mousein = false;
-// 		this._events();
-// 	}
-// 	_events() {
-// 		this.nodes.self.addEventListener('mouseenter', (e) => {
-// 			clearTimeout(this.closeTimeout);
-// 			this.mousein = true;
-// 			this.closeTimeout = null;
-// 		}, true);
-// 		this.nodes.self.addEventListener('mouseleave', (e) => {
-// 			this.mousein = false;
-// 			this.closeTimeout = setTimeout(() => {
-// 				this.mousein !== true ?
-// 					this.close(this.type) :
-// 					void(0);
-// 			}, this.showTimeout);
-// 		}, true);
-// 		this.nodes.self.addEventListener('click', (e) => {
-// 			this.close(this.type, true);
-// 		});
-// 	}
-// 	show(type = null, message = null, timeout = null, additionalTime = 0) {
-// 		if (this.canShow !== true) return;
-// 		if (type === null || message === null) throw new Error('type or message is not defined');
-// 		this.canShow = false;
-// 		this.nodes.self.classList.add(type);
-// 		this.nodes.self.classList.add(this.visible);
-// 		this.nodes.message.innerHTML = message;
-// 		let parsed = App.parser.parseFromString(message, 'text/html').querySelector('body').textContent;
-// 		this.showTimeout = (parsed.length * .06) * 1000;
-// 		this.type = type;
-// 		this.timeout = timeout;
-// 		this.additionalTime = additionalTime;
-// 		// prevent blinking
-// 		setTimeout(() => {
-// 			this.canShow = true;
-// 		}, timeout !== null ? timeout + this.showTimeout + this.additionalTime : this.canShowTimeout + this.showTimeout + this.additionalTime);
-// 		// close warning
-// 		this.closeTimeout = setTimeout(() => {
-// 			this.close(this.type);
-// 		}, this.showTimeout + additionalTime);
-// 	}
-// 	close(type, force = false) {
-// 		if (this.timeout === false && force !== true) return;
-// 		this.nodes.self.classList.remove(this.visible);
-// 		this.showTimeout = null;
-// 		this.additionalTime = 0;
-// 		setTimeout(() => {
-// 			this.nodes.self.classList.remove(this.type);
-// 		}, this.transition)
-// 	}
-// }
+			new PromisedTimeOut(function () {
+				return _this.nodes.self.classList.remove(_this.classes[0]);
+			}, this.transition).then(function () {
+				return _this.nodes.self.classList.remove(_this.type);
+			});
+		}
+	}, {
+		key: 'events',
+		value: function events() {
+			this.nodes.self.listener('click', function () {});
+		}
+	}]);
+
+	return Alert;
+})();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -125,7 +96,8 @@ var App = (function () {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			VersionController: new VersionController(),
-			Preloader: new Preloader()
+			Preloader: new Preloader(),
+			Alert: new Alert()
 		};
 		this.online = navigator.onLine;
 		/*
@@ -875,5 +847,15 @@ var Listener = document.addEventListener;
 
 Node.prototype.listener = function (type, callback) {
 	this.addEventListener(type, callback);
+};
+
+var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
+	if (!func || !timeout) throw new Error('Defined func and timeout');
+	func();
+	return new Promise(function (resolve, reject) {
+		setTimeout(function () {
+			resolve();
+		}, timeout);
+	});
 };
 //# sourceMappingURL=maps/app.js.map

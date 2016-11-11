@@ -41,7 +41,8 @@ class App {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			VersionController: new VersionController(),
-			Preloader: new Preloader()
+			Preloader: new Preloader(),
+			Alert: new Alert()
 		};
 		this.online = navigator.onLine;
 		/*
