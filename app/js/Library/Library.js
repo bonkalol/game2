@@ -19,3 +19,6 @@ var PromisedTimeOut = (func, timeout) => {
 		setTimeout(() => { resolve(); }, timeout);
 	});
 };
+
+var $ = document.querySelector;
+var $$ = document.querySelectorAll;

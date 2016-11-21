@@ -1,14 +1,43 @@
 class App {
 	constructor() {
-		this.data = {
+		this.data = this.getInitialState();
+		this.attr = {
+			game: 'data-game',
+			getTruth: 'data-game="truth"',
+			getAction: 'data-game="action"',
+			currentPlayer: 'data-currentplayer'
+		};
+		this.nodes = {
+			currentPlayer: document.querySelector(`[${this.attr.currentPlayer}]`),
+			getTruth: document.querySelector(`[${this.attr.getTruth}]`),
+			getAction: document.querySelector(`[${this.attr.getAction}]`),
+			game: document.querySelector(`[${this.game}]`)
+		};
+		this.manager = {
+			PlayerController: new PlayerController(),
+			VersionController: new VersionController(),
+			Preloader: new Preloader(),
+			Storage: new Storage(),
+			Content: new Content(),
+			Overlay: new Overlay(),
+			Sidebar: new Sidebar(),
+			Render: new Render(),
+			Alert: new Alert().show,
+			Modals: new Modals()
+		};
+		this.online = navigator.onLine;
+		/*
+			Define is latest version of JSON loaded
+		*/
+		this.isUpdated = false;
+		this.language = 'en';
+	}
+
+	getInitialState() {
+		return {
 			started: false,
 			rubribcs: [],
-			players: [
-						{name: 'Соня', gender: 'f', score: 1},
-						{name: 'Лена', gender: 'f', score: 0},
-						{name: 'Богдан', gender: 'm', score: -1},
-						{name: 'Тимур', gender: 'm', score: -1},
-					],
+			players: [],
 			settings: {
 				repeatContent: false,
 				alcohol: true,
@@ -24,65 +53,5 @@ class App {
 				}
 			}
 		};
-		this.attr = {
-			game: 'data-game',
-			getTruth: 'data-game="truth"',
-			getAction: 'data-game="action"',
-			currentPlayer: 'data-currentplayer'
-		};
-		this.nodes = {
-			currentPlayer: document.querySelector(`[${this.attr.currentPlayer}]`)
-		};
-		this.manager = {
-			PlayerController: new PlayerController(),
-			Render: new Render(),
-			Storage: new Storage(),
-			Content: new Content(),
-			Overlay: new Overlay(),
-			Sidebar: new Sidebar(),
-			VersionController: new VersionController(),
-			Preloader: new Preloader(),
-			Alert: new Alert()
-		};
-		this.online = navigator.onLine;
-		/*
-			Define is latest version of JSON loaded
-		*/
-		this.isUpdated = false;
 	}
-
-	check() {
-		if (this.manager.Storage.get('Game') !== false) {
-			// Show screen 0.
-			this.load();
-			this.manager.Render._screen0();
-		} else {
-			// Show screen 1.
-			this.manager.Render._screen1();
-			this.manager.VersionController.check();
-		}
-	}
-
-	init() {
-		// Start game cycle.
-	}
-
-	load() {
-		let game = this.manager.Storage.get('Game');
-		this.data = game;
-	}
-
-	save() {
-		this.manager.Storage.set('Game', this.data);
-	}
-
-	getTruth() {
-
-	}
-
-	getAction() {
-
-	}
-
 }
-

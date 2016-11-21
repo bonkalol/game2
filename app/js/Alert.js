@@ -14,11 +14,12 @@ class Alert {
 		this.classes = ['js-visible'];
 		this.events();
 	}
-	show(type, message, time = null, constant = null) {
+	show(type, message,  constant = false, time = 3e3) {
 		this.type = type;
 		this.nodes.content.innerHTML = message;
 		this.nodes.self.classList.add(this.type);
 		this.nodes.self.classList.add(this.classes[0]);
+		if (!constant) setTimeout(() => this.close(), time);
 	}
 	close() {
 		new PromisedTimeOut(() => this.nodes.self.classList.remove(this.classes[0]), this.transition)
@@ -26,7 +27,7 @@ class Alert {
 	}
 	events() {
 		this.nodes.self.listener('click', () => {
-
+			this.close();
 		});
 	}
 }

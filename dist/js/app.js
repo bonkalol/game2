@@ -24,29 +24,38 @@ var Alert = (function () {
 	_createClass(Alert, [{
 		key: 'show',
 		value: function show(type, message) {
-			var time = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-			var constant = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+			var _this = this;
+
+			var constant = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+			var time = arguments.length <= 3 || arguments[3] === undefined ? 3e3 : arguments[3];
 
 			this.type = type;
 			this.nodes.content.innerHTML = message;
 			this.nodes.self.classList.add(this.type);
 			this.nodes.self.classList.add(this.classes[0]);
+			if (!constant) setTimeout(function () {
+				return _this.close();
+			}, time);
 		}
 	}, {
 		key: 'close',
 		value: function close() {
-			var _this = this;
+			var _this2 = this;
 
 			new PromisedTimeOut(function () {
-				return _this.nodes.self.classList.remove(_this.classes[0]);
+				return _this2.nodes.self.classList.remove(_this2.classes[0]);
 			}, this.transition).then(function () {
-				return _this.nodes.self.classList.remove(_this.type);
+				return _this2.nodes.self.classList.remove(_this2.type);
 			});
 		}
 	}, {
 		key: 'events',
 		value: function events() {
-			this.nodes.self.listener('click', function () {});
+			var _this3 = this;
+
+			this.nodes.self.listener('click', function () {
+				_this3.close();
+			});
 		}
 	}]);
 
@@ -60,25 +69,7 @@ var App = (function () {
 	function App() {
 		_classCallCheck(this, App);
 
-		this.data = {
-			started: false,
-			rubribcs: [],
-			players: [{ name: 'Соня', gender: 'f', score: 1 }, { name: 'Лена', gender: 'f', score: 0 }, { name: 'Богдан', gender: 'm', score: -1 }, { name: 'Тимур', gender: 'm', score: -1 }],
-			settings: {
-				repeatContent: false,
-				alcohol: true,
-				score: true,
-				streak: 2,
-				sex: 'hetero', // possible 'hetero', 'homo', 'herma'
-				smartPick: true,
-				randomPlayers: true,
-				cards: {
-					gray: true,
-					yellow: true,
-					special: true
-				}
-			}
-		};
+		this.data = this.getInitialState();
 		this.attr = {
 			game: 'data-game',
 			getTruth: 'data-game="truth"',
@@ -86,61 +77,54 @@ var App = (function () {
 			currentPlayer: 'data-currentplayer'
 		};
 		this.nodes = {
-			currentPlayer: document.querySelector('[' + this.attr.currentPlayer + ']')
+			currentPlayer: document.querySelector('[' + this.attr.currentPlayer + ']'),
+			getTruth: document.querySelector('[' + this.attr.getTruth + ']'),
+			getAction: document.querySelector('[' + this.attr.getAction + ']'),
+			game: document.querySelector('[' + this.game + ']')
 		};
 		this.manager = {
 			PlayerController: new PlayerController(),
-			Render: new Render(),
+			VersionController: new VersionController(),
+			Preloader: new Preloader(),
 			Storage: new Storage(),
 			Content: new Content(),
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
-			VersionController: new VersionController(),
-			Preloader: new Preloader(),
-			Alert: new Alert()
+			Render: new Render(),
+			Alert: new Alert().show,
+			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
 		/*
   	Define is latest version of JSON loaded
   */
 		this.isUpdated = false;
+		this.language = 'en';
 	}
 
 	_createClass(App, [{
-		key: 'check',
-		value: function check() {
-			if (this.manager.Storage.get('Game') !== false) {
-				// Show screen 0.
-				this.load();
-				this.manager.Render._screen0();
-			} else {
-				// Show screen 1.
-				this.manager.Render._screen1();
-				this.manager.VersionController.check();
-			}
+		key: 'getInitialState',
+		value: function getInitialState() {
+			return {
+				started: false,
+				rubribcs: [],
+				players: [],
+				settings: {
+					repeatContent: false,
+					alcohol: true,
+					score: true,
+					streak: 2,
+					sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+					smartPick: true,
+					randomPlayers: true,
+					cards: {
+						gray: true,
+						yellow: true,
+						special: true
+					}
+				}
+			};
 		}
-	}, {
-		key: 'init',
-		value: function init() {
-			// Start game cycle.
-		}
-	}, {
-		key: 'load',
-		value: function load() {
-			var game = this.manager.Storage.get('Game');
-			this.data = game;
-		}
-	}, {
-		key: 'save',
-		value: function save() {
-			this.manager.Storage.set('Game', this.data);
-		}
-	}, {
-		key: 'getTruth',
-		value: function getTruth() {}
-	}, {
-		key: 'getAction',
-		value: function getAction() {}
 	}]);
 
 	return App;
@@ -149,9 +133,7 @@ var App = (function () {
 (function () {
 		window.addEventListener('load', function (event) {
 				window.App = new App();
-				App.check();
-				App.manager.Render.views.gamePlayers.innerHTML = App.manager.Render.GamePlayers();
-				App.manager.Preloader.hide();
+				App.manager.GameController = new GameController();
 		}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -181,7 +163,6 @@ var Content = (function () {
 
 	return Content;
 })();
-
 (function mouseDown() {
 	var queue = function queue(node, e) {
 		if (node.closest('[' + App.attr.getTruth + ']')) App.getTruth();
@@ -193,6 +174,60 @@ var Content = (function () {
 	}, false);
 	// Rewrite to events() in classes
 })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var GameController = (function () {
+	function GameController() {
+		_classCallCheck(this, GameController);
+
+		this.check();
+	}
+
+	_createClass(GameController, [{
+		key: 'check',
+		value: function check() {
+			if (App.manager.Storage.get('Game') !== false) {
+				// Show screen 0.
+				this.load();
+				App.manager.Render._screen0();
+				App.manager.Preloader.hide();
+			} else {
+				// Show screen 1.
+				App.manager.Render._screen1();
+				App.manager.VersionController.check();
+			}
+		}
+	}, {
+		key: 'init',
+		value: function init() {
+			// Start game cycle.
+		}
+	}, {
+		key: 'load',
+		value: function load() {
+			var game = this.manager.Storage.get('Game');
+			this.data = game;
+		}
+	}, {
+		key: 'save',
+		value: function save() {
+			this.manager.Storage.set('Game', this.data);
+		}
+	}]);
+
+	return GameController;
+})();
+window.Language = {
+	ru: {
+		badinternet: 'Опс. Произошла какая-то ошибка :(. Проверьте ваше интернет соединение.'
+	},
+
+	en: {
+		badinternet: 'Ooops. Some error happen :(. Check your internet connection.'
+	}
+};
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -210,13 +245,9 @@ var Storage = (function () {
 
 	_createClass(Storage, [{
 		key: 'get',
-		value: function get(name, type) {
+		value: function get(name) {
 			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
-				if (type && type === 'str') {
-					return localStorage.getItem(name);
-				} else {
-					return JSON.parse(localStorage.getItem(name));
-				}
+				return JSON.parse(localStorage.getItem(name));
 			} else {
 				return false;
 			}
@@ -229,6 +260,42 @@ var Storage = (function () {
 	}]);
 
 	return Storage;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Modals = (function () {
+	function Modals() {
+		_classCallCheck(this, Modals);
+
+		this.players = new PlayerModal();
+		this.rubrics = new RubricsModal();
+		this.settings = new SettingsModal();
+		this.rules = new RulesModal();
+		this["continue"] = new ContinueModal();
+		this["enum"] = Object.freeze({
+			players: 0,
+			rubrics: 1,
+			settings: 2,
+			rules: 3,
+			"continue": 4
+		});
+		this.current = null;
+	}
+
+	_createClass(Modals, [{
+		key: "next",
+		value: function next() {}
+	}, {
+		key: "check",
+		value: function check() {}
+	}, {
+		key: "close",
+		value: function close() {}
+	}]);
+
+	return Modals;
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -583,21 +650,25 @@ var VersionController = (function () {
 	_createClass(VersionController, [{
 		key: 'check',
 		value: function check() {
-			var version = App.manager.Storage.get('JV', 'str');
+			var version = App.manager.Storage.get('JV');
 			if (version === false) {
 				this.load();
 				return;
 			}
-			if (App.onLine === true && JV === version) {
+			if (App.online === true && JV === version) {
 				// Don't update
 				this.storage();
-			} else if (App.onLine === true && JV !== version) {
+			} else if (App.online === true && JV !== version) {
 				this.load();
 			}
 		}
 	}, {
 		key: 'load',
 		value: function load() {
+			var _this = this;
+
+			var requestFailed = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
 			var request = new XMLHttpRequest();
 			request.open('GET', 'data/response.json', true);
 			request.send();
@@ -609,18 +680,25 @@ var VersionController = (function () {
 					App.manager.Storage.set('content', request.responseText);
 					App.manager.Content.set(JSON.parse(request.responseText));
 					App.manager.Preloader.hide();
+				} else if (version !== false && requestFailed === false) {
+					_this.storage(true);
+				} else if (version === false && requestFailed === false) {
+					App.manager.Alert('error', Language[App.language].badinternet, true);
 				}
 			};
 		}
 	}, {
 		key: 'storage',
 		value: function storage() {
-			App.isUpdated = true;
+			var requestFailed = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+
 			var content = App.manager.Storage.get('content');
 			if (content) {
+				App.isUpdated = true;
 				App.manager.Content.set(content);
+				App.manager.Preloader.hide();
 			} else {
-				this.load();
+				this.load(requestFailed);
 			}
 		}
 	}]);
@@ -857,5 +935,49 @@ var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
 			resolve();
 		}, timeout);
 	});
+};
+
+var $ = document.querySelector;
+var $$ = document.querySelectorAll;
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var ContinueModal = function ContinueModal() {
+	_classCallCheck(this, ContinueModal);
+};
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var PlayerModal = (function () {
+	function PlayerModal() {
+		_classCallCheck(this, PlayerModal);
+
+		this.attr = {};
+	}
+
+	_createClass(PlayerModal, [{
+		key: "check",
+		value: function check() {}
+	}, {
+		key: "render",
+		value: function render() {}
+	}]);
+
+	return PlayerModal;
+})();
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RubricsModal = function RubricsModal() {
+	_classCallCheck(this, RubricsModal);
+};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var RulesModal = function RulesModal() {
+	_classCallCheck(this, RulesModal);
+};
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var SettingsModal = function SettingsModal() {
+	_classCallCheck(this, SettingsModal);
 };
 //# sourceMappingURL=maps/app.js.map
