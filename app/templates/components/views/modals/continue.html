@@ -1,5 +1,5 @@
 <script type="text/template" id="modal_continue">
-	<div class="modal modal_rubrics">
+	<div class="modal modal_rubrics" data-continue-modal>
 		<h2 class="modal_title">Продолжить игру</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
@@ -15,10 +15,10 @@
 			</div>
 		</section>
 		<footer class="modal_action modal_action--double">
-			<button type="button" data-game-continue class="button button--small">
+			<button type="button" data-modal-action="continue:restart" class="button button--small">
 				<span class="button_text">Новая</span>
 			</button>
-			<button type="button" data-game-continue class="button button--small">
+			<button type="button" data-modal-action="continue:continue" class="button button--small">
 				<span class="button_text">Продолжить</span>
 			</button>
 		</footer>

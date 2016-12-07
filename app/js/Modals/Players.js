@@ -1,8 +1,9 @@
-class PlayerModal {
+class PlayerModal extends Modal {
 	constructor() {
-		this.attr = {
-
-		};
+		super('data-player-modal');
+	}
+	save() {
+		
 	}
 	check() {
 

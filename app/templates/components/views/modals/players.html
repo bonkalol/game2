@@ -1,5 +1,5 @@
 <script type="text/template" id="modal_players">
-	<div class="modal">
+	<div class="modal" data-players-modal>
 		<h2 class="modal_title">Добавить игроков</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
@@ -30,13 +30,16 @@
 				{{~}}
 			</div>
 		</section>
-		<footer class="modal_action modal_action--single">
+		<footer class="modal_action {{? it.started !== true }}modal_action--single{{??}}modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-players-save class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-modal-action="players:save" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
+				<button type="button" data-modal-action="players:close" class="button">
+					<span class="button_text">Отмена</span>
+				</button>
 			{{??}}
-				<button type="button" data-players-save data-nextmodal class="button js-disabled">
+				<button type="button" data-modal-action="players:next" class="button js-disabled">
 					<span class="button_text">Далее</span>
 				</button>
 			{{?}}

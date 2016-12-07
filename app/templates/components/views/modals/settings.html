@@ -1,5 +1,5 @@
 <script type="text/template" id="modal_settings">
-	<div class="modal">
+	<div class="modal" data-settings-modal>
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content modal_content--settings">
 			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
@@ -91,14 +91,17 @@
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rubrics-save class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-modal-action="settings:save" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
+				<button type="button" data-modal-action="settings:close" class="button">
+					<span class="button_text">Отмена</span>
+				</button>
 			{{??}}
-				<button type="button" data-prevmodal class="button">
+				<button type="button" data-modal-action="settings:prev" class="button">
 					<span class="button_text">Назад</span>
 				</button>
-				<button type="button" data-rubrics-save data-nextmodal class="button js-disabled">
+				<button type="button"  data-modal-action="settings:next" class="button js-disabled">
 					<span class="button_text">Далее</span>
 				</button>
 			{{?}}

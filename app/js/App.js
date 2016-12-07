@@ -26,10 +26,7 @@ class App {
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
-		/*
-			Define is latest version of JSON loaded
-		*/
-		this.isUpdated = false;
+		this.isUpdated = false; // Define is latest version of JSON loaded
 		this.language = 'en';
 	}
 
@@ -43,7 +40,7 @@ class App {
 				alcohol: true,
 				score: true,
 				streak: 2,
-				sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+				sex: 'hetero', // Possible 'hetero', 'homo', 'herma'
 				smartPick: true,
 				randomPlayers: true,
 				cards: {

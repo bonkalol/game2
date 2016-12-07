@@ -1,4 +1,4 @@
-class GameController {
+class Game {
 	constructor() {
 		this.check();
 	}
@@ -14,14 +14,19 @@ class GameController {
 			App.manager.VersionController.check();
 		}
 	}
-	init() {
+	start() {
 		// Start game cycle.
+	}
+	restart() {
+
+	}
+	continue() {
+		
 	}
 	load() {
 		let game = this.manager.Storage.get('Game');
 		this.data = game;
 	}
-
 	save() {
 		this.manager.Storage.set('Game', this.data);
 	}

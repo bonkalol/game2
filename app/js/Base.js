@@ -2,6 +2,6 @@
 (function () {
 	window.addEventListener('load', (event) => {
 			window.App = new App();
-			App.manager.GameController = new GameController();
+			App.manager.Game = new Game();
 	}, false);
 })();

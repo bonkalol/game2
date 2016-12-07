@@ -1,5 +1,5 @@
 <script type="text/template" id="modal_rules">
-	<div class="modal modal_rubrics">
+	<div class="modal modal_rubrics" data-rules-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content rules">
 			<section class="rules_content">
@@ -12,14 +12,14 @@
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-rules-ok class="button">
+				<button type="button" data-modal-action="rules:close" class="button">
 					<span class="button_text">Ок</span>
 				</button>
 			{{??}}
-				<button type="button" data-prevmodal class="button">
+				<button type="button" data-modal-action="rules:prev" class="button">
 					<span class="button_text">Назад</span>
 				</button>
-				<button type="button" data-rules-start class="button">
+				<button type="button" data-modal-action="rules:start" class="button">
 					<span class="button_text">Начать</span>
 				</button>
 			{{?}}

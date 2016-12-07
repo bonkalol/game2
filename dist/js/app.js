@@ -95,10 +95,7 @@ var App = (function () {
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
-		/*
-  	Define is latest version of JSON loaded
-  */
-		this.isUpdated = false;
+		this.isUpdated = false; // Define is latest version of JSON loaded
 		this.language = 'en';
 	}
 
@@ -114,7 +111,7 @@ var App = (function () {
 					alcohol: true,
 					score: true,
 					streak: 2,
-					sex: 'hetero', // possible 'hetero', 'homo', 'herma'
+					sex: 'hetero', // Possible 'hetero', 'homo', 'herma'
 					smartPick: true,
 					randomPlayers: true,
 					cards: {
@@ -133,7 +130,7 @@ var App = (function () {
 (function () {
 		window.addEventListener('load', function (event) {
 				window.App = new App();
-				App.manager.GameController = new GameController();
+				App.manager.Game = new Game();
 		}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -178,14 +175,14 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var GameController = (function () {
-	function GameController() {
-		_classCallCheck(this, GameController);
+var Game = (function () {
+	function Game() {
+		_classCallCheck(this, Game);
 
 		this.check();
 	}
 
-	_createClass(GameController, [{
+	_createClass(Game, [{
 		key: 'check',
 		value: function check() {
 			if (App.manager.Storage.get('Game') !== false) {
@@ -200,10 +197,16 @@ var GameController = (function () {
 			}
 		}
 	}, {
-		key: 'init',
-		value: function init() {
+		key: 'start',
+		value: function start() {
 			// Start game cycle.
 		}
+	}, {
+		key: 'restart',
+		value: function restart() {}
+	}, {
+		key: 'continue',
+		value: function _continue() {}
 	}, {
 		key: 'load',
 		value: function load() {
@@ -217,7 +220,7 @@ var GameController = (function () {
 		}
 	}]);
 
-	return GameController;
+	return Game;
 })();
 window.Language = {
 	ru: {
@@ -261,38 +264,126 @@ var Storage = (function () {
 
 	return Storage;
 })();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+var Modal = (function () {
+	function Modal(self) {
+		_classCallCheck(this, Modal);
+
+		required([self]);
+		this.attr = {
+			self: self,
+			action: 'data-modal-action'
+		};
+		this['enum'] = Object.freeze({
+			DURING: 0,
+			FINISHED: 1
+		});
+		this.classes = ['js-disabled', 'js-finished', 'js-close'];
+		this.status = this['enum'].DURING;
+		this.buttons = this.__buttons();
+	}
+
+	_createClass(Modal, [{
+		key: 'check',
+		value: function check() {
+			return this.status === this['enum'].FINISHED;
+		}
+	}, {
+		key: 'getView',
+		value: function getView() {
+			return $('[' + this.attr.self + ']');
+		}
+	}, {
+		key: 'next',
+		value: function next() {
+			this.getView().classList.add(this.classes[1]);
+		}
+	}, {
+		key: 'prev',
+		value: function prev() {
+			this.getView().classList.remove(this.classes[1]);
+		}
+	}, {
+		key: 'close',
+		value: function close() {
+			this.getView().classList.add(this.classes[2]);
+		}
+	}, {
+		key: 'save',
+		value: function save() {
+			/*
+   	@Custom for every popup
+   	@Defined in popups
+   */
+		}
+	}, {
+		key: '__buttons',
+		value: function __buttons() {
+			var _this = this;
+
+			return {
+				enable: function enable() {
+					_this.getView().$('[' + _this.attr.action + ']')[0].classList.remove(_this.classes[0]);
+				},
+				disable: function disable() {
+					_this.getView().$('[' + _this.attr.action + ']')[0].classList.add(_this.classes[0]);
+				}
+			};
+		}
+	}]);
+
+	return Modal;
+})();
 
 var Modals = (function () {
 	function Modals() {
 		_classCallCheck(this, Modals);
 
+		this.language = new LanguageModal();
 		this.players = new PlayerModal();
 		this.rubrics = new RubricsModal();
 		this.settings = new SettingsModal();
 		this.rules = new RulesModal();
-		this["continue"] = new ContinueModal();
-		this["enum"] = Object.freeze({
-			players: 0,
-			rubrics: 1,
-			settings: 2,
-			rules: 3,
-			"continue": 4
-		});
-		this.current = null;
+		this['continue'] = new ContinueModal();
+		this.card = new CardModal();
+		this.attr = {
+			action: 'data-modal-action'
+		};
+		this.__events();
 	}
 
 	_createClass(Modals, [{
-		key: "next",
-		value: function next() {}
+		key: 'check',
+		value: function check() {
+			if (this.currnet.check()) this.current.buttons.enable();else this.current.buttons.disable();
+		}
 	}, {
-		key: "check",
-		value: function check() {}
+		key: 'paserAction',
+		value: function paserAction(attr) {
+			var parsed = attr.split(':');
+			return parsed;
+		}
 	}, {
-		key: "close",
-		value: function close() {}
+		key: 'dispatcher',
+		value: function dispatcher(name, action) {
+			this[name][action]();
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this2 = this;
+
+			Listener('mousedown', function (event) {
+				var closest = node.closest('[' + _this2.attr.action + ']');
+				if (closest) {
+					var parsed = _this2.parseAction(closest.getAttribute(_this2.attr.action));
+					_this2.dispatcher(parsed[0], parsed[1]);
+				}
+			});
+		}
 	}]);
 
 	return Modals;
@@ -750,7 +841,7 @@ if (typeof Element.prototype.remove !== 'function') {
       }), c in d || (d[c] = g)) : new Function("def", "def['" + c + "']=" + g)(d));return "";
     }).replace(b.use || h, function (a, c) {
       b.useParams && (c = c.replace(b.useParams, function (a, b, c, l) {
-        if (d[c] && d[c].arg && l) return (a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']");
+        if (d[c] && d[c].arg && l) return a = (c + ":" + l).replace(/'|\\/g, "_"), d.__exp = d.__exp || {}, d.__exp[a] = d[c].text.replace(new RegExp("(^|[^\\w$])" + d[c].arg + "([^\\w$])", "g"), "$1" + l + "$2"), b + "def.__exp['" + a + "']";
       }));var e = new Function("def", "return " + c)(d);return e ? p(b, e, d) : e;
     });
   }function k(b) {
@@ -937,47 +1028,180 @@ var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
 	});
 };
 
-var $ = document.querySelector;
-var $$ = document.querySelectorAll;
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var required = function required(variables) {
+	variables.forEach(function (variable) {
+		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
+	});
+};
 
-var ContinueModal = function ContinueModal() {
-	_classCallCheck(this, ContinueModal);
+var $ = document.querySelector.bind(document);
+var $$ = document.querySelectorAll.bind(document);
+HTMLElement.prototype.$ = function (query) {
+	return this.querySelector(query);
 };
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var PlayerModal = (function () {
+var CardModal = (function () {
+	function CardModal() {
+		_classCallCheck(this, CardModal);
+
+		this.attr = {};
+		this.__events();
+	}
+
+	_createClass(CardModal, [{
+		key: "__events",
+		value: function __events() {}
+	}]);
+
+	return CardModal;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ContinueModal = (function (_Modal) {
+	_inherits(ContinueModal, _Modal);
+
+	function ContinueModal() {
+		_classCallCheck(this, ContinueModal);
+
+		_get(Object.getPrototypeOf(ContinueModal.prototype), 'constructor', this).call(this, 'data-continue-modal');
+	}
+
+	_createClass(ContinueModal, [{
+		key: 'restart',
+		value: function restart() {}
+	}, {
+		key: 'continue',
+		value: function _continue() {}
+	}]);
+
+	return ContinueModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LanguageModal = (function (_Modal) {
+	_inherits(LanguageModal, _Modal);
+
+	function LanguageModal() {
+		_classCallCheck(this, LanguageModal);
+
+		_get(Object.getPrototypeOf(LanguageModal.prototype), 'constructor', this).call(this, 'data-language-modal');
+	}
+
+	_createClass(LanguageModal, [{
+		key: 'save',
+		value: function save() {}
+	}]);
+
+	return LanguageModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PlayerModal = (function (_Modal) {
+	_inherits(PlayerModal, _Modal);
+
 	function PlayerModal() {
 		_classCallCheck(this, PlayerModal);
 
-		this.attr = {};
+		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
 	}
 
 	_createClass(PlayerModal, [{
-		key: "check",
+		key: 'save',
+		value: function save() {}
+	}, {
+		key: 'check',
 		value: function check() {}
 	}, {
-		key: "render",
+		key: 'render',
 		value: function render() {}
 	}]);
 
 	return PlayerModal;
-})();
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-var RubricsModal = function RubricsModal() {
-	_classCallCheck(this, RubricsModal);
-};
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
 
-var RulesModal = function RulesModal() {
-	_classCallCheck(this, RulesModal);
-};
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
-var SettingsModal = function SettingsModal() {
-	_classCallCheck(this, SettingsModal);
-};
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RubricsModal = (function (_Modal) {
+	_inherits(RubricsModal, _Modal);
+
+	function RubricsModal() {
+		_classCallCheck(this, RubricsModal);
+
+		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubrics-modal');
+	}
+
+	_createClass(RubricsModal, [{
+		key: 'save',
+		value: function save() {}
+	}]);
+
+	return RubricsModal;
+})(Modal);
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RulesModal = (function (_Modal) {
+	_inherits(RulesModal, _Modal);
+
+	function RulesModal() {
+		_classCallCheck(this, RulesModal);
+
+		_get(Object.getPrototypeOf(RulesModal.prototype), 'constructor', this).call(this, 'data-rules-modal');
+	}
+
+	return RulesModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SettingsModal = (function (_Modal) {
+	_inherits(SettingsModal, _Modal);
+
+	function SettingsModal() {
+		_classCallCheck(this, SettingsModal);
+
+		_get(Object.getPrototypeOf(SettingsModal.prototype), 'constructor', this).call(this, 'data-settings-modal');
+	}
+
+	_createClass(SettingsModal, [{
+		key: 'save',
+		value: function save() {}
+	}]);
+
+	return SettingsModal;
+})(Modal);
 //# sourceMappingURL=maps/app.js.map

@@ -12,6 +12,7 @@ Node.prototype.listener = function(type, callback) {
 	this.addEventListener(type, callback);
 };
 
+
 var PromisedTimeOut = (func, timeout) => {
 	if (!func || !timeout) throw new Error('Defined func and timeout');
 	func();
@@ -20,5 +21,14 @@ var PromisedTimeOut = (func, timeout) => {
 	});
 };
 
-var $ = document.querySelector;
-var $$ = document.querySelectorAll;
+var required = function (variables) {
+	variables.forEach((variable) => {
+		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
+	});
+};
+
+var $ = document.querySelector.bind(document);
+var $$ = document.querySelectorAll.bind(document);
+HTMLElement.prototype.$ = function (query) {
+	return this.querySelector(query);
+};
