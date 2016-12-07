@@ -605,6 +605,7 @@ var Render = (function () {
 			settings: document.querySelector('#modal_settings'),
 			rules: document.querySelector('#modal_rules'),
 			'continue': document.querySelector('#modal_continue'),
+			card: document.querySelector('#modal_card'),
 			gamePlayers: document.querySelector('#game_players')
 		};
 	}
@@ -665,7 +666,7 @@ var Render = (function () {
 		key: '_screen0',
 		value: function _screen0() {
 			var view = this.modalContinue();
-			this.views.modals.innerHTML = view;
+			// this.views.modals.innerHTML = view;
 		}
 	}, {
 		key: '_screen1',
@@ -675,7 +676,7 @@ var Render = (function () {
 			views.forEach(function (view) {
 				rendered += view;
 			});
-			this.views.modals.innerHTML = rendered;
+			// this.views.modals.innerHTML = rendered;
 		}
 	}]);
 

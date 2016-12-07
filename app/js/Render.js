@@ -12,6 +12,7 @@ class Render {
 			settings:    document.querySelector('#modal_settings'),
 			rules:       document.querySelector('#modal_rules'),
 			continue:    document.querySelector('#modal_continue'),
+			card:        document.querySelector('#modal_card'),
 			gamePlayers: document.querySelector('#game_players')
 		};
 	}
@@ -61,7 +62,7 @@ class Render {
 	*/
 	_screen0() {
 		let view = this.modalContinue();
-		this.views.modals.innerHTML = view;
+		// this.views.modals.innerHTML = view;
 	}
 
 	_screen1() {
@@ -75,7 +76,7 @@ class Render {
 		views.forEach((view) => {
 			rendered += view;
 		});
-		this.views.modals.innerHTML = rendered;
+		// this.views.modals.innerHTML = rendered;
 	}
 
 }
