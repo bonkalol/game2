@@ -74,8 +74,8 @@ class Modals {
 		this[name][action]();
 	}
 	__events() {
-		Listener('mousedown', (event) => {
-			let closest = node.closest(`[${this.attr.action}]`);
+		document.addEventListener('mousedown', (event) => {
+			let closest = event.target.closest(`[${this.attr.action}]`);
 			if (closest) {
 				let parsed = this.parseAction(closest.getAttribute(this.attr.action));
 				this.dispatcher(parsed[0], parsed[1]);

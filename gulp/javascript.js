@@ -17,8 +17,7 @@ var gulp = require('gulp'),
 	babel = require('gulp-babel'),
 	argv = require('yargs').argv,
 	plumber = require('gulp-plumber'),
-	sourcemaps = require('gulp-sourcemaps'),
-	ts = require('gulp-typescript');
+	sourcemaps = require('gulp-sourcemaps');
 
 // Concat all JS files into production/js/main.js
 // If coffee disabled

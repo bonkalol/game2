@@ -52,7 +52,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 	<div class="alert_inner" data-alert-content></div>
 </div>
-	<div class="modals" data-modals-view></div>
+	<div class="modals" data-modals-view>
+	</div>
+	<!-- <div class="modal_shadow"></div> -->
 	<div class="game_view hidden" data-game-view>
 		<div class="game">
 	<div class="game_header">
@@ -365,7 +367,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				<p class="card_paragraph">Если бы тебе предложили любую пластическую операцию у лучшего хирурга бесплатно и без негативных последствий, то чтобы ты исправил?</p>
 			</div>
 			<footer class="card_footer">
-				<div role="button" class="card_button">Ок</div>
+				<div role="button" class="button card_button">
+					<span class="button_text">Ок</span>
+				</div>
 			</footer>
 		</section>
 
@@ -375,13 +379,13 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				<p class="card_paragraph">Справился ли игрок {{it.currentPlayer}} с заданием?</p>
 			</div>
 			<footer class="card_footer">
-				<div role="button" class="card_button">
-					<span class="card_button_text">Да</span>
-					<svg class="card_button_icon">
+				<div role="button" class="button card_button">
+					<span class="button_text">Да</span>
+					<svg class="button_icon">
 						<use xlink:href="#like">
 					</svg>
 				</div>
-				<div role="button" class="card_button">
+				<div role="button" class="button card_button">
 					<span class="card_button_text">Нет</span>
 					<svg class="card_button_icon">
 						<use xlink:href="#dislike">
@@ -400,12 +404,13 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</ul>
 			</div>
 			<footer class="card_footer">
-				<button class="card_button">Ок</button>
+				<div role="button" class="button card_button">
+					<span class="card_button_text">Ок</span>
+				</div>
 			</footer>
 		</section>
 	</div>
 </div>
-	<div class="modal_shadow"></div>
 	<script type="text/template" id="game_players">
 	{{~it.players :player:index}}
 		<div class="game_player">

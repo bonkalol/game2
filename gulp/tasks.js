@@ -16,7 +16,6 @@ gulp.task('build', function(callback) {
 	configs.paths.srcPaths.js.push('!./app/js/modules/debug.js');
 	// start task
 	runSequence(
-		'clean',
 		'template',
 		'sprite',
 		'sass',

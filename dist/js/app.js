@@ -53,7 +53,7 @@ var Alert = (function () {
 		value: function events() {
 			var _this3 = this;
 
-			this.nodes.self.listener('click', function () {
+			this.nodes.self.addEventListener('click', function () {
 				_this3.close();
 			});
 		}
@@ -376,8 +376,8 @@ var Modals = (function () {
 		value: function __events() {
 			var _this2 = this;
 
-			Listener('mousedown', function (event) {
-				var closest = node.closest('[' + _this2.attr.action + ']');
+			document.addEventListener('mousedown', function (event) {
+				var closest = event.target.closest('[' + _this2.attr.action + ']');
 				if (closest) {
 					var parsed = _this2.parseAction(closest.getAttribute(_this2.attr.action));
 					_this2.dispatcher(parsed[0], parsed[1]);
@@ -666,7 +666,7 @@ var Render = (function () {
 		key: '_screen0',
 		value: function _screen0() {
 			var view = this.modalContinue();
-			// this.views.modals.innerHTML = view;
+			this.views.modals.innerHTML = view;
 		}
 	}, {
 		key: '_screen1',
@@ -676,7 +676,7 @@ var Render = (function () {
 			views.forEach(function (view) {
 				rendered += view;
 			});
-			// this.views.modals.innerHTML = rendered;
+			this.views.modals.innerHTML = rendered;
 		}
 	}]);
 
@@ -742,15 +742,15 @@ var VersionController = (function () {
 	_createClass(VersionController, [{
 		key: 'check',
 		value: function check() {
-			var version = App.manager.Storage.get('JV');
-			if (version === false) {
+			this.version = App.manager.Storage.get('JV');
+			if (this.version === false) {
 				this.load();
 				return;
 			}
-			if (App.online === true && JV === version) {
+			if (App.online === true && JV === this.version) {
 				// Don't update
 				this.storage();
-			} else if (App.online === true && JV !== version) {
+			} else if (App.online === true && JV !== this.version) {
 				this.load();
 			}
 		}
@@ -772,9 +772,9 @@ var VersionController = (function () {
 					App.manager.Storage.set('content', request.responseText);
 					App.manager.Content.set(JSON.parse(request.responseText));
 					App.manager.Preloader.hide();
-				} else if (version !== false && requestFailed === false) {
+				} else if (_this.version !== false && requestFailed === false) {
 					_this.storage(true);
-				} else if (version === false && requestFailed === false) {
+				} else if (_this.version === false && requestFailed === false) {
 					App.manager.Alert('error', Language[App.language].badinternet, true);
 				}
 			};
@@ -1011,12 +1011,6 @@ var random = function random(min, max) {
 
 var isFunc = function isFunc(func) {
 	return typeof func === 'function';
-};
-
-var Listener = document.addEventListener;
-
-Node.prototype.listener = function (type, callback) {
-	this.addEventListener(type, callback);
 };
 
 var PromisedTimeOut = function PromisedTimeOut(func, timeout) {

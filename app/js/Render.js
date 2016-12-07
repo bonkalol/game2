@@ -62,7 +62,7 @@ class Render {
 	*/
 	_screen0() {
 		let view = this.modalContinue();
-		// this.views.modals.innerHTML = view;
+		this.views.modals.innerHTML = view;
 	}
 
 	_screen1() {
@@ -76,7 +76,7 @@ class Render {
 		views.forEach((view) => {
 			rendered += view;
 		});
-		// this.views.modals.innerHTML = rendered;
+		this.views.modals.innerHTML = rendered;
 	}
 
 }

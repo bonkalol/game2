@@ -1,6 +1,7 @@
 .card {
 	@include alignCenter();
 	@include size(90%, 60%);
+	@extend %shadow-6dp;
 	max-width: 480px;
 	max-height: 480px;
 	overflow: hidden;
@@ -11,6 +12,7 @@
 		top: 0;
 		@include size(100%);
 		will-change: transform;
+		padding-bottom: 70px;
 
 		&:nth-child(1) {
 			transform: translate(0, 0);
@@ -42,4 +44,37 @@
 			transform: translate(-200%, 0);
 		}
 	}
+
+	&_title {
+		padding: 12px;
+		background-color: rgba(0, 0, 0, .1);
+	}
+
+	&_content {
+		padding: 12px;
+	}
+
+	&_footer {
+		@extend .modal_action;
+		text-align: center;
+	}
+
+	&_paragraph {
+		@extend .rules_content;
+	}
+
+	&_button {
+		display: inline-block;
+		margin-left: 20px;
+
+		&:first-child {
+			margin-left: 0;
+		}
+	}
 }
+
+
+
+
+
+

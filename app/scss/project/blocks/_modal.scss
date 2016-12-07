@@ -9,13 +9,19 @@
 	display: flex;
 	flex-direction: column;
 	align-items: stretch;
+	will-change: transform, box-shadow;
+	transition: transform .4s, box-shadow .4s;
 
-	&_shadow {
+	&.js-finished {
+		transform: translate(calc(-50vw - 100%),-50%);
+
+		& + .modal:not(.js-finished) {
+			@extend %shadow-6dp;
+		}
+	}
+
+	&:nth-child(1):not(.js-finished) {
 		@extend %shadow-6dp;
-		@include alignCenter();
-		@include size(90%, 90%);
-		max-width: 480px;
-		max-height: 480px;
 	}
 
 	&.inactive {
@@ -73,14 +79,15 @@
 			line-height: 1.2em;
 		}
 	}
+
+	&.js-finished + .modal {
+		@extend %shadow-6dp;
+	}
 }
 
 
 @for $i from 1 through 4 {
 	.modal:nth-child(#{$i}) {
-		// top: 50% + $i;
-		// left: 50% + $i/2;
 		z-index: decimal-round(12 / $i);
-		// box-shadow: none; 
 	}
 }

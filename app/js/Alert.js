@@ -26,7 +26,7 @@ class Alert {
 			.then(() => this.nodes.self.classList.remove(this.type));
 	}
 	events() {
-		this.nodes.self.listener('click', () => {
+		this.nodes.self.addEventListener('click', () => {
 			this.close();
 		});
 	}

@@ -1,14 +1,14 @@
 class VersionController {
 	check() {
-		let version = App.manager.Storage.get('JV');
-		if (version === false) {
+		this.version = App.manager.Storage.get('JV');
+		if (this.version === false) {
 			this.load();
 			return;
 		}
-		if (App.online === true && JV === version) {
+		if (App.online === true && JV === this.version) {
 			// Don't update
 			this.storage();
-		} else if (App.online === true && JV !== version) {
+		} else if (App.online === true && JV !== this.version) {
 			this.load();
 		}
 	}
@@ -24,9 +24,9 @@ class VersionController {
 				App.manager.Storage.set('content', request.responseText);
 				App.manager.Content.set(JSON.parse(request.responseText));
 				App.manager.Preloader.hide();
-			} else if (version !== false && requestFailed === false) {
+			} else if (this.version !== false && requestFailed === false) {
 				this.storage(true);
-			} else if (version === false && requestFailed === false) {
+			} else if (this.version === false && requestFailed === false) {
 				App.manager.Alert('error', Language[App.language].badinternet, true);
 			}
 		};
