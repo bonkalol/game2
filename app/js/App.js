@@ -22,7 +22,7 @@ class App {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			Render: new Render(),
-			Alert: new Alert().show,
+			Alert: new Alert(),
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;

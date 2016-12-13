@@ -91,7 +91,7 @@ var App = (function () {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			Render: new Render(),
-			Alert: new Alert().show,
+			Alert: new Alert(),
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
@@ -224,11 +224,17 @@ var Game = (function () {
 })();
 window.Language = {
 	ru: {
-		badinternet: 'Опс. Произошла какая-то ошибка :(. Проверьте ваше интернет соединение.'
+		badinternet: 'Опс. Произошла какая-то ошибка :(. Проверьте ваше интернет соединение.',
+		players: {
+			exist: 'Игрок с таким именем уже существует, создавайте игроков с уникальными именами.'
+		}
 	},
 
 	en: {
-		badinternet: 'Ooops. Some error happen :(. Check your internet connection.'
+		badinternet: 'Ooops. Some error happen :(. Check your internet connection.',
+		players: {
+			exist: 'Player with this name is allready exist, please, create players with uniq names.'
+		}
 	}
 };
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -272,7 +278,7 @@ var Modal = (function () {
 	function Modal(self) {
 		_classCallCheck(this, Modal);
 
-		required([self]);
+		_.required([self]);
 		this.attr = {
 			self: self,
 			action: 'data-modal-action'
@@ -284,6 +290,7 @@ var Modal = (function () {
 		this.classes = ['js-disabled', 'js-finished', 'js-close'];
 		this.status = this['enum'].DURING;
 		this.buttons = this.__buttons();
+		if (this.__events) this.__events();
 	}
 
 	_createClass(Modal, [{
@@ -361,8 +368,8 @@ var Modals = (function () {
 			if (this.currnet.check()) this.current.buttons.enable();else this.current.buttons.disable();
 		}
 	}, {
-		key: 'paserAction',
-		value: function paserAction(attr) {
+		key: 'parseAction',
+		value: function parseAction(attr) {
 			var parsed = attr.split(':');
 			return parsed;
 		}
@@ -449,8 +456,6 @@ var Overlay = (function () {
 	return Overlay;
 })();
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
@@ -464,36 +469,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 */
 
-var Player = (function () {
-	function Player(props) {
-		_classCallCheck(this, Player);
+var Player = function Player(props) {
+	_classCallCheck(this, Player);
 
-		this["enum"] = Object.frezee({
-			awaiting: 0,
-			playing: 1
-		});
-		this.name = props.name;
-		this.gender = props.gender;
-		this.state = props.state;
-		this.pickRate = props.pickRate;
-		this.score = props.score;
-		this.views = props.views;
+	this.name = props.name;
+	this.gender = props.gender;
+	this.pickRate = props.pickRate || 0;
+	this.score = props.score || 0;
+	if (props.streak) {
 		this.streak = {
 			action: props.streak.action,
 			truth: props.streak.truth
 		};
+	} else {
+		this.streak = {
+			action: 0,
+			truth: 0
+		};
 	}
+};
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	_createClass(Player, [{
-		key: "streak",
-		value: function streak(type) {}
-	}]);
-
-	return Player;
-})();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var PlayerController = (function () {
 	function PlayerController() {
@@ -501,48 +498,67 @@ var PlayerController = (function () {
 	}
 
 	_createClass(PlayerController, [{
-		key: "getScoreBoard",
+		key: 'create',
+		value: function create(name, gender) {
+			if (this.isExist(name)) {
+				App.manager.Alert.show('error', Language[App.language].players.exist);
+				return false;
+			}
+			var player = new Player({
+				name: name,
+				gender: gender
+			});
+			App.data.players.push(player);
+			return player;
+		}
+	}, {
+		key: 'isExist',
+		value: function isExist(name) {
+			return _.getByKeyValue(App.data.players, 'name', name);
+		}
+	}, {
+		key: 'getScoreBoard',
 		value: function getScoreBoard() {
 			// return array of Players sorted by scores
 		}
 	}, {
-		key: "getAssistent",
+		key: 'getAssistent',
 		value: function getAssistent() {
 			// получить игрока ассисента (основываясь на пикрейт игроков)
 		}
 	}, {
-		key: "getCurrent",
+		key: 'getCurrent',
 		value: function getCurrent() {
 			// получить текущего игрока
 			// return instanceof Player
 		}
 	}, {
-		key: "getNext",
+		key: 'getNext',
 		value: function getNext() {
 			// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
 			// случайно
 			// return instanceof Player
 		}
 	}, {
-		key: "getPrevious",
+		key: 'getPrevious',
 		value: function getPrevious() {}
 	}, {
-		key: "getRandom",
+		key: 'getRandom',
 		value: function getRandom() {
 			// Получить рандомного игрока
 		}
 	}, {
-		key: "getLeader",
+		key: 'getLeader',
 		value: function getLeader() {
 			// Получить лидера по скорборду
 		}
 	}, {
-		key: "getLast",
+		key: 'getLast',
 		value: function getLast() {
 			// Получить последнего по скорборду
 		}
 	}, {
-		key: "getWinner",
+		key: 'getWinner',
 		value: function getWinner() {}
 	}]);
 
@@ -775,7 +791,7 @@ var VersionController = (function () {
 				} else if (_this.version !== false && requestFailed === false) {
 					_this.storage(true);
 				} else if (_this.version === false && requestFailed === false) {
-					App.manager.Alert('error', Language[App.language].badinternet, true);
+					App.manager.Alert.show('error', Language[App.language].badinternet, true);
 				}
 			};
 		}
@@ -1023,10 +1039,21 @@ var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
 	});
 };
 
-var required = function required(variables) {
+var _ = {};
+
+_.required = function (variables) {
 	variables.forEach(function (variable) {
 		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	});
+};
+
+_.getByKeyValue = function (arrayOfObjects, key, value) {
+	if (!Array.isArray(arrayOfObjects)) throw new Error('First argument should be an array of objects');
+	var finded = false;
+	arrayOfObjects.forEach(function (obj) {
+		if (obj[key] && obj[key] === value) finded = obj;
+	});
+	return finded;
 };
 
 var $ = document.querySelector.bind(document);
@@ -1047,6 +1074,9 @@ var CardModal = (function () {
 	}
 
 	_createClass(CardModal, [{
+		key: "setType",
+		value: function setType() {}
+	}, {
 		key: "__events",
 		value: function __events() {}
 	}]);
@@ -1119,17 +1149,58 @@ var PlayerModal = (function (_Modal) {
 		_classCallCheck(this, PlayerModal);
 
 		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
+		this.attr.input = 'data-player-input';
+		this.attr.button = 'data-player-create';
+		this.players = 'data-playerlist-player';
+		this.classes = ['disabled'];
 	}
 
 	_createClass(PlayerModal, [{
 		key: 'save',
 		value: function save() {}
 	}, {
-		key: 'check',
-		value: function check() {}
+		key: 'add',
+		value: function add() {
+			var name = $('[' + this.attr.input + ']').value,
+			    gender = getGender().value,
+			    created = App.manager.PlayerController.create(name, gender);
+			if (created) this.render();
+		}
 	}, {
 		key: 'render',
-		value: function render() {}
+		value: function render() {
+			// this
+			/*
+   	Закончил здесь
+   */
+		}
+	}, {
+		key: 'eventCondition',
+		value: function eventCondition(node) {
+			return node.hasAttribute('data-player-input') && node.value.length > 0 && this.getGender();
+		}
+	}, {
+		key: 'checkButton',
+		value: function checkButton(event) {
+			var input = $('[' + this.attr.input + ']');
+			if (this.eventCondition(input)) $('[' + this.attr.button + ']').classList.remove(this.classes[0]);else $('[' + this.attr.button + ']').classList.add(this.classes[0]);
+		}
+	}, {
+		key: 'getGender',
+		value: function getGender() {
+			return $('[name="players_gender"]:checked');
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			['keyup', 'mousedown', 'change'].forEach(function (e) {
+				document.addEventListener(e, function (event) {
+					_this.checkButton();
+				});
+			});
+		}
 	}]);
 
 	return PlayerModal;

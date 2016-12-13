@@ -1,6 +1,6 @@
 class Modal {
 	constructor(self) {
-		required([
+		_.required([
 			self
 		]);
 		this.attr = {
@@ -14,6 +14,7 @@ class Modal {
 		this.classes = ['js-disabled', 'js-finished', 'js-close'];
 		this.status = this.enum.DURING;
 		this.buttons = this.__buttons();
+		if (this.__events) this.__events();
 	}
 	check() {
 		return this.status === this.enum.FINISHED;
@@ -66,7 +67,7 @@ class Modals {
 		if (this.currnet.check()) this.current.buttons.enable();
 		else this.current.buttons.disable();
 	}
-	paserAction(attr) {
+	parseAction(attr) {
 		let parsed = attr.split(':');
 		return parsed;
 	}

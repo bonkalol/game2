@@ -97,20 +97,20 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	<div class="modal" data-players-modal>
 		<h2 class="modal_title">Добавить игроков</h2>
 		<section class="modal_content">
-			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
+			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
 			<div class="players_pick">
 				<div class="players_field">
 					<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
-					<span class="players_create" data-player-create>Добавить</span>
+					<span class="players_create disabled" data-modal-action="players:add" data-player-create>Добавить</span>
 				</div>
 				<div class="players_gender">
-					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
+					<input type="radio" name="players_gender" value="m" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
 					<label for="gender_m" class="players_gender_label">
 						<svg width="30" height="30">
 							<use xlink:href="#male">
 						</svg>
 					</label>
-					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
+					<input type="radio" name="players_gender" value="f" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
 					<label for="gender_f" class="players_gender_label">
 						<svg width="30" height="30">
 							<use xlink:href="#female">
@@ -119,9 +119,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 					<div class="players_gender_switcher"></div>
 				</div>
 			</div>
-			<div class="players_list" data-playerlist-view>
+			<div class="players_list">
 				{{~it.players :player:index}}
-					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player>{{=player.name}}</div>
 				{{~}}
 			</div>
 		</section>
