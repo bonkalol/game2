@@ -33,7 +33,7 @@ class App {
 	getInitialState() {
 		return {
 			started: false,
-			rubribcs: [],
+			rubrics: [],
 			players: [],
 			settings: {
 				repeatContent: false,

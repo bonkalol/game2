@@ -36,3 +36,6 @@ var $$ = document.querySelectorAll.bind(document);
 HTMLElement.prototype.$ = function (query) {
 	return this.querySelector(query);
 };
+NodeList.prototype.array = function () {
+	return [].slice.call(this);
+};

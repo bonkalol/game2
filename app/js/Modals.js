@@ -7,29 +7,28 @@ class Modal {
 			self: self,
 			action: 'data-modal-action'
 		};
-		this.enum = Object.freeze({
-			DURING: 0,
-			FINISHED: 1
-		});
-		this.classes = ['js-disabled', 'js-finished', 'js-close'];
-		this.status = this.enum.DURING;
+		this.baseClasses = ['js-disabled', 'js-finished', 'js-close'];
 		this.buttons = this.__buttons();
 		if (this.__events) this.__events();
 	}
 	check() {
-		return this.status === this.enum.FINISHED;
+		/*
+			@Custom for every popup
+			@Defined in popups
+		*/
 	}
 	getView() {
 		return $(`[${this.attr.self}]`);
 	}
 	next() {
-		this.getView().classList.add(this.classes[1]);
+		if (typeof this.beforeNext === 'function') this.beforeNext();
+		this.getView().classList.add(this.baseClasses[1]);
 	}
 	prev() {
-		this.getView().classList.remove(this.classes[1]);
+		this.getView().previousSibling.classList.remove(this.baseClasses[1]);
 	}
 	close() {
-		this.getView().classList.add(this.classes[2]);
+		this.getView().classList.add(this.baseClasses[2]);
 	}
 	save() {
 		/*
@@ -63,23 +62,19 @@ class Modals {
 		};
 		this.__events();
 	}
-	check() {
-		if (this.currnet.check()) this.current.buttons.enable();
-		else this.current.buttons.disable();
-	}
 	parseAction(attr) {
 		let parsed = attr.split(':');
 		return parsed;
 	}
-	dispatcher(name, action) {
-		this[name][action]();
+	dispatcher(name, action, event) {
+		this[name][action](event);
 	}
 	__events() {
 		document.addEventListener('mousedown', (event) => {
 			let closest = event.target.closest(`[${this.attr.action}]`);
 			if (closest) {
 				let parsed = this.parseAction(closest.getAttribute(this.attr.action));
-				this.dispatcher(parsed[0], parsed[1]);
+				this.dispatcher(parsed[0], parsed[1], event);
 			}
 		});
 	}

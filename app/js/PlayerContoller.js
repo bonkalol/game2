@@ -2,18 +2,12 @@ class PlayerController {
 	constructor() {
 	}
 	create(name, gender) {
-		if (this.isExist(name)) {
-			App.manager.Alert.show('error', Language[App.language].players.exist);
-			return false;
-		}
-		let player = new Player({
+		return App.data.players.push(new Player({
 			name,
 			gender
-		})
-		App.data.players.push(player);
-		return player;
+		}));
 	}
-	isExist(name) {
+	exist(name) {
 		return _.getByKeyValue(App.data.players, 'name', name);
 	}
 	getScoreBoard() {

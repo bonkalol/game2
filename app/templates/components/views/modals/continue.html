@@ -1,26 +1,24 @@
-<script type="text/template" id="modal_continue">
-	<div class="modal modal_rubrics" data-continue-modal>
-		<h2 class="modal_title">Продолжить игру</h2>
-		<section class="modal_content">
-			<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
-			<div class="continue">
-				<div class="continue_title">Игроки в предыидущей игре:</div>
-				<div class="continue_players">
-					<div class="players_list">
-						{{~it.players :player:index}}
-							<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
-						{{~}}
-					</div>
+<div class="modal modal_rubrics" data-continue-modal>
+	<h2 class="modal_title">Продолжить игру</h2>
+	<section class="modal_content">
+		<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
+		<div class="continue">
+			<div class="continue_title">Игроки в предыидущей игре:</div>
+			<div class="continue_players">
+				<div class="players_list">
+					{{~it.players :player:index}}
+						<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+					{{~}}
 				</div>
 			</div>
-		</section>
-		<footer class="modal_action modal_action--double">
-			<button type="button" data-modal-action="continue:restart" class="button button--small">
-				<span class="button_text">Новая</span>
-			</button>
-			<button type="button" data-modal-action="continue:continue" class="button button--small">
-				<span class="button_text">Продолжить</span>
-			</button>
-		</footer>
-	</div>
-</script>
+		</div>
+	</section>
+	<footer class="modal_action modal_action--double">
+		<button type="button" data-modal-action="continue:restart" class="button button--small">
+			<span class="button_text">Новая</span>
+		</button>
+		<button type="button" data-modal-action="continue:continue" class="button button--small">
+			<span class="button_text">Продолжить</span>
+		</button>
+	</footer>
+</div>

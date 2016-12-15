@@ -8,7 +8,7 @@ class Render {
 		};
 		this.templates = {
 			players:     document.querySelector('#modal_players'),
-			rubrics:     document.querySelector('#modal_rubrics'),
+			rubrics:     document.querySelector('#modal_rubric'),
 			settings:    document.querySelector('#modal_settings'),
 			rules:       document.querySelector('#modal_rules'),
 			continue:    document.querySelector('#modal_continue'),

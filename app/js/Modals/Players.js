@@ -6,20 +6,20 @@ class PlayerModal extends Modal {
 		this.players = 'data-playerlist-player';
 		this.classes = ['disabled'];
 	}
-	save() {
-		
-	}
-	add() {
+	add(event) {
+		event.preventDefault();
 		let name = $(`[${this.attr.input}]`).value,
-			gender = getGender().value,
-			created = App.manager.PlayerController.create(name, gender);
-		if (created) this.render();
+			gender = this.getGender().value,
+			player = null;
+		if (App.manager.PlayerController.exist(name)) {
+			App.manager.Alert.show('error', Language[App.language].players.exist);
+			return false;
+		}
+		App.manager.PlayerController.create(name, gender);
+		this.render();
 	}
 	render() {
-		// this
-		/*
-			Закончил здесь
-		*/
+		$(`[${this.attr.self}]`).outerHTML = App.manager.Render.modalPlayers();
 	}
 	eventCondition(node) {
 		return node.hasAttribute('data-player-input') &&

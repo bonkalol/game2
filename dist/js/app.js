@@ -104,7 +104,7 @@ var App = (function () {
 		value: function getInitialState() {
 			return {
 				started: false,
-				rubribcs: [],
+				rubrics: [],
 				players: [],
 				settings: {
 					repeatContent: false,
@@ -159,17 +159,6 @@ var Content = (function () {
 	}]);
 
 	return Content;
-})();
-(function mouseDown() {
-	var queue = function queue(node, e) {
-		if (node.closest('[' + App.attr.getTruth + ']')) App.getTruth();
-		if (node.closest('[' + App.attr.getAction + ']')) App.getAction();
-		if (node.closest('[' + App.manager.Sidebar.attr.button + ']')) App.manager.Sidebar.check();
-	};
-	document.addEventListener('mousedown', function (e) {
-		queue(e.target, e);
-	}, false);
-	// Rewrite to events() in classes
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -283,12 +272,7 @@ var Modal = (function () {
 			self: self,
 			action: 'data-modal-action'
 		};
-		this['enum'] = Object.freeze({
-			DURING: 0,
-			FINISHED: 1
-		});
-		this.classes = ['js-disabled', 'js-finished', 'js-close'];
-		this.status = this['enum'].DURING;
+		this.baseClasses = ['js-disabled', 'js-finished', 'js-close'];
 		this.buttons = this.__buttons();
 		if (this.__events) this.__events();
 	}
@@ -296,7 +280,10 @@ var Modal = (function () {
 	_createClass(Modal, [{
 		key: 'check',
 		value: function check() {
-			return this.status === this['enum'].FINISHED;
+			/*
+   	@Custom for every popup
+   	@Defined in popups
+   */
 		}
 	}, {
 		key: 'getView',
@@ -306,17 +293,18 @@ var Modal = (function () {
 	}, {
 		key: 'next',
 		value: function next() {
-			this.getView().classList.add(this.classes[1]);
+			if (typeof this.beforeNext === 'function') this.beforeNext();
+			this.getView().classList.add(this.baseClasses[1]);
 		}
 	}, {
 		key: 'prev',
 		value: function prev() {
-			this.getView().classList.remove(this.classes[1]);
+			this.getView().previousSibling.classList.remove(this.baseClasses[1]);
 		}
 	}, {
 		key: 'close',
 		value: function close() {
-			this.getView().classList.add(this.classes[2]);
+			this.getView().classList.add(this.baseClasses[2]);
 		}
 	}, {
 		key: 'save',
@@ -363,11 +351,6 @@ var Modals = (function () {
 	}
 
 	_createClass(Modals, [{
-		key: 'check',
-		value: function check() {
-			if (this.currnet.check()) this.current.buttons.enable();else this.current.buttons.disable();
-		}
-	}, {
 		key: 'parseAction',
 		value: function parseAction(attr) {
 			var parsed = attr.split(':');
@@ -375,8 +358,8 @@ var Modals = (function () {
 		}
 	}, {
 		key: 'dispatcher',
-		value: function dispatcher(name, action) {
-			this[name][action]();
+		value: function dispatcher(name, action, event) {
+			this[name][action](event);
 		}
 	}, {
 		key: '__events',
@@ -387,7 +370,7 @@ var Modals = (function () {
 				var closest = event.target.closest('[' + _this2.attr.action + ']');
 				if (closest) {
 					var parsed = _this2.parseAction(closest.getAttribute(_this2.attr.action));
-					_this2.dispatcher(parsed[0], parsed[1]);
+					_this2.dispatcher(parsed[0], parsed[1], event);
 				}
 			});
 		}
@@ -500,20 +483,14 @@ var PlayerController = (function () {
 	_createClass(PlayerController, [{
 		key: 'create',
 		value: function create(name, gender) {
-			if (this.isExist(name)) {
-				App.manager.Alert.show('error', Language[App.language].players.exist);
-				return false;
-			}
-			var player = new Player({
+			return App.data.players.push(new Player({
 				name: name,
 				gender: gender
-			});
-			App.data.players.push(player);
-			return player;
+			}));
 		}
 	}, {
-		key: 'isExist',
-		value: function isExist(name) {
+		key: 'exist',
+		value: function exist(name) {
 			return _.getByKeyValue(App.data.players, 'name', name);
 		}
 	}, {
@@ -617,7 +594,7 @@ var Render = (function () {
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics'),
+			rubrics: document.querySelector('#modal_rubric'),
 			settings: document.querySelector('#modal_settings'),
 			rules: document.querySelector('#modal_rules'),
 			'continue': document.querySelector('#modal_continue'),
@@ -716,6 +693,7 @@ var Sidebar = (function () {
 		});
 		this.self = document.querySelector('[' + this.attr.self + ']');
 		this.state = this['enum'].closed;
+		this.__events();
 	}
 
 	_createClass(Sidebar, [{
@@ -740,6 +718,9 @@ var Sidebar = (function () {
 			this.state = this['enum'].closed;
 			this.self.classList.remove(this['enum'].opened);
 		}
+	}, {
+		key: '__events',
+		value: function __events() {}
 	}]);
 
 	return Sidebar;
@@ -1061,6 +1042,51 @@ var $$ = document.querySelectorAll.bind(document);
 HTMLElement.prototype.$ = function (query) {
 	return this.querySelector(query);
 };
+NodeList.prototype.array = function () {
+	return [].slice.call(this);
+};
+if (!Object.prototype.watch) {
+	Object.defineProperty(Object.prototype, "watch", {
+		enumerable: false,
+		configurable: true,
+		writable: false,
+		value: function value(prop, handler) {
+			var oldval = this[prop],
+			    newval = oldval,
+			    getter = function getter() {
+				return newval;
+			},
+			    setter = function setter(val) {
+				oldval = newval;
+				return newval = handler.call(this, prop, oldval, val);
+			};
+
+			if (delete this[prop]) {
+				// can't watch constants
+				Object.defineProperty(this, prop, {
+					get: getter,
+					set: setter,
+					enumerable: true,
+					configurable: true
+				});
+			}
+		}
+	});
+}
+
+// object.unwatch
+if (!Object.prototype.unwatch) {
+	Object.defineProperty(Object.prototype, "unwatch", {
+		enumerable: false,
+		configurable: true,
+		writable: false,
+		value: function value(prop) {
+			var val = this[prop];
+			delete this[prop]; // remove accessors
+			this[prop] = val;
+		}
+	});
+}
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1156,23 +1182,23 @@ var PlayerModal = (function (_Modal) {
 	}
 
 	_createClass(PlayerModal, [{
-		key: 'save',
-		value: function save() {}
-	}, {
 		key: 'add',
-		value: function add() {
+		value: function add(event) {
+			event.preventDefault();
 			var name = $('[' + this.attr.input + ']').value,
-			    gender = getGender().value,
-			    created = App.manager.PlayerController.create(name, gender);
-			if (created) this.render();
+			    gender = this.getGender().value,
+			    player = null;
+			if (App.manager.PlayerController.exist(name)) {
+				App.manager.Alert.show('error', Language[App.language].players.exist);
+				return false;
+			}
+			App.manager.PlayerController.create(name, gender);
+			this.render();
 		}
 	}, {
 		key: 'render',
 		value: function render() {
-			// this
-			/*
-   	Закончил здесь
-   */
+			$('[' + this.attr.self + ']').outerHTML = App.manager.Render.modalPlayers();
 		}
 	}, {
 		key: 'eventCondition',
@@ -1219,12 +1245,42 @@ var RubricsModal = (function (_Modal) {
 	function RubricsModal() {
 		_classCallCheck(this, RubricsModal);
 
-		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubrics-modal');
+		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubric-modal');
 	}
 
 	_createClass(RubricsModal, [{
 		key: 'save',
 		value: function save() {}
+	}, {
+		key: 'change',
+		value: function change() {
+			App.data.rubrics = [];
+			$$('[name="rubrics"]:checked').array().forEach(function (checked) {
+				App.data.rubrics.push(checked.value);
+			});
+			this.render();
+		}
+	}, {
+		key: 'beforeNext',
+		value: function beforeNext() {
+			this.save();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			this.getView().outerHTML = App.manager.Render.modalRubrics();
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			document.addEventListener('mouseup', function (e) {
+				if (e.target.previousSibling && e.target.previousSibling.closest('[name="rubrics"]')) {
+					_this.change();
+				}
+			});
+		}
 	}]);
 
 	return RubricsModal;
