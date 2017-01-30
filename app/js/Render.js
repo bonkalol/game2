@@ -7,13 +7,14 @@ class Render {
 			main: null
 		};
 		this.templates = {
-			players:     document.querySelector('#modal_players'),
-			rubrics:     document.querySelector('#modal_rubric'),
-			settings:    document.querySelector('#modal_settings'),
-			rules:       document.querySelector('#modal_rules'),
-			continue:    document.querySelector('#modal_continue'),
-			card:        document.querySelector('#modal_card'),
-			gamePlayers: document.querySelector('#game_players')
+			players:     	document.querySelector('#modal_players'),
+			rubrics:     	document.querySelector('#modal_rubrics'),
+			rubrics_footer: document.querySelector('#modal_rubrics_footer'),
+			settings:    	document.querySelector('#modal_settings'),
+			rules:       	document.querySelector('#modal_rules'),
+			continue:    	document.querySelector('#modal_continue'),
+			card:        	document.querySelector('#modal_card'),
+			gamePlayers: 	document.querySelector('#game_players')
 		};
 	}
 
@@ -50,6 +51,11 @@ class Render {
 	modalContinue() {
 		let gameContinue = this.render(this.templates.continue, App.manager.Storage.get('Game'));
 		return gameContinue;
+	}
+
+	rubrics_footer() {
+		let rubrics_footer = this.render(this.templates.rubrics_footer, App.data);
+		return rubrics_footer;
 	}
 
 	GamePlayers() {

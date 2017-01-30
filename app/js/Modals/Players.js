@@ -1,8 +1,11 @@
 class PlayerModal extends Modal {
 	constructor() {
 		super('data-player-modal');
-		this.attr.input = 'data-player-input';
-		this.attr.button = 'data-player-create';
+		this.selfAttributes = {
+			input: 'data-player-input',
+			button: 'data-player-create'
+		};
+		this.attr = Object.assign(this.attr, this.selfAttributes);
 		this.players = 'data-playerlist-player';
 		this.classes = ['disabled'];
 	}

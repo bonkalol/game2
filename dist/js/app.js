@@ -594,7 +594,8 @@ var Render = (function () {
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubric'),
+			rubrics: document.querySelector('#modal_rubrics'),
+			rubrics_footer: document.querySelector('#modal_rubrics_footer'),
 			settings: document.querySelector('#modal_settings'),
 			rules: document.querySelector('#modal_rules'),
 			'continue': document.querySelector('#modal_continue'),
@@ -644,6 +645,12 @@ var Render = (function () {
 		value: function modalContinue() {
 			var gameContinue = this.render(this.templates['continue'], App.manager.Storage.get('Game'));
 			return gameContinue;
+		}
+	}, {
+		key: 'rubrics_footer',
+		value: function rubrics_footer() {
+			var rubrics_footer = this.render(this.templates.rubrics_footer, App.data);
+			return rubrics_footer;
 		}
 	}, {
 		key: 'GamePlayers',
@@ -1175,8 +1182,11 @@ var PlayerModal = (function (_Modal) {
 		_classCallCheck(this, PlayerModal);
 
 		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
-		this.attr.input = 'data-player-input';
-		this.attr.button = 'data-player-create';
+		this.selfAttributes = {
+			input: 'data-player-input',
+			button: 'data-player-create'
+		};
+		this.attr = Object.assign(this.attr, this.selfAttributes);
 		this.players = 'data-playerlist-player';
 		this.classes = ['disabled'];
 	}
@@ -1246,6 +1256,12 @@ var RubricsModal = (function (_Modal) {
 		_classCallCheck(this, RubricsModal);
 
 		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubric-modal');
+		this.selfAttributes = {
+			rubrics: 'name="rubrics"',
+			name: 'name'
+		};
+		this.nameValue = 'rubrics';
+		this.attr = Object.assign(this.attr, this.selfAttributes);
 	}
 
 	_createClass(RubricsModal, [{
@@ -1255,10 +1271,10 @@ var RubricsModal = (function (_Modal) {
 		key: 'change',
 		value: function change() {
 			App.data.rubrics = [];
-			$$('[name="rubrics"]:checked').array().forEach(function (checked) {
+			$$('[' + this.attr.rubrics + ']:checked').array().forEach(function (checked) {
 				App.data.rubrics.push(checked.value);
 			});
-			this.render();
+			this.updateView();
 		}
 	}, {
 		key: 'beforeNext',
@@ -1271,12 +1287,17 @@ var RubricsModal = (function (_Modal) {
 			this.getView().outerHTML = App.manager.Render.modalRubrics();
 		}
 	}, {
+		key: 'updateView',
+		value: function updateView() {
+			this.getView().querySelector('footer').outerHTML = App.manager.Render.rubrics_footer();
+		}
+	}, {
 		key: '__events',
 		value: function __events() {
 			var _this = this;
 
-			document.addEventListener('mouseup', function (e) {
-				if (e.target.previousSibling && e.target.previousSibling.closest('[name="rubrics"]')) {
+			document.addEventListener('change', function (e) {
+				if (e.target.getAttribute(_this.attr.name) === _this.nameValue) {
 					_this.change();
 				}
 			});
