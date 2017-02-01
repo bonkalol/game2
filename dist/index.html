@@ -22,23 +22,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, maximum-scale=1.0">
 	<script>
 	!function(e,t){"use strict";var n="img/symbol/svg/sprite.symbol.svg",
-a=10;if(!t.createElementNS||!t.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect)return!0;var o,r,l="localStorage"in e&&null!==e.localStorage,i=function(){t.body.insertAdjacentHTML("afterbegin",r)},s=function(){t.body?i():t.addEventListener("DOMContentLoaded",i)};if(l&&localStorage.getItem("inlineSVGrev")==a&&(r=localStorage.getItem("inlineSVGdata")))return s(),!0;try{o=new XMLHttpRequest,o.open("GET",n,!0),o.onload=function(){o.status>=200&&o.status<400&&(r=o.responseText,s(),l&&(localStorage.setItem("inlineSVGdata",r),localStorage.setItem("inlineSVGrev",a)))},o.send()}catch(c){}}(window,document);
+a=11;if(!t.createElementNS||!t.createElementNS("http://www.w3.org/2000/svg","svg").createSVGRect)return!0;var o,r,l="localStorage"in e&&null!==e.localStorage,i=function(){t.body.insertAdjacentHTML("afterbegin",r)},s=function(){t.body?i():t.addEventListener("DOMContentLoaded",i)};if(l&&localStorage.getItem("inlineSVGrev")==a&&(r=localStorage.getItem("inlineSVGdata")))return s(),!0;try{o=new XMLHttpRequest,o.open("GET",n,!0),o.onload=function(){o.status>=200&&o.status<400&&(r=o.responseText,s(),l&&(localStorage.setItem("inlineSVGdata",r),localStorage.setItem("inlineSVGrev",a)))},o.send()}catch(c){}}(window,document);
 	function loadFont(t,e,n){function a(){if(!window.FontFace)return!1;var t=new FontFace("t",'url("data:application/font-woff2,") format("woff2")',{});return t.load(),"loading"===t.status}var o=navigator.userAgent,r=!window.addEventListener||o.match(/(Android (2|3|4.0|4.1|4.2|4.3))|(Opera (Mini|Mobi))/)&&!o.match(/Chrome/);if(!r){var i={};try{i=localStorage||{}}catch(s){}var d="x-font-"+t,c=d+"url",l=d+"css",u=i[c],f=i[l],p=document.createElement("style");if(p.rel="stylesheet",document.head.appendChild(p),!f||u!==e&&u!==n){var w=n&&a()?n:e,h=new XMLHttpRequest;h.open("GET",w),h.onload=function(){h.status>=200&&h.status<400&&(i[c]=w,i[l]=p.textContent=h.responseText)},h.send()}else p.textContent=f}}
 loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 </script>
+
 	<script>var JV = '1';</script>
 	<!-- make gulp task "gulp release -patch. if -patch key exist, update JV version"-->
 	<!-- make gulp task "gulp release -cache. if -cache key exist, update manifest version"-->
 	<script src="js/app.js" async></script>
 </head>
 <body>
-	<div class="preloader" data-preloader>
+	<div class="inner">
+		<div class="preloader" data-preloader>
 	<div class="circular">
 		<div class="spin"></div>
 	</div>
 	<div class="preloader_text">Загружаю...</div>
 </div>
-	<div class="alert" data-alert>
+		<div class="alert" data-alert>
 	<div class="alert_icon">
 		<svg width=24 height=24 class="alert_icon_success">
 			<use xlink:href="#success"></use>
@@ -52,11 +54,11 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 	<div class="alert_inner" data-alert-content></div>
 </div>
-	<div class="modals" data-modals-view>
-	</div>
-	<!-- <div class="modal_shadow"></div> -->
-	<div class="game_view hidden" data-game-view>
-		<div class="game">
+		<div class="modals" data-modals-view>
+		</div>
+		<!-- <div class="modal_shadow"></div> -->
+		<div class="game_view hidden" data-game-view>
+			<div class="game">
 	<div class="game_header">
 		<div class="game_players_wrapper">
 			<div class="game_players" data-game-players>
@@ -80,9 +82,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</div>
 	</div>
 </div>
-	</div>
-	<div class="overlay hidden" data-overlay></div>
-	<div class="game_sidebar" data-sidebar>
+		</div>
+		<div class="overlay hidden" data-overlay></div>
+		<div class="game_sidebar" data-sidebar>
 	<ul class="game_sidebar_list">
 		<li class="game_sidebar_item"><a class="game_sidebar_link" href="javascript:void(0);" data-new-game>Начать заново</a></li>
 		<li class="game_sidebar_item"><a class="game_sidebar_link" href="javascript:void(0);" data-show-modal="modal_players">Игроки</a></li>
@@ -93,7 +95,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<li class="game_sidebar_item"><a class="game_sidebar_link" href="javascript:void(0);">Поддержать проект</a></li>
 	</ul>
 </div>
-	<script type="text/template" id="modal_players">
+		<script type="text/template" id="modal_players">
 	<div class="modal" data-player-modal>
 		<h2 class="modal_title">Добавить игроков</h2>
 		<section class="modal_content">
@@ -119,9 +121,16 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 					<div class="players_gender_switcher"></div>
 				</div>
 			</div>
-			<div class="players_list">
+			<div class="players_list" data-player-sortable>
 				{{~it.players :player:index}}
-					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player>{{=player.name}}</div>
+					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player={{=player.id}}>
+						<span class="players_player_item" data-player-sortable-handle>{{=player.name}}</span>
+						<span class="players_player_remove" data-modal-action="players:remove">
+							<svg width=16 height=16>
+								<use xlink:href="#trash">
+							</svg>
+						</span>
+					</div>
 				{{~}}
 			</div>
 		</section>
@@ -142,7 +151,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 
-	<script type="text/template" id="modal_rubrics">
+		<script type="text/template" id="modal_rubrics">
 	<div class="modal modal_rubrics" data-rubric-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content">
@@ -198,7 +207,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</footer>
 </script>
 
-	<script type="text/template" id="modal_settings">
+		<script type="text/template" id="modal_settings">
 	<div class="modal" data-settings-modal>
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content modal_content--settings">
@@ -309,7 +318,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 
-	<script type="text/template" id="modal_rules">
+		<script type="text/template" id="modal_rules">
 	<div class="modal modal_rubrics" data-rules-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content rules">
@@ -338,7 +347,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 
-	<script type="text/template" id="modal_continue">
+		<script type="text/template" id="modal_continue">
 	<div class="modal modal_rubrics" data-continue-modal>
 		<h2 class="modal_title">Продолжить игру</h2>
 		<section class="modal_content">
@@ -365,7 +374,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 
-	<script type="text/template" id="modal_card">
+		<script type="text/template" id="modal_card">
 	<div class="card" data-card>
 
 		<div class="card_slider">
@@ -421,7 +430,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 
-	<script type="text/template" id="game_players">
+		<script type="text/template" id="game_players">
 	{{~it.players :player:index}}
 		<div class="game_player">
 			{{?player.gender === 'f'}}
@@ -450,5 +459,6 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</div>
 	{{~}}
 </script>
+	</div>
 </body>
 </html>

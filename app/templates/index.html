@@ -9,22 +9,24 @@
 	<script src="js/app.js" async></script>
 </head>
 <body>
-	@@include('components/preloader.html')
-	@@include('components/alert.html')
-	<div class="modals" data-modals-view>
+	<div class="inner">
+		@@include('components/preloader.html')
+		@@include('components/alert.html')
+		<div class="modals" data-modals-view>
+		</div>
+		<!-- <div class="modal_shadow"></div> -->
+		<div class="game_view hidden" data-game-view>
+			@@include('components/views/game/game.html')
+		</div>
+		<div class="overlay hidden" data-overlay></div>
+		@@include('components/views/game/sidebar.html')
+		@@include('components/views/modals/players.html')
+		@@include('components/views/modals/rubrics.html')
+		@@include('components/views/modals/settings.html')
+		@@include('components/views/modals/rules.html')
+		@@include('components/views/modals/continue.html')
+		@@include('components/views/modals/card.html')
+		@@include('components/views/game/players.html')
 	</div>
-	<!-- <div class="modal_shadow"></div> -->
-	<div class="game_view hidden" data-game-view>
-		@@include('components/views/game/game.html')
-	</div>
-	<div class="overlay hidden" data-overlay></div>
-	@@include('components/views/game/sidebar.html')
-	@@include('components/views/modals/players.html')
-	@@include('components/views/modals/rubrics.html')
-	@@include('components/views/modals/settings.html')
-	@@include('components/views/modals/rules.html')
-	@@include('components/views/modals/continue.html')
-	@@include('components/views/modals/card.html')
-	@@include('components/views/game/players.html')
 </body>
 </html>

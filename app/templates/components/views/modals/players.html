@@ -24,9 +24,16 @@
 					<div class="players_gender_switcher"></div>
 				</div>
 			</div>
-			<div class="players_list">
+			<div class="players_list" data-player-sortable>
 				{{~it.players :player:index}}
-					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player>{{=player.name}}</div>
+					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player={{=player.id}}>
+						<span class="players_player_item" data-player-sortable-handle>{{=player.name}}</span>
+						<span class="players_player_remove" data-modal-action="players:remove">
+							<svg width=16 height=16>
+								<use xlink:href="#trash">
+							</svg>
+						</span>
+					</div>
 				{{~}}
 			</div>
 		</section>

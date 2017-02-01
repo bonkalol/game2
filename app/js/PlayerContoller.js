@@ -7,6 +7,10 @@ class PlayerController {
 			gender
 		}));
 	}
+	remove(id) {
+		let index = App.data.players.indexOf(_.getByKeyValue(App.data.players, 'id', id));
+		return App.data.players.splice(index, 1);
+	}
 	exist(name) {
 		return _.getByKeyValue(App.data.players, 'name', name);
 	}
@@ -38,6 +42,6 @@ class PlayerController {
 		// Получить последнего по скорборду
 	}
 	getWinner() {
-		
+
 	}
 }

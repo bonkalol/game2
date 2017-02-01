@@ -67,8 +67,7 @@ class Render {
 		Screens
 	*/
 	_screen0() {
-		let view = this.modalContinue();
-		this.views.modals.innerHTML = view;
+		this.views.modals.innerHTML = this.modalContinue();
 	}
 
 	_screen1() {
