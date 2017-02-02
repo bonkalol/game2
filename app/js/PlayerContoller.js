@@ -19,6 +19,7 @@ class PlayerController {
 	}
 	getAssistent() {
 		// получить игрока ассисента (основываясь на пикрейт игроков)
+		// return instanceof Player
 	}
 	getCurrent() {
 		// получить текущего игрока
@@ -30,18 +31,21 @@ class PlayerController {
 		// return instanceof Player
 	}
 	getPrevious() {
-
+		// return instanceof Player
 	}
 	getRandom(){
 		// Получить рандомного игрока
+		// return instanceof Player
 	}
 	getLeader() {
 		// Получить лидера по скорборду
+		// return instanceof Player
 	}
 	getLast() {
 		// Получить последнего по скорборду
+		// return instanceof Player
 	}
 	getWinner() {
-
+		// return instanceof Player
 	}
 }

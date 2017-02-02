@@ -525,6 +525,7 @@ var PlayerController = (function () {
 		key: 'getAssistent',
 		value: function getAssistent() {
 			// получить игрока ассисента (основываясь на пикрейт игроков)
+			// return instanceof Player
 		}
 	}, {
 		key: 'getCurrent',
@@ -541,25 +542,32 @@ var PlayerController = (function () {
 		}
 	}, {
 		key: 'getPrevious',
-		value: function getPrevious() {}
+		value: function getPrevious() {
+			// return instanceof Player
+		}
 	}, {
 		key: 'getRandom',
 		value: function getRandom() {
 			// Получить рандомного игрока
+			// return instanceof Player
 		}
 	}, {
 		key: 'getLeader',
 		value: function getLeader() {
 			// Получить лидера по скорборду
+			// return instanceof Player
 		}
 	}, {
 		key: 'getLast',
 		value: function getLast() {
 			// Получить последнего по скорборду
+			// return instanceof Player
 		}
 	}, {
 		key: 'getWinner',
-		value: function getWinner() {}
+		value: function getWinner() {
+			// return instanceof Player
+		}
 	}]);
 
 	return PlayerController;
@@ -2650,11 +2658,72 @@ var SettingsModal = (function (_Modal) {
 		_classCallCheck(this, SettingsModal);
 
 		_get(Object.getPrototypeOf(SettingsModal.prototype), 'constructor', this).call(this, 'data-settings-modal');
+		this.selfAttributes = {
+			binded: 'data-bind',
+			type: 'type'
+		};
+		this.INPUT_TYPES = Object.freeze({
+			CHECKBOX: 'checkbox'
+		});
+		this.attr = Object.assign(this.attr, this.selfAttributes);
+		this.__events();
 	}
 
 	_createClass(SettingsModal, [{
-		key: 'save',
-		value: function save() {}
+		key: 'handleBind',
+		value: function handleBind(binded) {
+			var parsed = this.parse(binded.getAttribute(this.attr.binded)),
+			    value = null;
+			try {
+				value = JSON.parse(binded.value);
+			} catch (e) {
+				value = binded.value;
+			}
+			if (Array.isArray(parsed)) {
+				App.data.settings[parsed[0]][parsed[1]] = value;
+			} else {
+				App.data.settings[parsed] = value;
+			}
+		}
+	}, {
+		key: 'parse',
+		value: function parse(attr) {
+			var splited = attr.split('-');
+			return splited.length === 1 ? splited[0] : splited;
+		}
+	}, {
+		key: 'setSettings',
+		value: function setSettings() {
+			var _this = this;
+
+			var binded = $$('\n\t\t\t[' + this.attr.binded + ']:checked,\n\t\t\t[' + this.attr.binded + '][' + this.attr.type + '="' + this.INPUT_TYPES.CHECKBOX + '"]\n\t\t').array();
+			binded.forEach(function (bind) {
+				_this.handleBind(bind);
+			});
+		}
+	}, {
+		key: 'setValue',
+		value: function setValue(node) {
+			node.value = node.checked;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			this.getView().outerHTML = App.manager.Render.modalSettings();
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this2 = this;
+
+			document.addEventListener('change', function (event) {
+				var target = event.target;
+				if (target.hasAttribute(_this2.attr.binded)) {
+					if (target.getAttribute(_this2.attr.type) === _this2.INPUT_TYPES.CHECKBOX) _this2.setValue(target);
+					_this2.setSettings();
+				}
+			}, false);
+		}
 	}]);
 
 	return SettingsModal;
