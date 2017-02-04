@@ -102,7 +102,7 @@
 	}
 
 	&_player {
-		padding: 7px;
+		height: 32px;
 		display: inline-block;
 		margin: 12px 0;
 		margin-left: 5px;
@@ -113,11 +113,28 @@
 
 		&--f {
 			background-color: #e91e63;
+			border: 1px solid #e91e63;
 		}
 
 		&--m {
 			background-color: #03a9f4;
+			border: 1px solid #03a9f4;
 		}
 	}
-}
 
+	&_player_item {
+		height: 100%;
+		@include flex(center, center);
+		float: left;
+		padding: 0 3px;
+	}
+
+	&_player_remove {
+		height: 100%;
+		@include flex(center, center);
+		float: left;
+		background-color: #fff;
+		padding: 0 7px;
+		fill: #000;
+	}
+}
