@@ -59,7 +59,14 @@ class Modals {
 		this.card = new CardModal();
 		this.attr = {
 			action: 'data-modal-action',
+			self: 'data-modals-view'
 		};
+		this.nodes = {
+			self: $(`[${this.attr.self}]`)
+		};
+		this.classes = {
+			hidden: 'js-hidden'
+		}
 		this.__events();
 	}
 	parseAction(attr) {
@@ -68,6 +75,12 @@ class Modals {
 	}
 	dispatcher(name, action, event) {
 		this[name][action](event);
+	}
+	hide() {
+		this.nodes.self.classList.add(this.classes.hidden);
+	}
+	show() {
+		this.nodes.self.classList.remove(this.classes.hidden);
 	}
 	__events() {
 		document.addEventListener('mousedown', (event) => {

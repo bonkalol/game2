@@ -11,20 +11,22 @@
 
 class Player {
 	constructor(props) {
+		this.props = {};
+		if (props.id) {
+			_.setProps(this, props);
+		} else {
+			this.initProps(props);
+		}
+	}
+	initProps(props) {
 		this.name = props.name;
 		this.gender = props.gender;
-		this.pickRate = props.pickRate || 0;
-		this.score = props.score || 0;
-		if (props.streak) {
-			this.streak = {
-				action: props.streak.action,
-				truth: props.streak.truth
-			};
-		} else {
-			this.streak = {
-				action: 0,
-				truth: 0
-			};
+		this.pickRate = 0;
+		this.score = 0;
+		this.id = _.getRandom();
+		this.streak = {
+			action: 0,
+			truth: 0
 		}
 	}
 }

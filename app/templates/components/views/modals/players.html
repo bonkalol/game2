@@ -1,44 +1,55 @@
-<div class="modal" data-player-modal>
-	<h2 class="modal_title">Добавить игроков</h2>
-	<section class="modal_content">
-		<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
-		<div class="players_pick">
-			<div class="players_field">
-				<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
-				<span class="players_create disabled" data-modal-action="players:add" data-player-create>Добавить</span>
+<script type="text/template" id="modal_players">
+	<div class="modal" data-player-modal>
+		<h2 class="modal_title">Добавить игроков</h2>
+		<section class="modal_content">
+			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
+			<div class="players_pick">
+				<div class="players_field">
+					<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+					<span class="players_create disabled" data-modal-action="players:add" data-player-create>Добавить</span>
+				</div>
+				<div class="players_gender">
+					<input type="radio" name="players_gender" value="m" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
+					<label for="gender_m" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#male">
+						</svg>
+					</label>
+					<input type="radio" name="players_gender" value="f" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
+					<label for="gender_f" class="players_gender_label">
+						<svg width="30" height="30">
+							<use xlink:href="#female">
+						</svg>
+					</label>
+					<div class="players_gender_switcher"></div>
+				</div>
 			</div>
-			<div class="players_gender">
-				<input type="radio" name="players_gender" value="m" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
-				<label for="gender_m" class="players_gender_label">
-					<svg width="30" height="30">
-						<use xlink:href="#male">
-					</svg>
-				</label>
-				<input type="radio" name="players_gender" value="f" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
-				<label for="gender_f" class="players_gender_label">
-					<svg width="30" height="30">
-						<use xlink:href="#female">
-					</svg>
-				</label>
-				<div class="players_gender_switcher"></div>
+			<div class="players_list" data-player-sortable>
+				{{~it.players :player:index}}
+					<div class="players_player players_player--{{=player.gender}}" data-playerlist-player={{=player.id}}>
+						<span class="players_player_item" data-player-sortable-handle>{{=player.name}}</span>
+						<span class="players_player_remove" data-modal-action="players:remove">
+							<svg width=16 height=16>
+								<use xlink:href="#trash">
+							</svg>
+						</span>
+					</div>
+				{{~}}
 			</div>
-		</div>
-		<div class="players_list">
-			{{~it.players :player:index}}
-				<div class="players_player players_player--{{=player.gender}}" data-playerlist-player>{{=player.name}}</div>
-			{{~}}
-		</div>
-	</section>
-</div>
-
+		</section>
 		<footer class="modal_action {{? it.started !== true }}modal_action--single{{??}}modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-modal-action="players:close" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-modal-action="players:save" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
+				<button type="button" data-modal-action="players:close" class="button">
+					<span class="button_text">Отмена</span>
+				</button>
 			{{??}}
-				<button type="button" data-modal-action="players:next" class="button {{? it.players.length < 2}} js-disabled {{?}}">
+				<button type="button" data-modal-action="players:next" class="button {{? it.players.length < 2}}js-disabled{{?}}">
 					<span class="button_text">Далее</span>
 				</button>
 			{{?}}
 		</footer>
+	</div>
+</script>

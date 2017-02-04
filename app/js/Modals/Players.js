@@ -1,8 +1,18 @@
 class PlayerModal extends Modal {
 	constructor() {
 		super('data-player-modal');
-		this.attr.input = 'data-player-input';
-		this.attr.button = 'data-player-create';
+		this.selfAttributes = {
+			input: 'data-player-input',
+			button: 'data-player-create',
+			sortable: 'data-player-sortable',
+			sortableHandle: 'data-player-sortable-handle',
+			player: 'data-playerlist-player'
+		};
+		this.sortableConfigs = {
+			animation: 150
+		};
+		this.sortableNode = null;
+		this.attr = Object.assign(this.attr, this.selfAttributes);
 		this.players = 'data-playerlist-player';
 		this.classes = ['disabled'];
 	}
@@ -18,8 +28,17 @@ class PlayerModal extends Modal {
 		App.manager.PlayerController.create(name, gender);
 		this.render();
 	}
+	remove(event) {
+		let id = event.target.closest(`[${this.attr.player}]`).getAttribute(this.attr.player);
+		App.manager.PlayerController.remove(id);
+		this.render();
+	}
 	render() {
 		$(`[${this.attr.self}]`).outerHTML = App.manager.Render.modalPlayers();
+		this.sortable();
+	}
+	sortable() {
+		this.sortableNode = new Sortable($(`[${this.attr.sortable}]`), this.sortableConfigs);
 	}
 	eventCondition(node) {
 		return node.hasAttribute('data-player-input') &&

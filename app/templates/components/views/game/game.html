@@ -12,13 +12,17 @@
 		</span>
 	</div>
 	<div class="game_view">
-		<div class="game_view_container">
-			<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>Соня<span class="game_view_inner-score more">1</span></span></div>
-			<div class="game_view_buttons">
-				<span role="button" class="game_view_button game_view_button--truth" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
-				<span class="game_view_buttons_separator">или</span>
-				<span role="button" class="game_view_button game_view_button--action" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
-			</div>
-		</div>
+
 	</div>
 </div>
+
+<script type="text/tempalte" id="game">
+	<div class="game_view_container">
+		<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score more">1</span></span></div>
+		<div class="game_view_buttons">
+			<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
+			<span class="game_view_buttons_separator">или</span>
+			<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
+		</div>
+	</div>
+</script>

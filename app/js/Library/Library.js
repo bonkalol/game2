@@ -31,6 +31,17 @@ _.getByKeyValue = function(arrayOfObjects, key, value) {
 	return finded;
 };
 
+_.getRandom = function() {
+	return parseInt(Math.random()*1e+10)+parseInt(Math.random()*1e+10)+String.fromCharCode(parseInt(Math.random()*(100-65)+65));
+}
+
+_.setProps = function(appendTo, object) {
+	Object.keys(object).forEach(function (prop) {
+		appendTo[prop] = object[prop];
+	});
+	return appendTo;
+}
+
 var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 HTMLElement.prototype.$ = function (query) {

@@ -1,6 +1,15 @@
 class Game {
 	constructor() {
 		this.check();
+		this.attr = {
+			self: 'data-game-view'
+		};
+		this.nodes = {
+			self: $(`[${this.attr.self}]`)
+		};
+		this.classes = {
+			hidden: 'js-hidden'
+		};
 	}
 	check() {
 		if (App.manager.Storage.get('Game') !== false) {
@@ -16,11 +25,16 @@ class Game {
 	}
 	start() {
 		// Start game cycle.
+		this.nodes.self.classList.remove(this.classes.hidden);
+		this.render();
 	}
 	restart() {
 
 	}
 	continue() {
+		
+	}
+	render() {
 		
 	}
 	load() {
