@@ -10,8 +10,8 @@ class Sidebar {
 		});
 		this.self = document.querySelector(`[${this.attr.self}]`);
 		this.state = this.enum.closed;
+		this.__events();
 	}
-
 	check() {
 		if (this.state === this.enum.closed) {
 			this.open();
@@ -19,15 +19,16 @@ class Sidebar {
 			this.close();
 		}
 	}
-
 	open() {
 		this.state = this.enum.opened;
 		App.manager.Overlay.show(null, this.close.bind(this));
 		this.self.classList.add(this.enum.opened);
 	}
-
 	close() {
 		this.state = this.enum.closed;
 		this.self.classList.remove(this.enum.opened);
+	}
+	__events() {
+
 	}
 }

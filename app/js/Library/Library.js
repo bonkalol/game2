@@ -14,14 +14,28 @@ var PromisedTimeOut = (func, timeout) => {
 	});
 };
 
-var required = function (variables) {
+var _ = {};
+
+_.required = function (variables) {
 	variables.forEach((variable) => {
 		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	});
+};
+
+_.getByKeyValue = function(arrayOfObjects, key, value) {
+	if (!Array.isArray(arrayOfObjects)) throw new Error('First argument should be an array of objects');
+	let finded = false;
+	arrayOfObjects.forEach(function(obj) {
+		if (obj[key] && obj[key] === value) finded = obj;
+	});
+	return finded;
 };
 
 var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 HTMLElement.prototype.$ = function (query) {
 	return this.querySelector(query);
+};
+NodeList.prototype.array = function () {
+	return [].slice.call(this);
 };

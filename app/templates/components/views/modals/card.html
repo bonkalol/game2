@@ -1,7 +1,4 @@
-<script type="text/template" id="modal_card">
-</script>
 <div class="card" data-card>
-
 	<div class="card_slider">
 		<section class="card_layout">
 			<h1 class="card_title">Обычная карточка</h1>
@@ -18,7 +15,7 @@
 		<section class="card_layout">
 			<h1 class="card_title">Справился?</h1>
 			<div class="card_content">
-				<p class="card_paragraph">Справился ли игрок {{it.currentPlayer}} с заданием?</p>
+				<p class="card_paragraph">Справился ли игрок <span data-bind="App.currentPlayer"></span> с заданием?</p>
 			</div>
 			<footer class="card_footer">
 				<div role="button" class="button card_button">

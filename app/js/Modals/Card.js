@@ -5,6 +5,9 @@ class CardModal {
 		};
 		this.__events();
 	}
+	setType() {
+		
+	}
 	__events() {
 
 	}

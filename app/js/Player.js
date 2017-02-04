@@ -11,23 +11,20 @@
 
 class Player {
 	constructor(props) {
-		this.enum = Object.frezee({
-			awaiting: 0,
-			playing: 1
-		});
 		this.name = props.name;
 		this.gender = props.gender;
-		this.state = props.state;
-		this.pickRate = props.pickRate;
-		this.score = props.score;
-		this.views = props.views;
-		this.streak = {
-			action: props.streak.action,
-			truth: props.streak.truth
-		};
+		this.pickRate = props.pickRate || 0;
+		this.score = props.score || 0;
+		if (props.streak) {
+			this.streak = {
+				action: props.streak.action,
+				truth: props.streak.truth
+			};
+		} else {
+			this.streak = {
+				action: 0,
+				truth: 0
+			};
+		}
 	}
-
-	streak(type) {
-	}
-
 }

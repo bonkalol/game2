@@ -91,7 +91,7 @@ var App = (function () {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			Render: new Render(),
-			Alert: new Alert().show,
+			Alert: new Alert(),
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
@@ -100,11 +100,20 @@ var App = (function () {
 	}
 
 	_createClass(App, [{
+		key: 'handler',
+		value: function handler() {
+			return {
+				set: function set(obj, prop, value) {
+					console.log(Object.assign(obj[prop], {}), value);
+				}
+			};
+		}
+	}, {
 		key: 'getInitialState',
 		value: function getInitialState() {
-			return {
+			return new Proxy({
 				started: false,
-				rubribcs: [],
+				rubrics: [],
 				players: [],
 				settings: {
 					repeatContent: false,
@@ -120,7 +129,7 @@ var App = (function () {
 						special: true
 					}
 				}
-			};
+			}, this.handler());
 		}
 	}]);
 
@@ -159,17 +168,6 @@ var Content = (function () {
 	}]);
 
 	return Content;
-})();
-(function mouseDown() {
-	var queue = function queue(node, e) {
-		if (node.closest('[' + App.attr.getTruth + ']')) App.getTruth();
-		if (node.closest('[' + App.attr.getAction + ']')) App.getAction();
-		if (node.closest('[' + App.manager.Sidebar.attr.button + ']')) App.manager.Sidebar.check();
-	};
-	document.addEventListener('mousedown', function (e) {
-		queue(e.target, e);
-	}, false);
-	// Rewrite to events() in classes
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -224,11 +222,17 @@ var Game = (function () {
 })();
 window.Language = {
 	ru: {
-		badinternet: 'Опс. Произошла какая-то ошибка :(. Проверьте ваше интернет соединение.'
+		badinternet: 'Опс. Произошла какая-то ошибка :(. Проверьте ваше интернет соединение.',
+		players: {
+			exist: 'Игрок с таким именем уже существует, создавайте игроков с уникальными именами.'
+		}
 	},
 
 	en: {
-		badinternet: 'Ooops. Some error happen :(. Check your internet connection.'
+		badinternet: 'Ooops. Some error happen :(. Check your internet connection.',
+		players: {
+			exist: 'Player with this name is allready exist, please, create players with uniq names.'
+		}
 	}
 };
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -272,24 +276,23 @@ var Modal = (function () {
 	function Modal(self) {
 		_classCallCheck(this, Modal);
 
-		required([self]);
+		_.required([self]);
 		this.attr = {
 			self: self,
 			action: 'data-modal-action'
 		};
-		this['enum'] = Object.freeze({
-			DURING: 0,
-			FINISHED: 1
-		});
-		this.classes = ['js-disabled', 'js-finished', 'js-close'];
-		this.status = this['enum'].DURING;
+		this.baseClasses = ['js-disabled', 'js-finished', 'js-close'];
 		this.buttons = this.__buttons();
+		if (this.__events) this.__events();
 	}
 
 	_createClass(Modal, [{
 		key: 'check',
 		value: function check() {
-			return this.status === this['enum'].FINISHED;
+			/*
+   	@Custom for every popup
+   	@Defined in popups
+   */
 		}
 	}, {
 		key: 'getView',
@@ -299,17 +302,18 @@ var Modal = (function () {
 	}, {
 		key: 'next',
 		value: function next() {
-			this.getView().classList.add(this.classes[1]);
+			if (typeof this.beforeNext === 'function') this.beforeNext();
+			this.getView().classList.add(this.baseClasses[1]);
 		}
 	}, {
 		key: 'prev',
 		value: function prev() {
-			this.getView().classList.remove(this.classes[1]);
+			this.getView().previousSibling.classList.remove(this.baseClasses[1]);
 		}
 	}, {
 		key: 'close',
 		value: function close() {
-			this.getView().classList.add(this.classes[2]);
+			this.getView().classList.add(this.baseClasses[2]);
 		}
 	}, {
 		key: 'save',
@@ -356,20 +360,15 @@ var Modals = (function () {
 	}
 
 	_createClass(Modals, [{
-		key: 'check',
-		value: function check() {
-			if (this.currnet.check()) this.current.buttons.enable();else this.current.buttons.disable();
-		}
-	}, {
-		key: 'paserAction',
-		value: function paserAction(attr) {
+		key: 'parseAction',
+		value: function parseAction(attr) {
 			var parsed = attr.split(':');
 			return parsed;
 		}
 	}, {
 		key: 'dispatcher',
-		value: function dispatcher(name, action) {
-			this[name][action]();
+		value: function dispatcher(name, action, event) {
+			this[name][action](event);
 		}
 	}, {
 		key: '__events',
@@ -380,7 +379,7 @@ var Modals = (function () {
 				var closest = event.target.closest('[' + _this2.attr.action + ']');
 				if (closest) {
 					var parsed = _this2.parseAction(closest.getAttribute(_this2.attr.action));
-					_this2.dispatcher(parsed[0], parsed[1]);
+					_this2.dispatcher(parsed[0], parsed[1], event);
 				}
 			});
 		}
@@ -449,8 +448,6 @@ var Overlay = (function () {
 	return Overlay;
 })();
 
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*
@@ -464,36 +461,28 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 */
 
-var Player = (function () {
-	function Player(props) {
-		_classCallCheck(this, Player);
+var Player = function Player(props) {
+	_classCallCheck(this, Player);
 
-		this["enum"] = Object.frezee({
-			awaiting: 0,
-			playing: 1
-		});
-		this.name = props.name;
-		this.gender = props.gender;
-		this.state = props.state;
-		this.pickRate = props.pickRate;
-		this.score = props.score;
-		this.views = props.views;
+	this.name = props.name;
+	this.gender = props.gender;
+	this.pickRate = props.pickRate || 0;
+	this.score = props.score || 0;
+	if (props.streak) {
 		this.streak = {
 			action: props.streak.action,
 			truth: props.streak.truth
 		};
+	} else {
+		this.streak = {
+			action: 0,
+			truth: 0
+		};
 	}
+};
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-	_createClass(Player, [{
-		key: "streak",
-		value: function streak(type) {}
-	}]);
-
-	return Player;
-})();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var PlayerController = (function () {
 	function PlayerController() {
@@ -501,48 +490,61 @@ var PlayerController = (function () {
 	}
 
 	_createClass(PlayerController, [{
-		key: "getScoreBoard",
+		key: 'create',
+		value: function create(name, gender) {
+			return App.data.players.push(new Player({
+				name: name,
+				gender: gender
+			}));
+		}
+	}, {
+		key: 'exist',
+		value: function exist(name) {
+			return _.getByKeyValue(App.data.players, 'name', name);
+		}
+	}, {
+		key: 'getScoreBoard',
 		value: function getScoreBoard() {
 			// return array of Players sorted by scores
 		}
 	}, {
-		key: "getAssistent",
+		key: 'getAssistent',
 		value: function getAssistent() {
 			// получить игрока ассисента (основываясь на пикрейт игроков)
 		}
 	}, {
-		key: "getCurrent",
+		key: 'getCurrent',
 		value: function getCurrent() {
 			// получить текущего игрока
 			// return instanceof Player
 		}
 	}, {
-		key: "getNext",
+		key: 'getNext',
 		value: function getNext() {
 			// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
 			// случайно
 			// return instanceof Player
 		}
 	}, {
-		key: "getPrevious",
+		key: 'getPrevious',
 		value: function getPrevious() {}
 	}, {
-		key: "getRandom",
+		key: 'getRandom',
 		value: function getRandom() {
 			// Получить рандомного игрока
 		}
 	}, {
-		key: "getLeader",
+		key: 'getLeader',
 		value: function getLeader() {
 			// Получить лидера по скорборду
 		}
 	}, {
-		key: "getLast",
+		key: 'getLast',
 		value: function getLast() {
 			// Получить последнего по скорборду
 		}
 	}, {
-		key: "getWinner",
+		key: 'getWinner',
 		value: function getWinner() {}
 	}]);
 
@@ -601,7 +603,7 @@ var Render = (function () {
 		};
 		this.templates = {
 			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics'),
+			rubrics: document.querySelector('#modal_rubric'),
 			settings: document.querySelector('#modal_settings'),
 			rules: document.querySelector('#modal_rules'),
 			'continue': document.querySelector('#modal_continue'),
@@ -700,6 +702,7 @@ var Sidebar = (function () {
 		});
 		this.self = document.querySelector('[' + this.attr.self + ']');
 		this.state = this['enum'].closed;
+		this.__events();
 	}
 
 	_createClass(Sidebar, [{
@@ -724,6 +727,9 @@ var Sidebar = (function () {
 			this.state = this['enum'].closed;
 			this.self.classList.remove(this['enum'].opened);
 		}
+	}, {
+		key: '__events',
+		value: function __events() {}
 	}]);
 
 	return Sidebar;
@@ -775,7 +781,7 @@ var VersionController = (function () {
 				} else if (_this.version !== false && requestFailed === false) {
 					_this.storage(true);
 				} else if (_this.version === false && requestFailed === false) {
-					App.manager.Alert('error', Language[App.language].badinternet, true);
+					App.manager.Alert.show('error', Language[App.language].badinternet, true);
 				}
 			};
 		}
@@ -1023,16 +1029,30 @@ var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
 	});
 };
 
-var required = function required(variables) {
+var _ = {};
+
+_.required = function (variables) {
 	variables.forEach(function (variable) {
 		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	});
+};
+
+_.getByKeyValue = function (arrayOfObjects, key, value) {
+	if (!Array.isArray(arrayOfObjects)) throw new Error('First argument should be an array of objects');
+	var finded = false;
+	arrayOfObjects.forEach(function (obj) {
+		if (obj[key] && obj[key] === value) finded = obj;
+	});
+	return finded;
 };
 
 var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);
 HTMLElement.prototype.$ = function (query) {
 	return this.querySelector(query);
+};
+NodeList.prototype.array = function () {
+	return [].slice.call(this);
 };
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1047,6 +1067,9 @@ var CardModal = (function () {
 	}
 
 	_createClass(CardModal, [{
+		key: "setType",
+		value: function setType() {}
+	}, {
 		key: "__events",
 		value: function __events() {}
 	}]);
@@ -1119,17 +1142,58 @@ var PlayerModal = (function (_Modal) {
 		_classCallCheck(this, PlayerModal);
 
 		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
+		this.attr.input = 'data-player-input';
+		this.attr.button = 'data-player-create';
+		this.players = 'data-playerlist-player';
+		this.classes = ['disabled'];
 	}
 
 	_createClass(PlayerModal, [{
-		key: 'save',
-		value: function save() {}
-	}, {
-		key: 'check',
-		value: function check() {}
+		key: 'add',
+		value: function add(event) {
+			event.preventDefault();
+			var name = $('[' + this.attr.input + ']').value,
+			    gender = this.getGender().value,
+			    player = null;
+			if (App.manager.PlayerController.exist(name)) {
+				App.manager.Alert.show('error', Language[App.language].players.exist);
+				return false;
+			}
+			App.manager.PlayerController.create(name, gender);
+			this.render();
+		}
 	}, {
 		key: 'render',
-		value: function render() {}
+		value: function render() {
+			$('[' + this.attr.self + ']').outerHTML = App.manager.Render.modalPlayers();
+		}
+	}, {
+		key: 'eventCondition',
+		value: function eventCondition(node) {
+			return node.hasAttribute('data-player-input') && node.value.length > 0 && this.getGender();
+		}
+	}, {
+		key: 'checkButton',
+		value: function checkButton(event) {
+			var input = $('[' + this.attr.input + ']');
+			if (this.eventCondition(input)) $('[' + this.attr.button + ']').classList.remove(this.classes[0]);else $('[' + this.attr.button + ']').classList.add(this.classes[0]);
+		}
+	}, {
+		key: 'getGender',
+		value: function getGender() {
+			return $('[name="players_gender"]:checked');
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			['keyup', 'mousedown', 'change'].forEach(function (e) {
+				document.addEventListener(e, function (event) {
+					_this.checkButton();
+				});
+			});
+		}
 	}]);
 
 	return PlayerModal;
@@ -1148,12 +1212,42 @@ var RubricsModal = (function (_Modal) {
 	function RubricsModal() {
 		_classCallCheck(this, RubricsModal);
 
-		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubrics-modal');
+		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubric-modal');
 	}
 
 	_createClass(RubricsModal, [{
 		key: 'save',
 		value: function save() {}
+	}, {
+		key: 'change',
+		value: function change() {
+			App.data.rubrics = [];
+			$$('[name="rubrics"]:checked').array().forEach(function (checked) {
+				App.data.rubrics.push(checked.value);
+			});
+			this.render();
+		}
+	}, {
+		key: 'beforeNext',
+		value: function beforeNext() {
+			this.save();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			this.getView().outerHTML = App.manager.Render.modalRubrics();
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			document.addEventListener('mouseup', function (e) {
+				if (e.target.previousSibling && e.target.previousSibling.closest('[name="rubrics"]')) {
+					_this.change();
+				}
+			});
+		}
 	}]);
 
 	return RubricsModal;

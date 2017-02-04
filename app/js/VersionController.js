@@ -27,7 +27,7 @@ class VersionController {
 			} else if (this.version !== false && requestFailed === false) {
 				this.storage(true);
 			} else if (this.version === false && requestFailed === false) {
-				App.manager.Alert('error', Language[App.language].badinternet, true);
+				App.manager.Alert.show('error', Language[App.language].badinternet, true);
 			}
 		};
 	}

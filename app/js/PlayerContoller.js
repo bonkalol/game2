@@ -1,6 +1,15 @@
 class PlayerController {
 	constructor() {
 	}
+	create(name, gender) {
+		return App.data.players.push(new Player({
+			name,
+			gender
+		}));
+	}
+	exist(name) {
+		return _.getByKeyValue(App.data.players, 'name', name);
+	}
 	getScoreBoard() {
 		// return array of Players sorted by scores
 	}

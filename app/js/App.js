@@ -22,7 +22,7 @@ class App {
 			Overlay: new Overlay(),
 			Sidebar: new Sidebar(),
 			Render: new Render(),
-			Alert: new Alert().show,
+			Alert: new Alert(),
 			Modals: new Modals()
 		};
 		this.online = navigator.onLine;
@@ -30,10 +30,18 @@ class App {
 		this.language = 'en';
 	}
 
-	getInitialState() {
+	handler() {
 		return {
+			set: (obj, prop, value) => {
+				console.log(Object.assign(obj[prop], {}), value);
+			}
+		}
+	}
+
+	getInitialState() {
+		return new Proxy ({
 			started: false,
-			rubribcs: [],
+			rubrics: [],
 			players: [],
 			settings: {
 				repeatContent: false,
@@ -49,6 +57,6 @@ class App {
 					special: true
 				}
 			}
-		};
+		}, this.handler());
 	}
 }

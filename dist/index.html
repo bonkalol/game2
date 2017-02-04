@@ -93,196 +93,192 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<li class="game_sidebar_item"><a class="game_sidebar_link" href="javascript:void(0);">Поддержать проект</a></li>
 	</ul>
 </div>
-	<script type="text/template" id="modal_players">
-	<div class="modal" data-players-modal>
-		<h2 class="modal_title">Добавить игроков</h2>
-		<section class="modal_content">
-			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока разного пола. Чтобы удалить игрока просто нажмите на него в списке.</p>
-			<div class="players_pick">
-				<div class="players_field">
-					<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
-					<span class="players_create" data-player-create>Добавить</span>
-				</div>
-				<div class="players_gender">
-					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
-					<label for="gender_m" class="players_gender_label">
-						<svg width="30" height="30">
-							<use xlink:href="#male">
-						</svg>
-					</label>
-					<input type="radio" name="players_gender" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
-					<label for="gender_f" class="players_gender_label">
-						<svg width="30" height="30">
-							<use xlink:href="#female">
-						</svg>
-					</label>
-					<div class="players_gender_switcher"></div>
-				</div>
+	<div class="modal" data-player-modal>
+	<h2 class="modal_title">Добавить игроков</h2>
+	<section class="modal_content">
+		<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
+		<div class="players_pick">
+			<div class="players_field">
+				<input type="text" class="players_input input" placeholder="Имя игрока сюда" id="player_name" data-player-input>
+				<span class="players_create disabled" data-modal-action="players:add" data-player-create>Добавить</span>
 			</div>
-			<div class="players_list" data-playerlist-view>
-				{{~it.players :player:index}}
-					<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
-				{{~}}
+			<div class="players_gender">
+				<input type="radio" name="players_gender" value="m" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
+				<label for="gender_m" class="players_gender_label">
+					<svg width="30" height="30">
+						<use xlink:href="#male">
+					</svg>
+				</label>
+				<input type="radio" name="players_gender" value="f" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
+				<label for="gender_f" class="players_gender_label">
+					<svg width="30" height="30">
+						<use xlink:href="#female">
+					</svg>
+				</label>
+				<div class="players_gender_switcher"></div>
 			</div>
-		</section>
+		</div>
+		<div class="players_list">
+			{{~it.players :player:index}}
+				<div class="players_player players_player--{{=player.gender}}" data-playerlist-player>{{=player.name}}</div>
+			{{~}}
+		</div>
+	</section>
+</div>
+
 		<footer class="modal_action {{? it.started !== true }}modal_action--single{{??}}modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-modal-action="players:save" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
+				<button type="button" data-modal-action="players:close" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
 				</button>
-				<button type="button" data-modal-action="players:close" class="button">
-					<span class="button_text">Отмена</span>
-				</button>
 			{{??}}
-				<button type="button" data-modal-action="players:next" class="button js-disabled">
+				<button type="button" data-modal-action="players:next" class="button {{? it.players.length < 2}} js-disabled {{?}}">
 					<span class="button_text">Далее</span>
 				</button>
 			{{?}}
 		</footer>
-	</div>
-</script>
-	<script type="text/template" id="modal_rubrics">
-	<div class="modal modal_rubrics" data-rubrics-modal>
-		<h2 class="modal_title">Выбрать рубрику</h2>
-		<section class="modal_content">
-			<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
-			<div class="rubrics">
-				<input type="checkbox" name="rubrics" value="16" class="rubrics_input hidden-checkbox" id="rubric-16">
-				<label for="rubric-16" class="rubrics_label">
-					<span class="rubrics_text">16+</span>
-					<svg width="40" height="40px">
-							<use xlink:href="#16">
-					</svg>
-					<span class="rubrics_desc"><b>Например:</b> Спеть песню.</span>
-				</label>
-				<input type="checkbox" name="rubrics" value="18" class="rubrics_input hidden-checkbox" id="rubric-18">
-				<label for="rubric-18" class="rubrics_label">
-					<span class="rubrics_text">18+</span>
-					<svg width="40" height="40px">
-							<use xlink:href="#18">
-					</svg>
-					<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока в губы.</span>
-				</label>
-				<input type="checkbox" name="rubrics" value="21" class="rubrics_input hidden-checkbox" id="rubric-21">
-				<label for="rubric-21" class="rubrics_label">
-					<span class="rubrics_text">21+</span>
-					<svg width="40" height="40px">
-							<use xlink:href="#21">
-					</svg>
-					<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока «По французски».</span>
-				</label>
-			</div>
-		</section>
+	<div class="modal modal_rubrics" data-rubric-modal>
+	<h2 class="modal_title">Выбрать рубрику</h2>
+	<section class="modal_content">
+		<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
+		<div class="rubrics">
+			<input type="checkbox" name="rubrics" value="16" class="rubrics_input hidden-checkbox" id="rubric-16">
+			<label for="rubric-16" class="rubrics_label">
+				<span class="rubrics_text">16+</span>
+				<svg width="40" height="40px">
+						<use xlink:href="#16">
+				</svg>
+				<span class="rubrics_desc"><b>Например:</b> Спеть песню.</span>
+			</label>
+			<input type="checkbox" name="rubrics" value="18" class="rubrics_input hidden-checkbox" id="rubric-18">
+			<label for="rubric-18" class="rubrics_label">
+				<span class="rubrics_text">18+</span>
+				<svg width="40" height="40px">
+						<use xlink:href="#18">
+				</svg>
+				<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока в губы.</span>
+			</label>
+			<input type="checkbox" name="rubrics" value="21" class="rubrics_input hidden-checkbox" id="rubric-21">
+			<label for="rubric-21" class="rubrics_label">
+				<span class="rubrics_text">21+</span>
+				<svg width="40" height="40px">
+						<use xlink:href="#21">
+				</svg>
+				<span class="rubrics_desc"><b>Например:</b> Поцеловать игрока «По французски».</span>
+			</label>
+		</div>
+	</section>
+</div>
+
+
+
+
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
-				<button type="button" data-modal-action="rubrics:save" class="button {{? !(it.rubribcs.length >= 1) }} js-disabled {{?}}">
+				<button type="button" data-modal-action="rubrics:save" class="button {{? it.rubrics.length < 1 }} js-disabled {{?}}">
 					<span class="button_text">Сохранить</span>
-				</button>
-				<button type="button" data-modal-action="rubrics:close" class="button">
-					<span class="button_text">Отмена</span>
 				</button>
 			{{??}}
 				<button type="button" data-modal-action="rubrics:prev" class="button">
 					<span class="button_text">Назад</span>
 				</button>
-				<button type="button" data-modal-action="rubrics:next" class="button">
+				<button type="button" data-modal-action="rubrics:next" class="button {{? it.rubrics.length < 1 }} js-disabled {{?}}">
 					<span class="button_text">Далее</span>
 				</button>
 			{{?}}
 		</footer>
-	</div>
-</script>
-	<script type="text/template" id="modal_settings">
 	<div class="modal" data-settings-modal>
-		<h2 class="modal_title">Настройки</h2>
-		<section class="modal_content modal_content--settings">
-			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
-			<div class="settings">
-				<span class="settings_name">Повторять вопросы:</span>
-				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="repeat-content" id="repeat-content-true" value="true" {{? it.settings.repeatContent === true}}checked{{?}}>
-					<label class="settings_switcher_element" for="repeat-content-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="repeat-content" id="repeat-content-false" value="false" {{? it.settings.repeatContent === false || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+	<h2 class="modal_title">Настройки</h2>
+	<section class="modal_content modal_content--settings">
+		<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
+		<div class="settings">
+			<span class="settings_name">Повторять вопросы:</span>
+			<div class="settings_switcher settings_switcher--x2">
+				<input class="settings_switcher_input" type="radio" name="repeat-content" id="repeat-content-true" value="true" checked>
+				<label class="settings_switcher_element" for="repeat-content-true">Да</label>
+				<input class="settings_switcher_input" type="radio" name="repeat-content" id="repeat-content-false" value="false" checked>
+				<label class="settings_switcher_element" for="repeat-content-false">Нет</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Алкоголь:</span>
-				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="alcohol" id="alcohol-true" value="true" {{? it.settings.alcohol === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="alcohol-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="alcohol" id="alcohol-false" value="herma" {{? it.settings.alcohol !== true }}checked{{?}}>
-					<label class="settings_switcher_element" for="alcohol-false">Нет</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Алкоголь:</span>
+			<div class="settings_switcher settings_switcher--x2">
+				<input class="settings_switcher_input" type="radio" name="alcohol" id="alcohol-true" value="true" checked>
+				<label class="settings_switcher_element" for="alcohol-true">Да</label>
+				<input class="settings_switcher_input" type="radio" name="alcohol" id="alcohol-false" value="false" >
+				<label class="settings_switcher_element" for="alcohol-false">Нет</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Игра на очки:</span>
-				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="score" id="score-true" value="true" {{? it.settings.score === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="score-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="score" id="score-false" value="herma" {{? it.settings.score !== true }}checked{{?}}>
-					<label class="settings_switcher_element" for="score-false">Нет</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Игра на очки:</span>
+			<div class="settings_switcher settings_switcher--x2">
+				<input class="settings_switcher_input" type="radio" name="score" id="score-true" value="true" checked>
+				<label class="settings_switcher_element" for="score-true">Да</label>
+				<input class="settings_switcher_input" type="radio" name="score" id="score-false" value="false" checked>
+				<label class="settings_switcher_element" for="score-false">Нет</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Стрик (вопросов | действий):</span>
-				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" type="radio" name="streak" id="streak-2" value="true" {{? it.settings.streak === 2 || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="streak-2">2</label>
-					<input class="settings_switcher_input" type="radio" name="streak" id="streak-3" value="herma" {{? it.settings.streak === 3 }}checked{{?}}>
-					<label class="settings_switcher_element" for="streak-3">3</label>
-					<input class="settings_switcher_input" type="radio" name="streak" id="streak-4" value="herma" {{? it.settings.streak === 4 }}checked{{?}}>
-					<label class="settings_switcher_element" for="streak-4">4</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Стрик (вопросов | действий):</span>
+			<div class="settings_switcher settings_switcher--x3">
+				<input class="settings_switcher_input" type="radio" name="streak" id="streak-2" value="2" checked>
+				<label class="settings_switcher_element" for="streak-2">2</label>
+				<input class="settings_switcher_input" type="radio" name="streak" id="streak-3" value="3" checked>
+				<label class="settings_switcher_element" for="streak-3">3</label>
+				<input class="settings_switcher_input" type="radio" name="streak" id="streak-4" value="4" checked>
+				<label class="settings_switcher_element" for="streak-4">4</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings settings_cards">
-				<span class="settings_name">Карточки:</span>
-				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-gray" value="cards-gray" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards-gray">Серая</label>
-					<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-yellow" value="cards-yellow" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards-yellow">Желтая</label>
-					<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-special" value="cards-special" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards-special">Специ&shy;альная</label>
-				</div>
+		</div>
+		<div class="settings settings_cards">
+			<span class="settings_name">Карточки:</span>
+			<div class="settings_switcher settings_switcher--x3">
+				<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-gray" value="gray" checked>
+				<label class="settings_switcher_element" for="cards-gray">Серая</label>
+				<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-yellow" value="yellow" checked>
+				<label class="settings_switcher_element" for="cards-yellow">Желтая</label>
+				<input class="settings_switcher_input" type="checkbox" name="cards" id="cards-special" value="special" checked>
+				<label class="settings_switcher_element" for="cards-special">Специ&shy;альная</label>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Игроки ходят:</span>
-				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-true" value="randomPlayers-true" {{? it.settings.randomPlayers === false || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="randomPlayers-true">По очереди</label>
-					<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-false" value="randomPlayers-false" {{? it.settings.randomPlayers === true}}checked{{?}}>
-					<label class="settings_switcher_element" for="randomPlayers-false">Случайно</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Игроки ходят:</span>
+			<div class="settings_switcher settings_switcher--x2">
+				<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-true" value="true" checked>
+				<label class="settings_switcher_element" for="randomPlayers-true">По очереди</label>
+				<input class="settings_switcher_input" type="radio" name="randomPlayers" id="randomPlayers-false" value="false">
+				<label class="settings_switcher_element" for="randomPlayers-false">Случайно</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Умный выбор игроков-ассистентов:</span>
-				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" type="radio" name="smartpick" id="smartpick-true" value="smartpick-true" {{? it.settings.smartPick === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="smartpick-true">Да</label>
-					<input class="settings_switcher_input" type="radio" name="smartpick" id="smartpick-false" value="smartpick-false" {{? it.settings.smartPick !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="smartpick-false">Нет</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Умный выбор игроков-ассистентов:</span>
+			<div class="settings_switcher settings_switcher--x2">
+				<input class="settings_switcher_input" type="radio" name="smartpick" id="smartpick-true" value="true" {{? it.settings.smartPick === true || it.started !== true}}checked{{?}}>
+				<label class="settings_switcher_element" for="smartpick-true">Да</label>
+				<input class="settings_switcher_input" type="radio" name="smartpick" id="smartpick-false" value="false" {{? it.settings.smartPick !== true}}checked{{?}}>
+				<label class="settings_switcher_element" for="smartpick-false">Нет</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-			<div class="settings">
-				<span class="settings_name">Сексуальная ориентация:</span>
-				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" type="radio" name="sex" id="sex-hetero" value="hetero" {{? it.settings.sex === 'hetero' || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="sex-hetero" checked>Гетеро</label>
-					<input class="settings_switcher_input" type="radio" name="sex" id="sex-herma" value="herma" {{? it.settings.sex === 'homo'}}checked{{?}}>
-					<label class="settings_switcher_element" for="sex-herma">Би</label>
-					<input class="settings_switcher_input" type="radio" name="sex" id="sex-homo" value="homo" {{? it.settings.sex === 'herma'}}checked{{?}}>
-					<label class="settings_switcher_element" for="sex-homo">Гомо</label>
-					<div class="settings_switcher_toggler"></div>
-				</div>
+		</div>
+		<div class="settings">
+			<span class="settings_name">Сексуальная ориентация:</span>
+			<div class="settings_switcher settings_switcher--x3">
+				<input class="settings_switcher_input" type="radio" name="sex" id="sex-hetero" value="hetero" checked>
+				<label class="settings_switcher_element" for="sex-hetero" checked>Гетеро</label>
+				<input class="settings_switcher_input" type="radio" name="sex" id="sex-herma" value="herma">
+				<label class="settings_switcher_element" for="sex-herma">Би</label>
+				<input class="settings_switcher_input" type="radio" name="sex" id="sex-homo" value="homo" >
+				<label class="settings_switcher_element" for="sex-homo">Гомо</label>
+				<div class="settings_switcher_toggler"></div>
 			</div>
-		</section>
+		</div>
+	</section>
+
+
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
 				<button type="button" data-modal-action="settings:save" class="button {{? !it.players.length >= 2}} js-disabled {{?}}">
@@ -301,65 +297,59 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			{{?}}
 		</footer>
 	</div>
-</script>
-	<script type="text/template" id="modal_rules">
-	<div class="modal modal_rubrics" data-rules-modal>
-		<h2 class="modal_title">Выбрать рубрику</h2>
-		<section class="modal_content rules">
-			<section class="rules_content">
-			<p>
-			<strong class="rules_gray">Серая</strong> - карточка означает что вы должны прочитать задание про себя и выполнять его так, чтобы игроки не догадывались что это задание.</p>
-			<p><strong class="rules_yellow">Желтая</strong> - карточка означает коллективное задание, данное задание должны выполнять все. </p>
-			<p><strong class="rules_special">Специальная</strong> - карточка означает. </p>
-			<p> Носки, бижутерия не являются вещью. Один игрок не может выполнять действие или правду более {{=it.settings.streak}} раз подряд. Старайтесь выполнять все задачи и отвечать на все вопросы, иначе, игра будет не интересна. </p>
-			</section>
+	
+<div class="modal modal_rubrics" data-rules-modal>
+	<h2 class="modal_title">Выбрать рубрику</h2>
+	<section class="modal_content rules">
+		<section class="rules_content">
+		<p>
+		<strong class="rules_gray">Серая</strong> - карточка означает что вы должны прочитать задание про себя и выполнять его так, чтобы игроки не догадывались что это задание.</p>
+		<p><strong class="rules_yellow">Желтая</strong> - карточка означает коллективное задание, данное задание должны выполнять все. </p>
+		<p><strong class="rules_special">Специальная</strong> - карточка означает. </p>
+		<p> Носки, бижутерия не являются вещью. Один игрок не может выполнять действие или правду более {{=it.settings.streak}} раз подряд. Старайтесь выполнять все задачи и отвечать на все вопросы, иначе, игра будет не интересна. </p>
 		</section>
-		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
-			{{? it.started === true }}
-				<button type="button" data-modal-action="rules:close" class="button">
-					<span class="button_text">Ок</span>
-				</button>
-			{{??}}
-				<button type="button" data-modal-action="rules:prev" class="button">
-					<span class="button_text">Назад</span>
-				</button>
-				<button type="button" data-modal-action="rules:start" class="button">
-					<span class="button_text">Начать</span>
-				</button>
-			{{?}}
-		</footer>
-	</div>
-</script>
-	<script type="text/template" id="modal_continue">
+	</section>
+</div>
+
+	<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
+		{{? it.started === true }}
+			<button type="button" data-modal-action="rules:close" class="button">
+				<span class="button_text">Ок</span>
+			</button>
+		{{??}}
+			<button type="button" data-modal-action="rules:prev" class="button">
+				<span class="button_text">Назад</span>
+			</button>
+			<button type="button" data-modal-action="rules:start" class="button">
+				<span class="button_text">Начать</span>
+			</button>
+		{{?}}
+	</footer>
 	<div class="modal modal_rubrics" data-continue-modal>
-		<h2 class="modal_title">Продолжить игру</h2>
-		<section class="modal_content">
-			<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
-			<div class="continue">
-				<div class="continue_title">Игроки в предыидущей игре:</div>
-				<div class="continue_players">
-					<div class="players_list">
-						{{~it.players :player:index}}
-							<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
-						{{~}}
-					</div>
+	<h2 class="modal_title">Продолжить игру</h2>
+	<section class="modal_content">
+		<p class="modal_hint">Похоже вы вернулись, хотите продолжить игру? Или начать заново?</p>
+		<div class="continue">
+			<div class="continue_title">Игроки в предыидущей игре:</div>
+			<div class="continue_players">
+				<div class="players_list">
+					{{~it.players :player:index}}
+						<div class="players_player players_player--{{=player.gender}}">{{=player.name}}</div>
+					{{~}}
 				</div>
 			</div>
-		</section>
-		<footer class="modal_action modal_action--double">
-			<button type="button" data-modal-action="continue:restart" class="button button--small">
-				<span class="button_text">Новая</span>
-			</button>
-			<button type="button" data-modal-action="continue:continue" class="button button--small">
-				<span class="button_text">Продолжить</span>
-			</button>
-		</footer>
-	</div>
-</script>
-	<script type="text/template" id="modal_card">
-</script>
-<div class="card" data-card>
-
+		</div>
+	</section>
+	<footer class="modal_action modal_action--double">
+		<button type="button" data-modal-action="continue:restart" class="button button--small">
+			<span class="button_text">Новая</span>
+		</button>
+		<button type="button" data-modal-action="continue:continue" class="button button--small">
+			<span class="button_text">Продолжить</span>
+		</button>
+	</footer>
+</div>
+	<div class="card" data-card>
 	<div class="card_slider">
 		<section class="card_layout">
 			<h1 class="card_title">Обычная карточка</h1>
@@ -376,7 +366,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		<section class="card_layout">
 			<h1 class="card_title">Справился?</h1>
 			<div class="card_content">
-				<p class="card_paragraph">Справился ли игрок {{it.currentPlayer}} с заданием?</p>
+				<p class="card_paragraph">Справился ли игрок <span data-bind="App.currentPlayer"></span> с заданием?</p>
 			</div>
 			<footer class="card_footer">
 				<div role="button" class="button card_button">
