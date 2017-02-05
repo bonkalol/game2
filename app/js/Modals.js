@@ -106,6 +106,7 @@ class Modals {
 		}
 		if (event.type === this.TOUCH_TYPES[2]) {
 			// this.delta.counter > 100 ? this.next() : this.reset();
+			// Доделать
 		}
 	}
 	next() {
