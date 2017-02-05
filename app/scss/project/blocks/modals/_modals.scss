@@ -1,3 +1,9 @@
 .js-hidden {
 	display: none;
 }
+
+.modals {
+	position: relative;
+	overflow: hidden;
+	@include size(100%);
+}

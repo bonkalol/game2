@@ -72,18 +72,17 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</span>
 	</div>
 	<div class="game_view">
-
+		<div class="game_view_container" data-game-container>
+		</div>
 	</div>
 </div>
 
 <script type="text/tempalte" id="game">
-	<div class="game_view_container">
-		<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score more">1</span></span></div>
-		<div class="game_view_buttons">
-			<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
-			<span class="game_view_buttons_separator">или</span>
-			<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
-		</div>
+	<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score more">1</span></span></div>
+	<div class="game_view_buttons">
+		<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
+		<span class="game_view_buttons_separator">или</span>
+		<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
 	</div>
 </script>
 		</div>
@@ -100,7 +99,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</ul>
 </div>
 		<script type="text/template" id="modal_players">
-	<div class="modal" data-player-modal>
+	<div class="modal" data-modals-modal data-player-modal>
 		<h2 class="modal_title">Добавить игроков</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
@@ -155,7 +154,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 		<script type="text/template" id="modal_rubrics">
-	<div class="modal modal_rubrics" data-rubric-modal>
+	<div class="modal modal_rubrics" data-modals-modal data-rubric-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
@@ -210,7 +209,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</footer>
 </script>
 		<script type="text/template" id="modal_settings">
-	<div class="modal" data-settings-modal>
+	<div class="modal" data-modals-modal data-settings-modal>
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content modal_content--settings">
 			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
@@ -256,17 +255,6 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>
-			<div class="settings settings_cards">
-				<span class="settings_name">Карточки:</span>
-				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" data-bind="cards-gray" type="checkbox" name="cards" id="cards:gray" value="{{? it.settings.gray === true || it.started !== true}}true{{?}}" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:gray">Серая</label>
-					<input class="settings_switcher_input" data-bind="cards-yellow" type="checkbox" name="cards" id="cards:yellow" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:yellow">Желтая</label>
-					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:special">Специ&shy;альная</label>
-				</div>
-			</div>
 			<div class="settings">
 				<span class="settings_name">Игроки ходят:</span>
 				<div class="settings_switcher settings_switcher--x2">
@@ -299,6 +287,27 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>
+			<div class="settings">
+				<span class="settings_name">Пропустить вопрос:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					<input class="settings_switcher_input" data-bind="skip" type="radio" name="skip" id="skip-true" value="true" {{? it.settings.skip === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="skip-true">Да</label>
+					<input class="settings_switcher_input" data-bind="skip" type="radio" name="skip" id="skip-false" value="false" {{? it.settings.skip !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="skip-false">Нет</label>
+					<div class="settings_switcher_toggler"></div>
+				</div>
+			</div>
+			<div class="settings settings_cards">
+				<span class="settings_name">Карточки:</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input class="settings_switcher_input" data-bind="cards-gray" type="checkbox" name="cards" id="cards:gray" value="{{? it.settings.gray === true || it.started !== true}}true{{?}}" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:gray">Серая</label>
+					<input class="settings_switcher_input" data-bind="cards-yellow" type="checkbox" name="cards" id="cards:yellow" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:yellow">Желтая</label>
+					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:special">Специ&shy;альная</label>
+				</div>
+			</div>
 		</section>
 		<footer class="modal_action {{? it.started === true }} modal_action--single {{??}} modal_action--double{{?}}">
 			{{? it.started === true }}
@@ -320,7 +329,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</div>
 </script>
 		<script type="text/template" id="modal_rules">
-	<div class="modal modal_rubrics" data-rules-modal>
+	<div class="modal modal_rubrics" data-modals-modal data-rules-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content rules">
 			<section class="rules_content">

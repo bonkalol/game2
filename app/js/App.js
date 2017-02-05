@@ -30,16 +30,8 @@ class App {
 		this.language = 'en';
 	}
 
-	handler() {
-		return {
-			set: (obj, prop, value) => {
-				console.log(Object.assign(obj[prop], {}), value);
-			}
-		}
-	}
-
 	getInitialState() {
-		return new Proxy ({
+		return {
 			started: false,
 			rubrics: [],
 			players: [],
@@ -51,12 +43,13 @@ class App {
 				sex: 'hetero', // Possible 'hetero', 'homo', 'herma'
 				smartPick: true,
 				randomPlayers: true,
+				skip: false,
 				cards: {
 					gray: true,
 					yellow: true,
 					special: true
 				}
 			}
-		}, this.handler());
+		};
 	}
 }

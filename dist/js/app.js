@@ -100,18 +100,9 @@ var App = (function () {
 	}
 
 	_createClass(App, [{
-		key: 'handler',
-		value: function handler() {
-			return {
-				set: function set(obj, prop, value) {
-					console.log(Object.assign(obj[prop], {}), value);
-				}
-			};
-		}
-	}, {
 		key: 'getInitialState',
 		value: function getInitialState() {
-			return new Proxy({
+			return {
 				started: false,
 				rubrics: [],
 				players: [],
@@ -123,13 +114,14 @@ var App = (function () {
 					sex: 'hetero', // Possible 'hetero', 'homo', 'herma'
 					smartPick: true,
 					randomPlayers: true,
+					skip: false,
 					cards: {
 						gray: true,
 						yellow: true,
 						special: true
 					}
 				}
-			}, this.handler());
+			};
 		}
 	}]);
 
@@ -367,20 +359,35 @@ var Modals = (function () {
 		this.rules = new RulesModal();
 		this['continue'] = new ContinueModal();
 		this.card = new CardModal();
+
+		this.TOUCH_TYPES = ['touchstart', 'touchmove', 'touchend'];
 		this.attr = {
 			action: 'data-modal-action',
-			self: 'data-modals-view'
+			self: 'data-modals-view',
+			modals: 'data-modals-modal'
 		};
 		this.nodes = {
 			self: $('[' + this.attr.self + ']')
 		};
 		this.classes = {
-			hidden: 'js-hidden'
+			hidden: 'js-hidden',
+			transition: 'transition'
 		};
+		this.delta = {
+			start: null,
+			end: null,
+			counter: 0
+		};
+		this.transform = 'translate(-50%, -50%)';
 		this.__events();
 	}
 
 	_createClass(Modals, [{
+		key: 'getCurrent',
+		value: function getCurrent() {
+			return $('[' + this.attr.modals + ']:not(.js-finished)');
+		}
+	}, {
 		key: 'parseAction',
 		value: function parseAction(attr) {
 			var parsed = attr.split(':');
@@ -402,6 +409,31 @@ var Modals = (function () {
 			this.nodes.self.classList.remove(this.classes.hidden);
 		}
 	}, {
+		key: 'handleTouch',
+		value: function handleTouch(event) {
+			if (event.type === this.TOUCH_TYPES[0]) {
+				this.delta.start = event.touches[0].clientX;
+				this.nodes.self.classList.remove(this.classes.transition);
+			}
+			if (event.type === this.TOUCH_TYPES[1]) {
+				this.delta.counter = this.delta.start - event.touches[0].clientX;
+				this.getCurrent().style.transform = 'translate(calc(-50% - ' + this.delta.counter + 'px), -50%)';
+			}
+			if (event.type === this.TOUCH_TYPES[2]) {
+				// this.delta.counter > 100 ? this.next() : this.reset();
+			}
+		}
+	}, {
+		key: 'next',
+		value: function next() {}
+	}, {
+		key: 'reset',
+		value: function reset() {
+			var current = this.getCurrent();
+			current.classList.add(this.classes.transition);
+			current.style.transform = this.transform;
+		}
+	}, {
 		key: '__events',
 		value: function __events() {
 			var _this2 = this;
@@ -413,6 +445,11 @@ var Modals = (function () {
 					_this2.dispatcher(parsed[0], parsed[1], event);
 				}
 			});
+			this.TOUCH_TYPES.forEach(function (touch) {
+				_this2.nodes.self.addEventListener(touch, function (event) {
+					_this2.handleTouch(event);
+				});
+			}, false);
 		}
 	}]);
 
@@ -1091,6 +1128,38 @@ var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
 		}, timeout);
 	});
 };
+
+if (!Object.assign) {
+	Object.defineProperty(Object, 'assign', {
+		enumerable: false,
+		configurable: true,
+		writable: true,
+		value: function value(target, firstSource) {
+			'use strict';
+			if (target === undefined || target === null) {
+				throw new TypeError('Cannot convert first argument to object');
+			}
+
+			var to = Object(target);
+			for (var i = 1; i < arguments.length; i++) {
+				var nextSource = arguments[i];
+				if (nextSource === undefined || nextSource === null) {
+					continue;
+				}
+
+				var keysArray = Object.keys(Object(nextSource));
+				for (var nextIndex = 0, len = keysArray.length; nextIndex < len; nextIndex++) {
+					var nextKey = keysArray[nextIndex];
+					var desc = Object.getOwnPropertyDescriptor(nextSource, nextKey);
+					if (desc !== undefined && desc.enumerable) {
+						to[nextKey] = nextSource[nextKey];
+					}
+				}
+			}
+			return to;
+		}
+	});
+}
 
 var _ = {};
 

@@ -57,17 +57,30 @@ class Modals {
 		this.rules = new RulesModal();
 		this.continue = new ContinueModal();
 		this.card = new CardModal();
+
+		this.TOUCH_TYPES = ['touchstart', 'touchmove', 'touchend'];
 		this.attr = {
 			action: 'data-modal-action',
-			self: 'data-modals-view'
+			self: 'data-modals-view',
+			modals: 'data-modals-modal'
 		};
 		this.nodes = {
 			self: $(`[${this.attr.self}]`)
 		};
 		this.classes = {
-			hidden: 'js-hidden'
-		}
+			hidden: 'js-hidden',
+			transition: 'transition'
+		};
+		this.delta = {
+			start: null,
+			end: null,
+			counter: 0
+		};
+		this.transform = 'translate(-50%, -50%)';
 		this.__events();
+	}
+	getCurrent() {
+		return $(`[${this.attr.modals}]:not(.js-finished)`);
 	}
 	parseAction(attr) {
 		let parsed = attr.split(':');
@@ -82,6 +95,27 @@ class Modals {
 	show() {
 		this.nodes.self.classList.remove(this.classes.hidden);
 	}
+	handleTouch(event) {
+		if (event.type === this.TOUCH_TYPES[0]) {
+			this.delta.start = event.touches[0].clientX;
+			this.nodes.self.classList.remove(this.classes.transition);
+		}
+		if (event.type === this.TOUCH_TYPES[1]) {
+			this.delta.counter = this.delta.start - event.touches[0].clientX;
+			this.getCurrent().style.transform = `translate(calc(-50% - ${this.delta.counter}px), -50%)`;
+		}
+		if (event.type === this.TOUCH_TYPES[2]) {
+			// this.delta.counter > 100 ? this.next() : this.reset();
+		}
+	}
+	next() {
+		
+	}
+	reset() {
+		let current = this.getCurrent();
+		current.classList.add(this.classes.transition);
+		current.style.transform = this.transform;
+	}
 	__events() {
 		document.addEventListener('mousedown', (event) => {
 			let closest = event.target.closest(`[${this.attr.action}]`);
@@ -90,5 +124,10 @@ class Modals {
 				this.dispatcher(parsed[0], parsed[1], event);
 			}
 		});
+		this.TOUCH_TYPES.forEach((touch) => {
+			this.nodes.self.addEventListener(touch, (event) => {
+				this.handleTouch(event);
+			});
+		}, false);
 	}
 }

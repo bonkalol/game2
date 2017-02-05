@@ -1,5 +1,5 @@
 <script type="text/template" id="modal_settings">
-	<div class="modal" data-settings-modal>
+	<div class="modal" data-modals-modal data-settings-modal>
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content modal_content--settings">
 			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
@@ -45,17 +45,6 @@
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>
-			<div class="settings settings_cards">
-				<span class="settings_name">Карточки:</span>
-				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" data-bind="cards-gray" type="checkbox" name="cards" id="cards:gray" value="{{? it.settings.gray === true || it.started !== true}}true{{?}}" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:gray">Серая</label>
-					<input class="settings_switcher_input" data-bind="cards-yellow" type="checkbox" name="cards" id="cards:yellow" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:yellow">Желтая</label>
-					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:special">Специ&shy;альная</label>
-				</div>
-			</div>
 			<div class="settings">
 				<span class="settings_name">Игроки ходят:</span>
 				<div class="settings_switcher settings_switcher--x2">
@@ -86,6 +75,27 @@
 					<input class="settings_switcher_input" data-bind="sex" type="radio" name="sex" id="sex-homo" value="homo" {{? it.settings.sex === 'herma'}}checked{{?}}>
 					<label class="settings_switcher_element" for="sex-homo">Гомо</label>
 					<div class="settings_switcher_toggler"></div>
+				</div>
+			</div>
+			<div class="settings">
+				<span class="settings_name">Пропустить вопрос:</span>
+				<div class="settings_switcher settings_switcher--x2">
+					<input class="settings_switcher_input" data-bind="skip" type="radio" name="skip" id="skip-true" value="true" {{? it.settings.skip === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="skip-true">Да</label>
+					<input class="settings_switcher_input" data-bind="skip" type="radio" name="skip" id="skip-false" value="false" {{? it.settings.skip !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="skip-false">Нет</label>
+					<div class="settings_switcher_toggler"></div>
+				</div>
+			</div>
+			<div class="settings settings_cards">
+				<span class="settings_name">Карточки:</span>
+				<div class="settings_switcher settings_switcher--x3">
+					<input class="settings_switcher_input" data-bind="cards-gray" type="checkbox" name="cards" id="cards:gray" value="{{? it.settings.gray === true || it.started !== true}}true{{?}}" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:gray">Серая</label>
+					<input class="settings_switcher_input" data-bind="cards-yellow" type="checkbox" name="cards" id="cards:yellow" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:yellow">Желтая</label>
+					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:special">Специ&shy;альная</label>
 				</div>
 			</div>
 		</section>

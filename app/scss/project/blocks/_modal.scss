@@ -11,7 +11,11 @@
 	flex-direction: column;
 	align-items: stretch;
 	will-change: transform, box-shadow;
-	transition: transform .4s, box-shadow .4s;
+	transition: box-shadow .4s;
+
+	&.trasnition {
+		transition: transform .4s, box-shadow .4s;
+	}
 
 	&.js-finished {
 		transform: translate(calc(-50vw - 100%),-50%);
@@ -72,7 +76,7 @@
 	}
 
 	&_hint {
-		font-size: 14px;
+		font-size: 16px;
 		line-height: 1.4em;
 
 		@include media('height') {
