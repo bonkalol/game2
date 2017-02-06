@@ -13,12 +13,16 @@
 	will-change: transform, box-shadow;
 	transition: box-shadow .4s;
 
-	&.trasnition {
+	&.transition {
 		transition: transform .4s, box-shadow .4s;
 	}
 
+	&.position {
+		@include alignCenter();
+	}
+
 	&.js-finished {
-		transform: translate(calc(-50vw - 100%),-50%);
+		transform: translate(calc(-50vw - 100%),-50%) !important;
 
 		& + .modal:not(.js-finished) {
 			@extend %shadow-6dp;

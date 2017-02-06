@@ -99,7 +99,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 	</ul>
 </div>
 		<script type="text/template" id="modal_players">
-	<div class="modal" data-modals-modal data-player-modal>
+	<div class="modal" data-modals-modal="players" data-modal-status="{{=it.players.length >= 2}}" data-player-modal>
 		<h2 class="modal_title">Добавить игроков</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Введите имя игрока в поле ниже и выберите половую принадлежность. Минимум 2 игрока. Чтобы удалить игрока просто нажмите на него в списке.</p>
@@ -153,8 +153,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</footer>
 	</div>
 </script>
+
 		<script type="text/template" id="modal_rubrics">
-	<div class="modal modal_rubrics" data-modals-modal data-rubric-modal>
+	<div class="modal modal_rubrics" data-modals-modal="rubrics" data-modal-status="{{=it.rubrics.length >= 1 }}" data-rubric-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content">
 			<p class="modal_hint">Выберите рубрику или рубрики для игры.</p>
@@ -208,8 +209,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		{{?}}
 	</footer>
 </script>
+
 		<script type="text/template" id="modal_settings">
-	<div class="modal" data-modals-modal data-settings-modal>
+	<div class="modal" data-modals-modal="settings" data-modal-status="true" data-settings-modal>
 		<h2 class="modal_title">Настройки</h2>
 		<section class="modal_content modal_content--settings">
 			<p class="modal_hint">Настройте игру по своему вкусу или оставьте по умолчанию.</p>
@@ -328,8 +330,9 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</footer>
 	</div>
 </script>
+
 		<script type="text/template" id="modal_rules">
-	<div class="modal modal_rubrics" data-modals-modal data-rules-modal>
+	<div class="modal modal_rubrics" data-modals-modal="rules" data-rules-modal>
 		<h2 class="modal_title">Выбрать рубрику</h2>
 		<section class="modal_content rules">
 			<section class="rules_content">
@@ -356,6 +359,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</footer>
 	</div>
 </script>
+
 		<script type="text/template" id="modal_continue">
 	<div class="modal modal_rubrics" data-continue-modal>
 		<h2 class="modal_title">Продолжить игру</h2>
