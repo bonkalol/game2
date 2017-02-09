@@ -8,7 +8,7 @@ class Modal {
 			action: 'data-modal-action',
 			status: 'data-modal-status'
 		};
-		this.baseClasses = ['js-disabled', 'js-finished', 'js-close'];
+		this.baseClasses = ['js-disabled', 'js-finished', 'js-close', 'transition'];
 		this.buttons = this.__buttons();
 		if (this.__events) this.__events();
 	}
@@ -23,9 +23,11 @@ class Modal {
 		this.getView().classList.add(this.baseClasses[1]);
 	}
 	prev() {
+		this.getView().classList.add(this.baseClasses[3]);
 		this.getView().previousSibling.classList.remove(this.baseClasses[1]);
 	}
 	close() {
+		this.getView().classList.add(this.baseClasses[3]);
 		this.getView().classList.add(this.baseClasses[2]);
 	}
 	save() {
@@ -95,29 +97,37 @@ class Modals {
 	}
 	handleTouch(event) {
 		let current = this.getCurrent(),
-			name = current.getAttribute(this.attr.modals);
-		if (!current.nextSibling || !this[name].getStatus()) return;
+			name = current.getAttribute(this.attr.modals),
+			canSwipeToNext = current.nextSibling && this[name].getStatus();
 		current.classList.remove(this.classes.transition);
 		if (event.type === this.TOUCH_TYPES[0]) {
 			this.delta.start = event.touches[0].clientX;
 			this.nodes.self.classList.remove(this.classes.transition);
 		}
 		if (event.type === this.TOUCH_TYPES[1]) {
-			if (this.delta.start - event.touches[0].clientX < 10) return;
-			this.delta.counter = this.delta.start - event.touches[0].clientX;
-			if (this.delta.counter > 0) {
+			if (this.delta.start - event.touches[0].clientX > 10 && canSwipeToNext) { // Ничего не делать если слайд незначительный
+				this.delta.counter = this.delta.start - event.touches[0].clientX;
 				current.style.transform = `translate(calc(-50% - ${this.delta.counter}px), -50%)`;
+			} else if (this.delta.start - event.touches[0].clientX < 10)  {
+				this.delta.counter = this.delta.start - event.touches[0].clientX;
 			}
 		}
 		if (event.type === this.TOUCH_TYPES[2]) {
-			this.delta.counter > 100 ? this.next(current) : this.back(current);
+			this.delta.counter > 80 ? this.next(current) : this.back(current);
+			this.delta.counter < -80 ? this.previous(current) : void(0);
 			this.delta.counter = 0;
 		}
 	}
 	next(current) {
-			current.classList.add(this.classes.transition);
-			current.classList.add(this.classes.finished);
-			this.reset(current);
+		current.classList.add(this.classes.transition);
+		current.classList.add(this.classes.finished);
+		this.reset(current);
+	}
+	previous(current) {
+		let prev = current.previousSibling;
+		if (prev) {
+			prev.classList.remove(this.classes.finished);
+		}
 	}
 	back(current) {
 		current.classList.add(this.classes.transition);

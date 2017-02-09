@@ -25,12 +25,14 @@ class RubricsModal extends Modal {
 		this.getView().outerHTML = App.manager.Render.modalRubrics();
 	}
 	updateView() {
-		this.getView().querySelector('footer').outerHTML = App.manager.Render.rubrics_footer();
+		let view = this.getView();
+		view.$('footer').outerHTML = App.manager.Render.rubrics_footer();
+		view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
 	}
 	__events() {
 		document.addEventListener('change', (e) => {
 			if (e.target.getAttribute(this.attr.name) === this.nameValue) {
-					this.change();
+				this.change();
 			}
 		});
 	}

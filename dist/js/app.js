@@ -288,7 +288,7 @@ var Modal = (function () {
 			action: 'data-modal-action',
 			status: 'data-modal-status'
 		};
-		this.baseClasses = ['js-disabled', 'js-finished', 'js-close'];
+		this.baseClasses = ['js-disabled', 'js-finished', 'js-close', 'transition'];
 		this.buttons = this.__buttons();
 		if (this.__events) this.__events();
 	}
@@ -312,11 +312,13 @@ var Modal = (function () {
 	}, {
 		key: 'prev',
 		value: function prev() {
+			this.getView().classList.add(this.baseClasses[3]);
 			this.getView().previousSibling.classList.remove(this.baseClasses[1]);
 		}
 	}, {
 		key: 'close',
 		value: function close() {
+			this.getView().classList.add(this.baseClasses[3]);
 			this.getView().classList.add(this.baseClasses[2]);
 		}
 	}, {
@@ -410,22 +412,25 @@ var Modals = (function () {
 		key: 'handleTouch',
 		value: function handleTouch(event) {
 			var current = this.getCurrent(),
-			    name = current.getAttribute(this.attr.modals);
-			if (!current.nextSibling || !this[name].getStatus()) return;
+			    name = current.getAttribute(this.attr.modals),
+			    canSwipeToNext = current.nextSibling && this[name].getStatus();
 			current.classList.remove(this.classes.transition);
 			if (event.type === this.TOUCH_TYPES[0]) {
 				this.delta.start = event.touches[0].clientX;
 				this.nodes.self.classList.remove(this.classes.transition);
 			}
 			if (event.type === this.TOUCH_TYPES[1]) {
-				if (this.delta.start - event.touches[0].clientX < 10) return;
-				this.delta.counter = this.delta.start - event.touches[0].clientX;
-				if (this.delta.counter > 0) {
+				if (this.delta.start - event.touches[0].clientX > 10 && canSwipeToNext) {
+					// Ничего не делать если слайд незначительный
+					this.delta.counter = this.delta.start - event.touches[0].clientX;
 					current.style.transform = 'translate(calc(-50% - ' + this.delta.counter + 'px), -50%)';
+				} else if (this.delta.start - event.touches[0].clientX < 10) {
+					this.delta.counter = this.delta.start - event.touches[0].clientX;
 				}
 			}
 			if (event.type === this.TOUCH_TYPES[2]) {
-				this.delta.counter > 100 ? this.next(current) : this.back(current);
+				this.delta.counter > 80 ? this.next(current) : this.back(current);
+				this.delta.counter < -80 ? this.previous(current) : void 0;
 				this.delta.counter = 0;
 			}
 		}
@@ -435,6 +440,14 @@ var Modals = (function () {
 			current.classList.add(this.classes.transition);
 			current.classList.add(this.classes.finished);
 			this.reset(current);
+		}
+	}, {
+		key: 'previous',
+		value: function previous(current) {
+			var prev = current.previousSibling;
+			if (prev) {
+				prev.classList.remove(this.classes.finished);
+			}
 		}
 	}, {
 		key: 'back',
@@ -2685,7 +2698,9 @@ var RubricsModal = (function (_Modal) {
 	}, {
 		key: 'updateView',
 		value: function updateView() {
-			this.getView().querySelector('footer').outerHTML = App.manager.Render.rubrics_footer();
+			var view = this.getView();
+			view.$('footer').outerHTML = App.manager.Render.rubrics_footer();
+			view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
 		}
 	}, {
 		key: '__events',
