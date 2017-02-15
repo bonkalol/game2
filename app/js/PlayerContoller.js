@@ -30,15 +30,15 @@ class PlayerController {
 		// return instanceof Player
 	}
 	getNext() {
-		// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
-		// случайно
+		// даст игрока который ходит следующий, если выдача игроков идет случайно то
+		// основываясь на pickrate
 		// return instanceof Player
 	}
 	getPrevious() {
 		// return instanceof Player
 	}
 	getRandom() {
-		const length = App.data.players.length, random = _.getRandomInt(0, length);
+		const max = App.data.players.length - 1, random = _.getRandomInt(0, max);
 		return App.data.players[random];
 	}
 	getLeader() {
