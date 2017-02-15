@@ -29,6 +29,8 @@ class Sidebar {
 		this.self.classList.remove(this.enum.opened);
 	}
 	__events() {
-
+		document.addEventListener('mousedown', (event) => {
+			if (event.target.closest(`[${this.attr.button}]`)) this.check();
+		}, false);
 	}
 }

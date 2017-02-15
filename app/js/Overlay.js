@@ -2,7 +2,7 @@
 class Overlay {
 
 	constructor() {
-		this.enum = 
+		this.enum =
 		this.self = document.querySelector('[data-overlay]');
 		this.states = ['hidden', 'active'];
 		this.listener = null;
@@ -13,7 +13,7 @@ class Overlay {
 		let Overlay = this;
 		this.self.classList.remove(this.states[0]);
 		this.self.classList.add(this.states[1]);
-		if (isFunc(onCloseCallback)) {
+		if (_.isFunc(onCloseCallback)) {
 			this.self.addEventListener('mousedown', (event) => {
 				Overlay.close(null, onCloseCallback);
 				Overlay.listener = onCloseCallback;
@@ -21,7 +21,7 @@ class Overlay {
 			});
 		}
 		let timeout = setTimeout( () => {
-			if (isFunc(callback)) {
+			if (_.isFunc(callback)) {
 				callback();
 			}
 		}, this.transition);
@@ -29,13 +29,13 @@ class Overlay {
 
 	close(callback = null, onCloseCallback = null) {
 		this.self.classList.remove(this.states[1]);
-		if (isFunc(this.listener)) {
+		if (_.isFunc(this.listener)) {
 			this.self.removeEventListener('mousedown', onCloseCallback, false);
 			this.listener = null;
 		}
 		let timeout = setTimeout( () => {
 			this.self.classList.add(this.states[0]);
-			if (isFunc(callback)) {
+			if (_.isFunc(callback)) {
 				callback();
 			}
 		}, this.transition);

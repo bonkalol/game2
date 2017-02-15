@@ -22,7 +22,7 @@ class Alert {
 		if (!constant) setTimeout(() => this.close(), time);
 	}
 	close() {
-		new PromisedTimeOut(() => this.nodes.self.classList.remove(this.classes[0]), this.transition)
+		new _.PromisedTimeOut(() => this.nodes.self.classList.remove(this.classes[0]), this.transition)
 			.then(() => this.nodes.self.classList.remove(this.type));
 	}
 	events() {

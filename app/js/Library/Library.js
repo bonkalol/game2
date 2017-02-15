@@ -1,19 +1,3 @@
-var random = function(min, max) {
-	return Math.floor(Math.random()*(max + 1 - min)) + min;
-};
-
-var isFunc = function(func) {
-	return typeof func === 'function';
-};
-
-var PromisedTimeOut = (func, timeout) => {
-	if (!func || !timeout) throw new Error('Defined func and timeout');
-	func();
-	return new Promise((resolve, reject) => {
-		setTimeout(() => { resolve(); }, timeout);
-	});
-};
-
 if (!Object.assign) {
 	Object.defineProperty(Object, 'assign', {
 		enumerable: false,
@@ -48,7 +32,12 @@ if (!Object.assign) {
 
 var _ = {};
 
+_.isFunc = function(func) {
+	return typeof func === 'function';
+};
+
 _.required = function (variables) {
+	if (!Array.isArray(variables)) if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	variables.forEach((variable) => {
 		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	});
@@ -67,12 +56,24 @@ _.getRandom = function() {
 	return parseInt(Math.random()*1e+10)+parseInt(Math.random()*1e+10)+String.fromCharCode(parseInt(Math.random()*(100-65)+65));
 }
 
+_.getRandomInt = function(min, max) {
+	return Math.floor(Math.random()*(max + 1 - min)) + min;
+};
+
 _.setProps = function(appendTo, object) {
 	Object.keys(object).forEach(function (prop) {
 		appendTo[prop] = object[prop];
 	});
 	return appendTo;
 }
+
+_.PromisedTimeOut = (func, timeout) => {
+	if (!func || !timeout) throw new Error('Defined func and timeout');
+	func();
+	return new Promise((resolve, reject) => {
+		setTimeout(() => { resolve(); }, timeout);
+	});
+};
 
 var $ = document.querySelector.bind(document);
 var $$ = document.querySelectorAll.bind(document);

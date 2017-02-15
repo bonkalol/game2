@@ -20,6 +20,7 @@ class Modal {
 	}
 	next() {
 		if (typeof this.beforeNext === 'function') this.beforeNext();
+		this.getView().classList.add(this.baseClasses[3]);
 		this.getView().classList.add(this.baseClasses[1]);
 	}
 	prev() {

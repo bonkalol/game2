@@ -21,6 +21,7 @@ class Player {
 	initProps(props) {
 		this.name = props.name;
 		this.gender = props.gender;
+		this.current = false;
 		this.pickRate = 0;
 		this.score = 0;
 		this.id = _.getRandom();

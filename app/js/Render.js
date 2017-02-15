@@ -2,19 +2,20 @@ class Render {
 
 	constructor() {
 		this.views = {
-			modals:      document.querySelector('[data-modals-view]'),
-			gamePlayers: document.querySelector('[data-game-players]'),
+			modals:      $('[data-modals-view]'),
+			gamePlayers: $('[data-game-players]'),
 			main: null
 		};
 		this.templates = {
-			players:     	document.querySelector('#modal_players'),
-			rubrics:     	document.querySelector('#modal_rubrics'),
-			rubrics_footer: document.querySelector('#modal_rubrics_footer'),
-			settings:    	document.querySelector('#modal_settings'),
-			rules:       	document.querySelector('#modal_rules'),
-			continue:    	document.querySelector('#modal_continue'),
-			card:        	document.querySelector('#modal_card'),
-			gamePlayers: 	document.querySelector('#game_players')
+			players:     	$('#modal_players'),
+			rubrics:     	$('#modal_rubrics'),
+			rubrics_footer: $('#modal_rubrics_footer'),
+			settings:    	$('#modal_settings'),
+			rules:       	$('#modal_rules'),
+			continue:    	$('#modal_continue'),
+			card:        	$('#modal_card'),
+			gamePlayers: 	$('#game_players'),
+			game:			$('#game')
 		};
 	}
 
@@ -61,6 +62,10 @@ class Render {
 	GamePlayers() {
 		let gamePlayers = this.render(this.templates.gamePlayers, App.data);
 		return gamePlayers;
+	}
+
+	game() {
+		return this.render(this.templates.game, App.data);
 	}
 
 	/*

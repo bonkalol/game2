@@ -2,10 +2,12 @@ class Game {
 	constructor() {
 		this.check();
 		this.attr = {
-			self: 'data-game-view'
+			self: 'data-game-view',
+			container: 'data-game-container'
 		};
 		this.nodes = {
-			self: $(`[${this.attr.self}]`)
+			self: $(`[${this.attr.self}]`),
+			container: $(`[${this.attr.container}]`)
 		};
 		this.classes = {
 			hidden: 'js-hidden'
@@ -26,16 +28,17 @@ class Game {
 	start() {
 		// Start game cycle.
 		this.nodes.self.classList.remove(this.classes.hidden);
+		this.init();
 		this.render();
 	}
 	restart() {
 
 	}
 	continue() {
-		
+
 	}
 	render() {
-		
+		this.nodes.container.innerHTML = App.manager.Render.game();
 	}
 	load() {
 		let game = this.manager.Storage.get('Game');
@@ -43,5 +46,17 @@ class Game {
 	}
 	save() {
 		this.manager.Storage.set('Game', this.data);
+	}
+	init() {
+		/*
+			Init base settings
+		*/
+		const settings = App.data.settings;
+
+		if (settings.randomPlayers) {
+			App.data.currentPlayer = App.manager.PlayerController.getRandom();
+		} else {
+			App.data.currentPlayer = App.manager.PlayerController.get(0);
+		}
 	}
 }

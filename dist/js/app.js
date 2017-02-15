@@ -42,7 +42,7 @@ var Alert = (function () {
 		value: function close() {
 			var _this2 = this;
 
-			new PromisedTimeOut(function () {
+			new _.PromisedTimeOut(function () {
 				return _this2.nodes.self.classList.remove(_this2.classes[0]);
 			}, this.transition).then(function () {
 				return _this2.nodes.self.classList.remove(_this2.type);
@@ -171,10 +171,12 @@ var Game = (function () {
 
 		this.check();
 		this.attr = {
-			self: 'data-game-view'
+			self: 'data-game-view',
+			container: 'data-game-container'
 		};
 		this.nodes = {
-			self: $('[' + this.attr.self + ']')
+			self: $('[' + this.attr.self + ']'),
+			container: $('[' + this.attr.container + ']')
 		};
 		this.classes = {
 			hidden: 'js-hidden'
@@ -200,6 +202,7 @@ var Game = (function () {
 		value: function start() {
 			// Start game cycle.
 			this.nodes.self.classList.remove(this.classes.hidden);
+			this.init();
 			this.render();
 		}
 	}, {
@@ -210,7 +213,9 @@ var Game = (function () {
 		value: function _continue() {}
 	}, {
 		key: 'render',
-		value: function render() {}
+		value: function render() {
+			this.nodes.container.innerHTML = App.manager.Render.game();
+		}
 	}, {
 		key: 'load',
 		value: function load() {
@@ -221,6 +226,20 @@ var Game = (function () {
 		key: 'save',
 		value: function save() {
 			this.manager.Storage.set('Game', this.data);
+		}
+	}, {
+		key: 'init',
+		value: function init() {
+			/*
+   	Init base settings
+   */
+			var settings = App.data.settings;
+
+			if (settings.randomPlayers) {
+				App.data.currentPlayer = App.manager.PlayerController.getRandom();
+			} else {
+				App.data.currentPlayer = App.manager.PlayerController.get(0);
+			}
 		}
 	}]);
 
@@ -307,6 +326,7 @@ var Modal = (function () {
 		key: 'next',
 		value: function next() {
 			if (typeof this.beforeNext === 'function') this.beforeNext();
+			this.getView().classList.add(this.baseClasses[3]);
 			this.getView().classList.add(this.baseClasses[1]);
 		}
 	}, {
@@ -505,7 +525,7 @@ var Overlay = (function () {
 			var Overlay = this;
 			this.self.classList.remove(this.states[0]);
 			this.self.classList.add(this.states[1]);
-			if (isFunc(onCloseCallback)) {
+			if (_.isFunc(onCloseCallback)) {
 				this.self.addEventListener('mousedown', function (event) {
 					Overlay.close(null, onCloseCallback);
 					Overlay.listener = onCloseCallback;
@@ -513,7 +533,7 @@ var Overlay = (function () {
 				});
 			}
 			var timeout = setTimeout(function () {
-				if (isFunc(callback)) {
+				if (_.isFunc(callback)) {
 					callback();
 				}
 			}, this.transition);
@@ -527,13 +547,13 @@ var Overlay = (function () {
 			var onCloseCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 			this.self.classList.remove(this.states[1]);
-			if (isFunc(this.listener)) {
+			if (_.isFunc(this.listener)) {
 				this.self.removeEventListener('mousedown', onCloseCallback, false);
 				this.listener = null;
 			}
 			var timeout = setTimeout(function () {
 				_this.self.classList.add(_this.states[0]);
-				if (isFunc(callback)) {
+				if (_.isFunc(callback)) {
 					callback();
 				}
 			}, this.transition);
@@ -575,6 +595,7 @@ var Player = (function () {
 		value: function initProps(props) {
 			this.name = props.name;
 			this.gender = props.gender;
+			this.current = false;
 			this.pickRate = 0;
 			this.score = 0;
 			this.id = _.getRandom();
@@ -608,12 +629,17 @@ var PlayerController = (function () {
 		key: 'remove',
 		value: function remove(id) {
 			var index = App.data.players.indexOf(_.getByKeyValue(App.data.players, 'id', id));
-			return App.data.players.splice(index, 1);
+			if (App.data.players[index].current) return App.data.players.splice(index, 1);
 		}
 	}, {
 		key: 'exist',
 		value: function exist(name) {
 			return _.getByKeyValue(App.data.players, 'name', name);
+		}
+	}, {
+		key: 'get',
+		value: function get(id) {
+			return App.data.players[id];
 		}
 	}, {
 		key: 'getScoreBoard',
@@ -647,8 +673,9 @@ var PlayerController = (function () {
 	}, {
 		key: 'getRandom',
 		value: function getRandom() {
-			// Получить рандомного игрока
-			// return instanceof Player
+			var length = App.data.players.length,
+			    random = _.getRandomInt(0, length);
+			return App.data.players[random];
 		}
 	}, {
 		key: 'getLeader',
@@ -666,6 +693,16 @@ var PlayerController = (function () {
 		key: 'getWinner',
 		value: function getWinner() {
 			// return instanceof Player
+		}
+	}, {
+		key: 'setCurrent',
+		value: function setCurrent(setPlayer /* @Player */) {
+			_.required(setPlayer);
+			App.data.players.forEach(function (player) {
+				player.current = false;
+			});
+			setPlayer.current = true;
+			return setPlayer;
 		}
 	}]);
 
@@ -718,19 +755,20 @@ var Render = (function () {
 		_classCallCheck(this, Render);
 
 		this.views = {
-			modals: document.querySelector('[data-modals-view]'),
-			gamePlayers: document.querySelector('[data-game-players]'),
+			modals: $('[data-modals-view]'),
+			gamePlayers: $('[data-game-players]'),
 			main: null
 		};
 		this.templates = {
-			players: document.querySelector('#modal_players'),
-			rubrics: document.querySelector('#modal_rubrics'),
-			rubrics_footer: document.querySelector('#modal_rubrics_footer'),
-			settings: document.querySelector('#modal_settings'),
-			rules: document.querySelector('#modal_rules'),
-			'continue': document.querySelector('#modal_continue'),
-			card: document.querySelector('#modal_card'),
-			gamePlayers: document.querySelector('#game_players')
+			players: $('#modal_players'),
+			rubrics: $('#modal_rubrics'),
+			rubrics_footer: $('#modal_rubrics_footer'),
+			settings: $('#modal_settings'),
+			rules: $('#modal_rules'),
+			'continue': $('#modal_continue'),
+			card: $('#modal_card'),
+			gamePlayers: $('#game_players'),
+			game: $('#game')
 		};
 	}
 
@@ -787,6 +825,11 @@ var Render = (function () {
 		value: function GamePlayers() {
 			var gamePlayers = this.render(this.templates.gamePlayers, App.data);
 			return gamePlayers;
+		}
+	}, {
+		key: 'game',
+		value: function game() {
+			return this.render(this.templates.game, App.data);
 		}
 
 		/*
@@ -856,7 +899,13 @@ var Sidebar = (function () {
 		}
 	}, {
 		key: '__events',
-		value: function __events() {}
+		value: function __events() {
+			var _this = this;
+
+			document.addEventListener('mousedown', function (event) {
+				if (event.target.closest('[' + _this.attr.button + ']')) _this.check();
+			}, false);
+		}
 	}]);
 
 	return Sidebar;
@@ -1138,24 +1187,6 @@ if ("document" in self) {
     })();
   }
 };
-var random = function random(min, max) {
-	return Math.floor(Math.random() * (max + 1 - min)) + min;
-};
-
-var isFunc = function isFunc(func) {
-	return typeof func === 'function';
-};
-
-var PromisedTimeOut = function PromisedTimeOut(func, timeout) {
-	if (!func || !timeout) throw new Error('Defined func and timeout');
-	func();
-	return new Promise(function (resolve, reject) {
-		setTimeout(function () {
-			resolve();
-		}, timeout);
-	});
-};
-
 if (!Object.assign) {
 	Object.defineProperty(Object, 'assign', {
 		enumerable: false,
@@ -1190,7 +1221,12 @@ if (!Object.assign) {
 
 var _ = {};
 
+_.isFunc = function (func) {
+	return typeof func === 'function';
+};
+
 _.required = function (variables) {
+	if (!Array.isArray(variables)) if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	variables.forEach(function (variable) {
 		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
 	});
@@ -1209,11 +1245,25 @@ _.getRandom = function () {
 	return parseInt(Math.random() * 1e+10) + parseInt(Math.random() * 1e+10) + String.fromCharCode(parseInt(Math.random() * (100 - 65) + 65));
 };
 
+_.getRandomInt = function (min, max) {
+	return Math.floor(Math.random() * (max + 1 - min)) + min;
+};
+
 _.setProps = function (appendTo, object) {
 	Object.keys(object).forEach(function (prop) {
 		appendTo[prop] = object[prop];
 	});
 	return appendTo;
+};
+
+_.PromisedTimeOut = function (func, timeout) {
+	if (!func || !timeout) throw new Error('Defined func and timeout');
+	func();
+	return new Promise(function (resolve, reject) {
+		setTimeout(function () {
+			resolve();
+		}, timeout);
+	});
 };
 
 var $ = document.querySelector.bind(document);
