@@ -1,4 +1,4 @@
-<script type="text/template" id="game_players">
+<script type="text/template" id="stats">
 	{{~it.players :player:index}}
 		<div class="game_player">
 			{{?player.gender === 'f'}}
@@ -16,13 +16,7 @@
 			{{?}}
 			<span class="game_player_name">{{=player.name}}</span>
 			{{?it.settings.score}}
-				{{? player.score === 0}}
-				<span class="game_player_score eq">{{=player.score}}</span>
-				{{?? player.score > 0}}
-				<span class="game_player_score more">{{=player.score}}</span>
-				{{?? player.score < 0}}
-				<span class="game_player_score less">{{=player.score}}</span>
-				{{?}}
+				<span class="game_player_score {{=App.manager.PlayerController.getScoreClass(player.score)}}">{{=player.score}}</span>
 			{{?}}
 		</div>
 	{{~}}

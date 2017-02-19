@@ -37,10 +37,13 @@ _.isFunc = function(func) {
 };
 
 _.required = function (variables) {
-	if (!Array.isArray(variables)) if (typeof variable === 'undefined') throw new Error('Define all required arguments');
-	variables.forEach((variable) => {
-		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
-	});
+	if (!Array.isArray(variables) && typeof variables === 'undefined') throw new Error('Define all required arguments');
+	if (Array.isArray(variables)) {
+		variables.forEach((variable) => {
+			if (typeof variable === 'undefined') throw new Error('Define all required arguments');
+		});
+	}
+	return true;
 };
 
 _.getByKeyValue = function(arrayOfObjects, key, value) {

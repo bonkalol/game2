@@ -26,7 +26,7 @@ class RubricsModal extends Modal {
 	}
 	updateView() {
 		let view = this.getView();
-		view.$('footer').outerHTML = App.manager.Render.rubrics_footer();
+		view.$('footer').outerHTML = App.manager.Render.rubricsFooter();
 		view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
 	}
 	__events() {

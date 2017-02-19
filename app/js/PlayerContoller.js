@@ -1,5 +1,12 @@
 class PlayerController {
 	constructor() {
+		this.classes = {
+			score: {
+				eq: 'eq',
+				more: 'more',
+				less: 'less'
+			}
+		}
 	}
 	create(name, gender) {
 		return App.data.players.push(new Player({
@@ -51,6 +58,13 @@ class PlayerController {
 	}
 	getWinner() {
 		// return instanceof Player
+	}
+	getScoreClass(score) {
+		_.required(score);
+		let className = this.classes.score.eq;
+		if (score > 0) className = this.classes.score.more;
+		else if (score < 0) className = this.classes.score.less;
+		return className;
 	}
 	setCurrent(setPlayer/* @Player */) {
 		_.required(setPlayer);

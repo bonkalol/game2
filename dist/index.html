@@ -61,7 +61,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			<div class="game">
 	<div class="game_header">
 		<div class="game_players_wrapper">
-			<div class="game_players" data-game-players>
+			<div class="game_players" data-game-stats>
 				
 			</div>
 		</div>
@@ -78,11 +78,11 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 </div>
 
 <script type="text/tempalte" id="game">
-	<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score more">1</span></span></div>
+	<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score {{=App.manager.PlayerController.getScoreClass(it.currentPlayer.score)}}">{{=it.currentPlayer.score}}</span></span></div>
 	<div class="game_view_buttons">
-		<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
+		<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.settings.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
 		<span class="game_view_buttons_separator">или</span>
-		<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
+		<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.settings.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
 	</div>
 </script>
 		</div>
@@ -186,7 +186,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</label>
 			</div>
 		</section>
-		{{=App.manager.Render.rubrics_footer()}}
+		{{=App.manager.Render.rubricsFooter()}}
 	</div>
 </script>
 
@@ -442,7 +442,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 		</div>
 	</div>
 </script>
-		<script type="text/template" id="game_players">
+		<script type="text/template" id="stats">
 	{{~it.players :player:index}}
 		<div class="game_player">
 			{{?player.gender === 'f'}}
@@ -460,13 +460,7 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			{{?}}
 			<span class="game_player_name">{{=player.name}}</span>
 			{{?it.settings.score}}
-				{{? player.score === 0}}
-				<span class="game_player_score eq">{{=player.score}}</span>
-				{{?? player.score > 0}}
-				<span class="game_player_score more">{{=player.score}}</span>
-				{{?? player.score < 0}}
-				<span class="game_player_score less">{{=player.score}}</span>
-				{{?}}
+				<span class="game_player_score {{=App.manager.PlayerController.getScoreClass(player.score)}}">{{=player.score}}</span>
 			{{?}}
 		</div>
 	{{~}}

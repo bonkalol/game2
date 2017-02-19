@@ -8,9 +8,6 @@ class PlayerModal extends Modal {
 			sortableHandle: 'data-player-sortable-handle',
 			player: 'data-playerlist-player'
 		};
-		this.sortableConfigs = {
-			animation: 150
-		};
 		this.sortableNode = null;
 		this.attr = Object.assign(this.attr, this.selfAttributes);
 		this.players = 'data-playerlist-player';
@@ -38,7 +35,10 @@ class PlayerModal extends Modal {
 		this.sortable();
 	}
 	sortable() {
-		this.sortableNode = new Sortable($(`[${this.attr.sortable}]`), this.sortableConfigs);
+		this.sortableNode = new Sortable($(`[${this.attr.sortable}]`), {
+			animation: 150,
+			// TODO Sort player on sort
+		});
 	}
 	eventCondition(node) {
 		return node.hasAttribute('data-player-input') &&

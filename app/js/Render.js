@@ -9,12 +9,12 @@ class Render {
 		this.templates = {
 			players:     	$('#modal_players'),
 			rubrics:     	$('#modal_rubrics'),
-			rubrics_footer: $('#modal_rubrics_footer'),
+			rubricsFooter:	$('#modal_rubrics_footer'),
 			settings:    	$('#modal_settings'),
 			rules:       	$('#modal_rules'),
 			continue:    	$('#modal_continue'),
 			card:        	$('#modal_card'),
-			gamePlayers: 	$('#game_players'),
+			stats:       	$('#stats'),
 			game:			$('#game')
 		};
 	}
@@ -54,14 +54,14 @@ class Render {
 		return gameContinue;
 	}
 
-	rubrics_footer() {
-		let rubrics_footer = this.render(this.templates.rubrics_footer, App.data);
-		return rubrics_footer;
+	rubricsFooter() {
+		let rubricsFooter = this.render(this.templates.rubricsFooter, App.data);
+		return rubricsFooter;
 	}
 
-	GamePlayers() {
-		let gamePlayers = this.render(this.templates.gamePlayers, App.data);
-		return gamePlayers;
+	stats() {
+		let stats = this.render(this.templates.stats, App.data);
+		return stats;
 	}
 
 	game() {
