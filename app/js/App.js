@@ -35,6 +35,8 @@ class App {
 			started: false,
 			rubrics: [],
 			players: [],
+			previousPlayer: null,
+			currentPlayer: null,
 			settings: {
 				repeatContent: false,
 				alcohol: true,
