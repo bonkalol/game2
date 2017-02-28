@@ -595,7 +595,6 @@ var Player = (function () {
 		value: function initProps(props) {
 			this.name = props.name;
 			this.gender = props.gender;
-			this.current = false;
 			this.pickRate = 0;
 			this.score = 0;
 			this.id = _.getRandom();
@@ -644,7 +643,10 @@ var PlayerController = (function () {
 	}, {
 		key: 'getScoreBoard',
 		value: function getScoreBoard() {
-			// return array of Players sorted by scores
+			var sorted = App.data.players.sort(function (x, y) {
+				return x.score < y.score;
+			});
+			return sorted;
 		}
 	}, {
 		key: 'getAssistent',
@@ -653,56 +655,70 @@ var PlayerController = (function () {
 			// return instanceof Player
 		}
 	}, {
-		key: 'getCurrent',
-		value: function getCurrent() {
-			// получить текущего игрока
-			// return instanceof Player
-		}
-	}, {
 		key: 'getNext',
 		value: function getNext() {
-			// даст игрока который ходит следующий, основываясь на pickrate если выдача игроков идет
-			// случайно
+			// даст игрока который ходит следующий, если выдача игроков идет случайно то
+			// основываясь на pickrate
 			// return instanceof Player
-		}
-	}, {
-		key: 'getPrevious',
-		value: function getPrevious() {
-			// return instanceof Player
+			App.data.currentPlayer.pickRate++;
+			App.data.previousPlayer = App.data.currentPlayer;
+			var settings = App.data.settings;
+			if (settings.randomPlayers) {
+				App.data.currentPlayer = this.getRandomPickRate();
+			} else {
+				App.data.currentPlayer = this.getNextPlayer();
+			}
+			return App.data.currentPlayer;
 		}
 	}, {
 		key: 'getRandom',
 		value: function getRandom() {
-			var length = App.data.players.length,
-			    random = _.getRandomInt(0, length);
+			var max = App.data.players.length - 1,
+			    random = _.getRandomInt(0, max);
 			return App.data.players[random];
+		}
+	}, {
+		key: 'getRandomPickRate',
+		value: function getRandomPickRate() {
+			// случайная выдача игроков
+			// основываясь на pickrate
+			// return instanceof Player
+			var sorted = App.data.players.sort(function (x, y) {
+				return x.pickRate > y.pickRate;
+			});
+			return sorted[0];
+		}
+	}, {
+		key: 'getNextPlayer',
+		value: function getNextPlayer() {
+			var indexOfPlayer = App.data.players.indexOf(App.data.currentPlayer);
+			if (App.data.players[indexOfPlayer + 1]) {
+				return App.data.players[indexOfPlayer + 1];
+			} else {
+				return App.data.players[0];
+			}
 		}
 	}, {
 		key: 'getLeader',
 		value: function getLeader() {
 			// Получить лидера по скорборду
-			// return instanceof Player
+			// return array instanceof Player
+			var winner = App.data.players[0];
+			App.data.players.forEach(function (player) {
+				if (player.score > winner.score) winner = player;
+			});
+			return winner;
 		}
 	}, {
-		key: 'getLast',
-		value: function getLast() {
+		key: 'getLoser',
+		value: function getLoser() {
 			// Получить последнего по скорборду
 			// return instanceof Player
-		}
-	}, {
-		key: 'getWinner',
-		value: function getWinner() {
-			// return instanceof Player
-		}
-	}, {
-		key: 'setCurrent',
-		value: function setCurrent(setPlayer /* @Player */) {
-			_.required(setPlayer);
+			var loser = App.data.players[0];
 			App.data.players.forEach(function (player) {
-				player.current = false;
+				if (player.score < loser.score) loser = player;
 			});
-			setPlayer.current = true;
-			return setPlayer;
+			return loser;
 		}
 	}]);
 
