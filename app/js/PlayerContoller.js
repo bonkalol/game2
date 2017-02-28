@@ -1,5 +1,12 @@
 class PlayerController {
 	constructor() {
+		this.classes = {
+			score: {
+				eq: 'eq',
+				more: 'more',
+				less: 'less'
+			}
+		}
 	}
 	create(name, gender) {
 		return App.data.players.push(new Player({

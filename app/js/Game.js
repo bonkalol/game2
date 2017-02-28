@@ -3,11 +3,13 @@ class Game {
 		this.check();
 		this.attr = {
 			self: 'data-game-view',
-			container: 'data-game-container'
+			container: 'data-game-container',
+			stats: 'data-game-stats'
 		};
 		this.nodes = {
 			self: $(`[${this.attr.self}]`),
-			container: $(`[${this.attr.container}]`)
+			container: $(`[${this.attr.container}]`),
+			stats: $(`[${this.attr.stats}]`)
 		};
 		this.classes = {
 			hidden: 'js-hidden'
@@ -38,6 +40,7 @@ class Game {
 
 	}
 	render() {
+		this.nodes.stats.innerHTML = App.manager.Render.stats();
 		this.nodes.container.innerHTML = App.manager.Render.game();
 	}
 	load() {
@@ -48,9 +51,6 @@ class Game {
 		this.manager.Storage.set('Game', this.data);
 	}
 	init() {
-		/*
-			Init base settings
-		*/
 		const settings = App.data.settings;
 
 		if (settings.randomPlayers) {

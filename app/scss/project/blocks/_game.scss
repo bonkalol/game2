@@ -241,13 +241,14 @@
 	}
 
 	&_view_button {
-		width: 120px;
-		padding: 10px 30px;
+		width: 200px;
+		padding: 30px 30px;
 		color: #fff;
 		font-size: 20px;
 		cursor: pointer;
 		@include flex(center, center);
 		flex-direction: column;
+		margin: auto;
 
 		&--truth {
 			background-color: #3d9bff;
@@ -264,6 +265,9 @@
 
 		@include media('<tablet') {
 			@include flex(center, center);
+			width: 120px;
+			padding: 10px 30px;
+			margin: 0;
 			flex-direction: column;
 			@include size(auto);
 			flex: 1;

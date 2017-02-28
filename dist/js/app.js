@@ -172,11 +172,13 @@ var Game = (function () {
 		this.check();
 		this.attr = {
 			self: 'data-game-view',
-			container: 'data-game-container'
+			container: 'data-game-container',
+			stats: 'data-game-stats'
 		};
 		this.nodes = {
 			self: $('[' + this.attr.self + ']'),
-			container: $('[' + this.attr.container + ']')
+			container: $('[' + this.attr.container + ']'),
+			stats: $('[' + this.attr.stats + ']')
 		};
 		this.classes = {
 			hidden: 'js-hidden'
@@ -214,6 +216,7 @@ var Game = (function () {
 	}, {
 		key: 'render',
 		value: function render() {
+			this.nodes.stats.innerHTML = App.manager.Render.stats();
 			this.nodes.container.innerHTML = App.manager.Render.game();
 		}
 	}, {
@@ -230,9 +233,6 @@ var Game = (function () {
 	}, {
 		key: 'init',
 		value: function init() {
-			/*
-   	Init base settings
-   */
 			var settings = App.data.settings;
 
 			if (settings.randomPlayers) {
@@ -614,6 +614,14 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 var PlayerController = (function () {
 	function PlayerController() {
 		_classCallCheck(this, PlayerController);
+
+		this.classes = {
+			score: {
+				eq: 'eq',
+				more: 'more',
+				less: 'less'
+			}
+		};
 	}
 
 	_createClass(PlayerController, [{
@@ -659,6 +667,14 @@ var PlayerController = (function () {
 		value: function getNext() {
 			// даст игрока который ходит следующий, если выдача игроков идет случайно то
 			// основываясь на pickrate
+<<<<<<< HEAD
+=======
+			// return instanceof Player
+		}
+	}, {
+		key: 'getPrevious',
+		value: function getPrevious() {
+>>>>>>> 1e6f8591dfd282cffe1ddcde735461aeb1fe45c0
 			// return instanceof Player
 			App.data.currentPlayer.pickRate++;
 			App.data.previousPlayer = App.data.currentPlayer;
@@ -710,11 +726,25 @@ var PlayerController = (function () {
 			return winner;
 		}
 	}, {
+<<<<<<< HEAD
 		key: 'getLoser',
 		value: function getLoser() {
 			// Получить последнего по скорборду
 			// return instanceof Player
 			var loser = App.data.players[0];
+=======
+		key: 'getScoreClass',
+		value: function getScoreClass(score) {
+			_.required(score);
+			var className = this.classes.score.eq;
+			if (score > 0) className = this.classes.score.more;else if (score < 0) className = this.classes.score.less;
+			return className;
+		}
+	}, {
+		key: 'setCurrent',
+		value: function setCurrent(setPlayer /* @Player */) {
+			_.required(setPlayer);
+>>>>>>> 1e6f8591dfd282cffe1ddcde735461aeb1fe45c0
 			App.data.players.forEach(function (player) {
 				if (player.score < loser.score) loser = player;
 			});
@@ -778,12 +808,12 @@ var Render = (function () {
 		this.templates = {
 			players: $('#modal_players'),
 			rubrics: $('#modal_rubrics'),
-			rubrics_footer: $('#modal_rubrics_footer'),
+			rubricsFooter: $('#modal_rubrics_footer'),
 			settings: $('#modal_settings'),
 			rules: $('#modal_rules'),
 			'continue': $('#modal_continue'),
 			card: $('#modal_card'),
-			gamePlayers: $('#game_players'),
+			stats: $('#stats'),
 			game: $('#game')
 		};
 	}
@@ -831,16 +861,16 @@ var Render = (function () {
 			return gameContinue;
 		}
 	}, {
-		key: 'rubrics_footer',
-		value: function rubrics_footer() {
-			var rubrics_footer = this.render(this.templates.rubrics_footer, App.data);
-			return rubrics_footer;
+		key: 'rubricsFooter',
+		value: function rubricsFooter() {
+			var rubricsFooter = this.render(this.templates.rubricsFooter, App.data);
+			return rubricsFooter;
 		}
 	}, {
-		key: 'GamePlayers',
-		value: function GamePlayers() {
-			var gamePlayers = this.render(this.templates.gamePlayers, App.data);
-			return gamePlayers;
+		key: 'stats',
+		value: function stats() {
+			var stats = this.render(this.templates.stats, App.data);
+			return stats;
 		}
 	}, {
 		key: 'game',
@@ -1242,10 +1272,13 @@ _.isFunc = function (func) {
 };
 
 _.required = function (variables) {
-	if (!Array.isArray(variables)) if (typeof variable === 'undefined') throw new Error('Define all required arguments');
-	variables.forEach(function (variable) {
-		if (typeof variable === 'undefined') throw new Error('Define all required arguments');
-	});
+	if (!Array.isArray(variables) && typeof variables === 'undefined') throw new Error('Define all required arguments');
+	if (Array.isArray(variables)) {
+		variables.forEach(function (variable) {
+			if (typeof variable === 'undefined') throw new Error('Define all required arguments');
+		});
+	}
+	return true;
 };
 
 _.getByKeyValue = function (arrayOfObjects, key, value) {
@@ -2644,9 +2677,6 @@ var PlayerModal = (function (_Modal) {
 			sortableHandle: 'data-player-sortable-handle',
 			player: 'data-playerlist-player'
 		};
-		this.sortableConfigs = {
-			animation: 150
-		};
 		this.sortableNode = null;
 		this.attr = Object.assign(this.attr, this.selfAttributes);
 		this.players = 'data-playerlist-player';
@@ -2683,10 +2713,13 @@ var PlayerModal = (function (_Modal) {
 	}, {
 		key: 'sortable',
 		value: function sortable() {
-			this.sortableNode = new Sortable($('[' + this.attr.sortable + ']'), this.sortableConfigs);
+			this.sortableNode = new Sortable($('[' + this.attr.sortable + ']'), {
+				animation: 150
+			});
 		}
 	}, {
 		key: 'eventCondition',
+		// TODO Sort player on sort
 		value: function eventCondition(node) {
 			return node.hasAttribute('data-player-input') && node.value.length > 0 && this.getGender();
 		}
@@ -2765,7 +2798,7 @@ var RubricsModal = (function (_Modal) {
 		key: 'updateView',
 		value: function updateView() {
 			var view = this.getView();
-			view.$('footer').outerHTML = App.manager.Render.rubrics_footer();
+			view.$('footer').outerHTML = App.manager.Render.rubricsFooter();
 			view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
 		}
 	}, {
