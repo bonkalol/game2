@@ -663,18 +663,18 @@ var PlayerController = (function () {
 			// return instanceof Player
 		}
 	}, {
+		key: 'getScoreClass',
+		value: function getScoreClass(score) {
+			_.required(score);
+			var className = this.classes.score.eq;
+			if (score > 0) className = this.classes.score.more;else if (score < 0) className = this.classes.score.less;
+			return className;
+		}
+	}, {
 		key: 'getNext',
 		value: function getNext() {
 			// даст игрока который ходит следующий, если выдача игроков идет случайно то
 			// основываясь на pickrate
-<<<<<<< HEAD
-=======
-			// return instanceof Player
-		}
-	}, {
-		key: 'getPrevious',
-		value: function getPrevious() {
->>>>>>> 1e6f8591dfd282cffe1ddcde735461aeb1fe45c0
 			// return instanceof Player
 			App.data.currentPlayer.pickRate++;
 			App.data.previousPlayer = App.data.currentPlayer;
@@ -726,25 +726,11 @@ var PlayerController = (function () {
 			return winner;
 		}
 	}, {
-<<<<<<< HEAD
 		key: 'getLoser',
 		value: function getLoser() {
 			// Получить последнего по скорборду
 			// return instanceof Player
 			var loser = App.data.players[0];
-=======
-		key: 'getScoreClass',
-		value: function getScoreClass(score) {
-			_.required(score);
-			var className = this.classes.score.eq;
-			if (score > 0) className = this.classes.score.more;else if (score < 0) className = this.classes.score.less;
-			return className;
-		}
-	}, {
-		key: 'setCurrent',
-		value: function setCurrent(setPlayer /* @Player */) {
-			_.required(setPlayer);
->>>>>>> 1e6f8591dfd282cffe1ddcde735461aeb1fe45c0
 			App.data.players.forEach(function (player) {
 				if (player.score < loser.score) loser = player;
 			});

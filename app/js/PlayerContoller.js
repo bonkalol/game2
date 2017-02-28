@@ -35,6 +35,13 @@ class PlayerController {
 		// получить игрока ассисента (основываясь на пикрейт игроков)
 		// return instanceof Player
 	}
+	getScoreClass(score) {
+		_.required(score);
+		let className = this.classes.score.eq;
+		if (score > 0) className = this.classes.score.more;
+		else if (score < 0) className = this.classes.score.less;
+		return className;
+	}
 	getNext() {
 		// даст игрока который ходит следующий, если выдача игроков идет случайно то
 		// основываясь на pickrate
