@@ -653,10 +653,9 @@ var PlayerController = (function () {
 	}, {
 		key: 'getScoreBoard',
 		value: function getScoreBoard() {
-			var sorted = App.data.players.sort(function (x, y) {
+			return App.data.players.sort(function (x, y) {
 				return x.score < y.score;
-			});
-			return sorted;
+			})[0];
 		}
 	}, {
 		key: 'getAssistent',
@@ -701,10 +700,9 @@ var PlayerController = (function () {
 			// случайная выдача игроков
 			// основываясь на pickrate
 			// return instanceof Player
-			var sorted = App.data.players.sort(function (x, y) {
+			return App.data.players.sort(function (x, y) {
 				return x.pickRate > y.pickRate;
-			});
-			return sorted[0];
+			})[0];
 		}
 	}, {
 		key: 'getNextPlayer',

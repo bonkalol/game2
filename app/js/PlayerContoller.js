@@ -26,10 +26,9 @@ class PlayerController {
 		return App.data.players[id];
 	}
 	getScoreBoard() {
-		let sorted = App.data.players.sort((x, y) => {
+		return App.data.players.sort((x, y) => {
 			return x.score < y.score;
-		});
-		return sorted;
+		})[0];
 	}
 	getAssistent() {
 		// получить игрока ассисента (основываясь на пикрейт игроков)
@@ -64,10 +63,9 @@ class PlayerController {
 		// случайная выдача игроков
 		// основываясь на pickrate
 		// return instanceof Player
-		let sorted = App.data.players.sort((x, y) => {
+		return App.data.players.sort((x, y) => {
 			return x.pickRate > y.pickRate;
-		});
-		return sorted[0];
+		})[0];
 	}
 	getNextPlayer() {
 		const indexOfPlayer = App.data.players.indexOf(App.data.currentPlayer);
