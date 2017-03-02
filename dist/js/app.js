@@ -303,7 +303,6 @@ var Modal = (function () {
 	function Modal(self) {
 		_classCallCheck(this, Modal);
 
-		_.required([self]);
 		this.attr = {
 			self: self,
 			action: 'data-modal-action',
@@ -658,15 +657,8 @@ var PlayerController = (function () {
 			});
 		}
 	}, {
-		key: 'getAssistent',
-		value: function getAssistent() {
-			// получить игрока ассисента (основываясь на пикрейт игроков)
-			// return instanceof Player
-		}
-	}, {
 		key: 'getScoreClass',
 		value: function getScoreClass(score) {
-			_.required(score);
 			var className = this.classes.score.eq;
 			if (score > 0) className = this.classes.score.more;else if (score < 0) className = this.classes.score.less;
 			return className;
@@ -699,6 +691,7 @@ var PlayerController = (function () {
 		value: function getPickRate() {
 			// случайная выдача игроков
 			// основываясь на pickrate
+			// выдает игрока с наименьшим пикрейтом
 			// return instanceof Player
 			return App.data.players.sort(function (x, y) {
 				return x.pickRate > y.pickRate;
@@ -719,22 +712,18 @@ var PlayerController = (function () {
 		value: function getLeader() {
 			// Получить лидера по скорборду
 			// return array instanceof Player
-			var winner = App.data.players[0];
-			App.data.players.forEach(function (player) {
-				if (player.score > winner.score) winner = player;
-			});
-			return winner;
+			return App.data.players.sort(function (x, y) {
+				return x.score < y.score;
+			})[0];
 		}
 	}, {
 		key: 'getLoser',
 		value: function getLoser() {
 			// Получить последнего по скорборду
 			// return instanceof Player
-			var loser = App.data.players[0];
-			App.data.players.forEach(function (player) {
-				if (player.score < loser.score) loser = player;
-			});
-			return loser;
+			return App.data.players.sort(function (x, y) {
+				return x.score > y.score;
+			})[0];
 		}
 	}]);
 
@@ -2590,6 +2579,17 @@ var CardModal = (function () {
 
 	return CardModal;
 })();
+
+var Card = function Card() {
+	var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	_classCallCheck(this, Card);
+
+	this["default"] = {
+		last: false
+	};
+	this.options = Object.assign(this["default"], this.options);
+};
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };

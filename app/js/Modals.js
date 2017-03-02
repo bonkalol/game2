@@ -1,8 +1,5 @@
 class Modal {
 	constructor(self) {
-		_.required([
-			self
-		]);
 		this.attr = {
 			self: self,
 			action: 'data-modal-action',

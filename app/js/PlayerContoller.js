@@ -30,12 +30,7 @@ class PlayerController {
 			return x.score < y.score;
 		});
 	}
-	getAssistent() {
-		// получить игрока ассисента (основываясь на пикрейт игроков)
-		// return instanceof Player
-	}
 	getScoreClass(score) {
-		_.required(score);
 		let className = this.classes.score.eq;
 		if (score > 0) className = this.classes.score.more;
 		else if (score < 0) className = this.classes.score.less;
@@ -62,6 +57,7 @@ class PlayerController {
 	getPickRate() {
 		// случайная выдача игроков
 		// основываясь на pickrate
+		// выдает игрока с наименьшим пикрейтом
 		// return instanceof Player
 		return App.data.players.sort((x, y) => {
 			return x.pickRate > y.pickRate;
@@ -78,19 +74,15 @@ class PlayerController {
 	getLeader() {
 		// Получить лидера по скорборду
 		// return array instanceof Player
-		let winner = App.data.players[0];
-		App.data.players.forEach(player => {
-			if (player.score > winner.score) winner = player;
-		});
-		return winner;
+		return App.data.players.sort((x, y) => {
+			return x.score < y.score;
+		})[0];
 	}
 	getLoser() {
 		// Получить последнего по скорборду
 		// return instanceof Player
-		let loser = App.data.players[0];
-		App.data.players.forEach(player => {
-			if (player.score < loser.score) loser = player;
-		});
-		return loser;
+		return App.data.players.sort((x, y) => {
+			return x.score > y.score;
+		})[0];
 	}
 }
