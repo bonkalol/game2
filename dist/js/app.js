@@ -655,7 +655,7 @@ var PlayerController = (function () {
 		value: function getScoreBoard() {
 			return App.data.players.sort(function (x, y) {
 				return x.score < y.score;
-			})[0];
+			});
 		}
 	}, {
 		key: 'getAssistent',
@@ -681,7 +681,7 @@ var PlayerController = (function () {
 			App.data.previousPlayer = App.data.currentPlayer;
 			var settings = App.data.settings;
 			if (settings.randomPlayers) {
-				App.data.currentPlayer = this.getRandomPickRate();
+				App.data.currentPlayer = this.getPickRate();
 			} else {
 				App.data.currentPlayer = this.getNextPlayer();
 			}
@@ -695,8 +695,8 @@ var PlayerController = (function () {
 			return App.data.players[random];
 		}
 	}, {
-		key: 'getRandomPickRate',
-		value: function getRandomPickRate() {
+		key: 'getPickRate',
+		value: function getPickRate() {
 			// случайная выдача игроков
 			// основываясь на pickrate
 			// return instanceof Player
