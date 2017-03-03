@@ -54,7 +54,6 @@ class Modals {
 		this.settings = new SettingsModal();
 		this.rules = new RulesModal();
 		this.continue = new ContinueModal();
-		this.card = new CardModal();
 
 		this.TOUCH_TYPES = ['touchstart', 'touchmove', 'touchend'];
 		this.attr = {

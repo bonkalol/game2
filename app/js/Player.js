@@ -23,6 +23,7 @@ class Player {
 		this.gender = props.gender;
 		this.pickRate = 0;
 		this.score = 0;
+		this.awaiting = null;
 		this.id = _.getRandom();
 		this.streak = {
 			action: 0,

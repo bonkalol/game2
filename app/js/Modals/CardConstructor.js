@@ -1,0 +1,5 @@
+class CardConstructor {
+	constructor(cards = []) {
+
+	}
+}

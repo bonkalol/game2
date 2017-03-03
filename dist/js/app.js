@@ -379,7 +379,6 @@ var Modals = (function () {
 		this.settings = new SettingsModal();
 		this.rules = new RulesModal();
 		this['continue'] = new ContinueModal();
-		this.card = new CardModal();
 
 		this.TOUCH_TYPES = ['touchstart', 'touchmove', 'touchend'];
 		this.attr = {
@@ -598,6 +597,7 @@ var Player = (function () {
 			this.gender = props.gender;
 			this.pickRate = 0;
 			this.score = 0;
+			this.awaiting = null;
 			this.id = _.getRandom();
 			this.streak = {
 				action: 0,
@@ -2557,38 +2557,12 @@ NodeList.prototype.array = function () {
 	Sortable.version = '1.5.0-rc1';
 	return Sortable;
 });
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-var CardModal = (function () {
-	function CardModal() {
-		_classCallCheck(this, CardModal);
+var CardConstructor = function CardConstructor() {
+	var cards = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
 
-		this.attr = {};
-		this.__events();
-	}
-
-	_createClass(CardModal, [{
-		key: "setType",
-		value: function setType() {}
-	}, {
-		key: "__events",
-		value: function __events() {}
-	}]);
-
-	return CardModal;
-})();
-
-var Card = function Card() {
-	var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-
-	_classCallCheck(this, Card);
-
-	this["default"] = {
-		last: false
-	};
-	this.options = Object.assign(this["default"], this.options);
+	_classCallCheck(this, CardConstructor);
 };
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -2914,4 +2888,17 @@ var SettingsModal = (function (_Modal) {
 
 	return SettingsModal;
 })(Modal);
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var Card = function Card() {
+	var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	_classCallCheck(this, Card);
+
+	this["default"] = {
+		last: false,
+		self: null
+	};
+	this.options = Object.assign(this["default"], this.options);
+};
 //# sourceMappingURL=maps/app.js.map
