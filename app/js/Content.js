@@ -10,6 +10,10 @@ class Content {
 		this.content = data;
 	}
 
+	filter(data) {
+		// Filter content (alco)
+	}
+
 	get(type) {
 		// Get truth or action.
 	}
