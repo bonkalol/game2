@@ -53,6 +53,7 @@ class Game {
 	init() {
 		const settings = App.data.settings;
 
+		App.manager.Content.init();
 		if (settings.randomPlayers) {
 			App.data.currentPlayer = App.manager.PlayerController.getRandom();
 		} else {
