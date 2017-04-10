@@ -1,7 +1,11 @@
 class Content {
 	constructor() {
 		this.content = null;
-		this.inGame = {};
+		this.inGame = {
+			truth: [],
+			action: []
+		};
+		this.filters = {};
 		this.truth = [];
 		this.action = [];
 		this.CONTENT_TYPES = {
@@ -16,38 +20,38 @@ class Content {
 		this.content = data;
 	}
 	init() {
-		this.assign();
-		this.merge();
-	}
-	assign() {
-		// Assign object
 		Object.keys(this.content).forEach(key => {
 			if (App.data.rubrics.includes(key)) {
-				this.inGame[key] = this.content[key];
+				App.inGame.action.concat(this.content[key].action);
+				App.inGame.truth.concat(this.content[key].truth);
 			}
 		});
-		this.merge();
-		this.filters();
+		this.fiters();
 	}
 	merge() {
-
+		// Test this function in game
+		// Should add only new questions from new selected rubrics
+		App.data.rubrics.forEach(rubric => {
+			Object.keys(this.content[rubric]).forEach(type => {
+				this.inGame[type].forEach(question => {
+					let questionToAdd = _.getByKeyValue(this.content[rubric][type], 'text', question.text);
+					if (!questionToAdd) {
+						this.inGame[type].push(questionToAdd);
+					}
+				});
+			});
+		});
 	}
 	filters() {
-		let filters = {
+		this.filters = {
 			alco: App.data.settings.alco,
 			hidden: App.data.settings.cards[this.CONTENT_TYPES.HIDDEN],
 			all: App.data.settings.cards[this.CONTENT_TYPES.ALL],
 			special: App.data.settings.cards[this.CONTENT_TYPES.SPECIAL]
-		}
-		Object.keys(this.inGame).forEach(key => {
-			this.inGame[key].forEach((question, i) => {
-				Object.keys(this.filters).forEach(filterType => {
-					question.disabled = false;
-					if (question.type && question.type.includes(filterType) && !filterType) {
-						question.disabled = true;
-					}
-				});
-			});
+		};
+		App.inGame.action.forEach(question => {
+			if (!question.type) return;
+			// Done here.
 		});
 	}
 	get(type) {
