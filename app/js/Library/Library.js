@@ -81,6 +81,7 @@ _.getByKeyValue = function(arrayOfObjects, key, value) {
 	if (!Array.isArray(arrayOfObjects)) throw new Error('First argument should be an array of objects');
 	let finded = false;
 	arrayOfObjects.forEach(function(obj) {
+		if (typeof obj !== 'object') throw new Error('Cannot find in non object')
 		if (obj[key] && obj[key] === value) finded = obj;
 	});
 	return finded;

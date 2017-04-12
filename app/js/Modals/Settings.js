@@ -25,6 +25,9 @@ class SettingsModal extends Modal {
 			App.data.settings[parsed] = value;
 		}
 	}
+	beforeNext() {
+		App.manager.Content.filter();
+	}
 	parse(attr) {
 		let splited = attr.split('-');
 		return splited.length === 1 ? splited[0] : splited;

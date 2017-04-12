@@ -5,28 +5,37 @@ class Content {
 			truth: [],
 			action: []
 		};
-		this.filters = {};
+		this.excludes = {};
 		this.truth = [];
 		this.action = [];
 		this.CONTENT_TYPES = {
-			ALCO: 'alco',
+			ALCO: 'alcohol',
 			PARTNER: 'partner',
-			HIDDEN: 'hidden',
-			ALL: 'all',
+			HIDDEN: 'gray',
+			ALL: 'yellow',
 			SPECIAL: 'special'
 		}
 	}
 	set(data) {
-		this.content = data;
+		this.content = data.rubrics;
+		Object.keys(this.content).forEach(rubric => {
+			Object.keys(this.content[rubric]).forEach(type => {
+				this.content[rubric][type].forEach((question, i) => {
+					if (typeof question === 'string') {
+						this.content[rubric][type][i] = { text: question };
+					}
+				});
+			});
+		});
 	}
 	init() {
 		Object.keys(this.content).forEach(key => {
 			if (App.data.rubrics.includes(key)) {
-				App.inGame.action.concat(this.content[key].action);
-				App.inGame.truth.concat(this.content[key].truth);
+				this.inGame.action = this.inGame.action.concat(this.content[key].action);
+				this.inGame.truth = this.inGame.truth.concat(this.content[key].truth);
 			}
 		});
-		this.fiters();
+		this.filter();
 	}
 	merge() {
 		// Test this function in game
@@ -34,24 +43,32 @@ class Content {
 		App.data.rubrics.forEach(rubric => {
 			Object.keys(this.content[rubric]).forEach(type => {
 				this.inGame[type].forEach(question => {
-					let questionToAdd = _.getByKeyValue(this.content[rubric][type], 'text', question.text);
+					let questionToAdd = _.getByKeyValue(this.content[rubric][type], 'text', question.text); // Fix this issue
 					if (!questionToAdd) {
-						this.inGame[type].push(questionToAdd);
+						this.inGame[type].push(question);
 					}
 				});
 			});
 		});
+		this.filter();
 	}
-	filters() {
-		this.filters = {
-			alco: App.data.settings.alco,
+	filter() {
+		this.excludes = {
+			alco: App.data.settings[this.CONTENT_TYPES.ALCO],
 			hidden: App.data.settings.cards[this.CONTENT_TYPES.HIDDEN],
 			all: App.data.settings.cards[this.CONTENT_TYPES.ALL],
 			special: App.data.settings.cards[this.CONTENT_TYPES.SPECIAL]
 		};
-		App.inGame.action.forEach(question => {
-			if (!question.type) return;
-			// Done here.
+		Object.keys(this.inGame).forEach(type => {
+			this.inGame[type].forEach(question => {
+				if (!question.type) {
+					question.filtered = false;
+					return;
+				}
+				question.filtered = Object.keys(this.excludes).some(filterName => {
+					return question.type.includes(filterName) && !filterName;
+				});
+			});
 		});
 	}
 	get(type) {

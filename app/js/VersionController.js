@@ -36,6 +36,7 @@ class VersionController {
 		if (content) {
 			App.isUpdated = true;
 			App.manager.Content.set(content);
+			debugger;
 			App.manager.Preloader.hide();
 		} else {
 			this.load(requestFailed);
