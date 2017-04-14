@@ -8,18 +8,22 @@ class Content {
 		this.excludes = {};
 		this.truth = [];
 		this.action = [];
-		this.CONTENT_TYPES = {
-			ALCO: 'alcohol',
+		this.CONTENT_ACTIONS = [
+				'action',
+				'truth'
+		];
+		this.CONTENT_TYPES = Object.freeze({
+			ALCO: 'alco',
 			PARTNER: 'partner',
 			HIDDEN: 'gray',
 			ALL: 'yellow',
 			SPECIAL: 'special'
-		}
+		});
 	}
 	set(data) {
 		this.content = data.rubrics;
 		Object.keys(this.content).forEach(rubric => {
-			Object.keys(this.content[rubric]).forEach(type => {
+			this.CONTENT_ACTIONS.forEach(type => {
 				this.content[rubric][type].forEach((question, i) => {
 					if (typeof question === 'string') {
 						this.content[rubric][type][i] = { text: question };
@@ -40,10 +44,11 @@ class Content {
 	merge() {
 		// Test this function in game
 		// Should add only new questions from new selected rubrics
+		// Make unmerge function
 		App.data.rubrics.forEach(rubric => {
-			Object.keys(this.content[rubric]).forEach(type => {
-				this.inGame[type].forEach(question => {
-					let questionToAdd = _.getByKeyValue(this.content[rubric][type], 'text', question.text); // Fix this issue
+			this.CONTENT_ACTIONS.forEach(type => {
+				this.content[rubric][type].forEach(question => {
+					let questionToAdd = _.getByKeyValue(this.inGame[type], 'text', question.text);
 					if (!questionToAdd) {
 						this.inGame[type].push(question);
 					}
@@ -59,14 +64,14 @@ class Content {
 			all: App.data.settings.cards[this.CONTENT_TYPES.ALL],
 			special: App.data.settings.cards[this.CONTENT_TYPES.SPECIAL]
 		};
-		Object.keys(this.inGame).forEach(type => {
+		this.CONTENT_ACTIONS.forEach(type => {
 			this.inGame[type].forEach(question => {
 				if (!question.type) {
 					question.filtered = false;
 					return;
 				}
 				question.filtered = Object.keys(this.excludes).some(filterName => {
-					return question.type.includes(filterName) && !filterName;
+					return question.type.includes(filterName) && !this.excludes[filterName];
 				});
 			});
 		});

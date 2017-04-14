@@ -39,7 +39,7 @@ class App {
 			currentPlayer: null,
 			settings: {
 				repeatContent: false,
-				alcohol: true,
+				alco: true,
 				score: true,
 				streak: 2,
 				sex: 'hetero', // Possible 'hetero', 'homo', 'herma'

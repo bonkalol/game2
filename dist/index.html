@@ -228,10 +228,10 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 			<div class="settings">
 				<span class="settings_name">Алкоголь:</span>
 				<div class="settings_switcher settings_switcher--x2">
-					<input class="settings_switcher_input" data-bind="alcohol" type="radio" name="alcohol" id="alcohol-true" value="true" {{? it.settings.alcohol === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="alcohol-true">Да</label>
-					<input class="settings_switcher_input" data-bind="alcohol" type="radio" name="alcohol" id="alcohol-false" value="false" {{? it.settings.alcohol !== true }}checked{{?}}>
-					<label class="settings_switcher_element" for="alcohol-false">Нет</label>
+					<input class="settings_switcher_input" data-bind="alco" type="radio" name="alco" id="alco-true" value="true" {{? it.settings.alco === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="alco-true">Да</label>
+					<input class="settings_switcher_input" data-bind="alco" type="radio" name="alco" id="alco-false" value="false" {{? it.settings.alco !== true }}checked{{?}}>
+					<label class="settings_switcher_element" for="alco-false">Нет</label>
 					<div class="settings_switcher_toggler"></div>
 				</div>
 			</div>
