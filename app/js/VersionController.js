@@ -1,6 +1,6 @@
 class VersionController {
 	check() {
-		this.version = App.manager.Storage.get('JV');
+		this.version = App.manager.Storage.get('JV', String);
 		if (this.version === false) {
 			this.load();
 			return;
@@ -14,6 +14,7 @@ class VersionController {
 	}
 	load(requestFailed = false) {
 		let request = new XMLHttpRequest();
+		App.isLoading = true;
 		request.open('GET', 'data/response.json', true);
 		request.send();
 		request.onreadystatechange = () => {
@@ -23,7 +24,12 @@ class VersionController {
 				App.manager.Storage.set('JV', JV);
 				App.manager.Storage.set('content', request.responseText);
 				App.manager.Content.set(JSON.parse(request.responseText));
-				App.manager.Preloader.hide();
+				if (App.manager.Preloader.getState() === App.manager.Preloader.STATES.PRELOADING) {
+					App.manager.Preloader.hide();
+					App.manager.Modals.hide();
+					App.manager.Game.start();
+				}
+				// App.manager.Preloader.hide(); // Rework this on background loading
 			} else if (this.version !== false && requestFailed === false) {
 				this.storage(true);
 			} else if (this.version === false && requestFailed === false) {

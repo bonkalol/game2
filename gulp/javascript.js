@@ -19,6 +19,9 @@ var gulp = require('gulp'),
 	plumber = require('gulp-plumber'),
 	sourcemaps = require('gulp-sourcemaps');
 
+if (configs.release) {
+	paths.srcPaths.js.push('!./app/js/Tests/**/*');
+}
 // Concat all JS files into production/js/main.js
 // If coffee disabled
 gulp.task('concat', function() {

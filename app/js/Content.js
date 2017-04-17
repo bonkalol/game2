@@ -28,31 +28,40 @@ class Content {
 					if (typeof question === 'string') {
 						this.content[rubric][type][i] = { text: question };
 					}
+					this.content[rubric][type][i].rubric = rubric;
 				});
 			});
 		});
 	}
-	init() {
+	init(type = null) {
 		Object.keys(this.content).forEach(key => {
-			if (App.data.rubrics.includes(key)) {
-				this.inGame.action = this.inGame.action.concat(this.content[key].action);
-				this.inGame.truth = this.inGame.truth.concat(this.content[key].truth);
+			if (!App.data.rubrics.includes(key)) return;
+			if (type) {
+				this.inGame[type] = this.inGame[type].concat(this.content[key][type]);
+				return;
 			}
+			this.inGame.action = this.inGame.action.concat(this.content[key].action);
+			this.inGame.truth = this.inGame.truth.concat(this.content[key].truth);
+
 		});
 		this.filter();
 	}
 	merge() {
-		// Test this function in game
-		// Should add only new questions from new selected rubrics
-		// Make unmerge function
-		App.data.rubrics.forEach(rubric => {
-			this.CONTENT_ACTIONS.forEach(type => {
-				this.content[rubric][type].forEach(question => {
-					let questionToAdd = _.getByKeyValue(this.inGame[type], 'text', question.text);
-					if (!questionToAdd) {
-						this.inGame[type].push(question);
-					}
-				});
+		// merge
+		this.iterate(App.data.rubrics, (rubric, type) => {
+			this.content[rubric][type].forEach((question, i) => {
+				let questionToAdd = _.getByKeyValue(this.inGame[type], 'text', question.text);
+				if (!questionToAdd) {
+					this.inGame[type].push(question);
+				}
+			});
+		});
+		// unmerge
+		this.iterate(this.content, (rubric, type) => {
+			this.inGame[type].forEach((question, i) => {
+				if (!App.data.rubrics.includes(question.rubric)) {
+					this.inGame[type].splice(i, 1);
+				}
 			});
 		});
 		this.filter();
@@ -76,7 +85,23 @@ class Content {
 			});
 		});
 	}
+	iterate(arr, callback) {
+		let target = Array.isArray(arr) ? arr : Object.keys(arr);
+		target.forEach(rubric => {
+			this.CONTENT_ACTIONS.forEach(type => {
+				callback(rubric, type);
+			});
+		});
+	}
 	get(type) {
 		// Get truth or action.
+		let questions = this.inGame[type].filter(question => { return !question.disabled; }),
+			question = questions[_.getRandomInt(0, questions.length - 1)];
+			question.disabled = true;
+		if (questions.length === 1) {
+			this.inGame[type] = [];
+			this.init(type);
+		}
+		return question;
 	}
 }

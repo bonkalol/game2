@@ -4,8 +4,9 @@
 
 */
 class Storage {
-	get(name) {
+	get(name, type) {
 		if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
+				if (type === String) return localStorage.getItem(name);
 				return JSON.parse(localStorage.getItem(name));
 		} else {
 			return false;

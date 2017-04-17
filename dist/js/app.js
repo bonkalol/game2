@@ -134,6 +134,7 @@ var App = (function () {
 		window.addEventListener('load', function (event) {
 				window.App = new App();
 				App.manager.Game = new Game();
+				App.manager.Preloader.hide();
 		}, false);
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
@@ -174,6 +175,7 @@ var Content = (function () {
 						if (typeof question === 'string') {
 							_this.content[rubric][type][i] = { text: question };
 						}
+						_this.content[rubric][type][i].rubric = rubric;
 					});
 				});
 			});
@@ -183,11 +185,16 @@ var Content = (function () {
 		value: function init() {
 			var _this2 = this;
 
+			var type = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
 			Object.keys(this.content).forEach(function (key) {
-				if (App.data.rubrics.includes(key)) {
-					_this2.inGame.action = _this2.inGame.action.concat(_this2.content[key].action);
-					_this2.inGame.truth = _this2.inGame.truth.concat(_this2.content[key].truth);
+				if (!App.data.rubrics.includes(key)) return;
+				if (type) {
+					_this2.inGame[type] = _this2.inGame[type].concat(_this2.content[key][type]);
+					return;
 				}
+				_this2.inGame.action = _this2.inGame.action.concat(_this2.content[key].action);
+				_this2.inGame.truth = _this2.inGame.truth.concat(_this2.content[key].truth);
 			});
 			this.filter();
 		}
@@ -196,17 +203,21 @@ var Content = (function () {
 		value: function merge() {
 			var _this3 = this;
 
-			// Test this function in game
-			// Should add only new questions from new selected rubrics
-			// Make unmerge function
-			App.data.rubrics.forEach(function (rubric) {
-				_this3.CONTENT_ACTIONS.forEach(function (type) {
-					_this3.content[rubric][type].forEach(function (question) {
-						var questionToAdd = _.getByKeyValue(_this3.inGame[type], 'text', question.text);
-						if (!questionToAdd) {
-							_this3.inGame[type].push(question);
-						}
-					});
+			// merge
+			this.iterate(App.data.rubrics, function (rubric, type) {
+				_this3.content[rubric][type].forEach(function (question, i) {
+					var questionToAdd = _.getByKeyValue(_this3.inGame[type], 'text', question.text);
+					if (!questionToAdd) {
+						_this3.inGame[type].push(question);
+					}
+				});
+			});
+			// unmerge
+			this.iterate(this.content, function (rubric, type) {
+				_this3.inGame[type].forEach(function (question, i) {
+					if (!App.data.rubrics.includes(question.rubric)) {
+						_this3.inGame[type].splice(i, 1);
+					}
 				});
 			});
 			this.filter();
@@ -235,9 +246,31 @@ var Content = (function () {
 			});
 		}
 	}, {
+		key: 'iterate',
+		value: function iterate(arr, callback) {
+			var _this5 = this;
+
+			var target = Array.isArray(arr) ? arr : Object.keys(arr);
+			target.forEach(function (rubric) {
+				_this5.CONTENT_ACTIONS.forEach(function (type) {
+					callback(rubric, type);
+				});
+			});
+		}
+	}, {
 		key: 'get',
 		value: function get(type) {
 			// Get truth or action.
+			var questions = this.inGame[type].filter(function (question) {
+				return !question.disabled;
+			}),
+			    question = questions[_.getRandomInt(0, questions.length - 1)];
+			question.disabled = true;
+			if (questions.length === 1) {
+				this.inGame[type] = [];
+				this.init(type);
+			}
+			return question;
 		}
 	}]);
 
@@ -792,6 +825,11 @@ var Preloader = (function () {
 			preloader: document.querySelector('[' + this.attr.preloader + ']')
 		};
 		this.classes = ['opacity', 'hidden'];
+		this.STATES = Object.freeze({
+			LOADED: 'LOADED',
+			PRELOADING: 'PRELOADING'
+		});
+		this.state = this.STATES.LOADED;
 		this.transition = 300;
 	}
 
@@ -800,6 +838,7 @@ var Preloader = (function () {
 		value: function show() {
 			this.nodes.preloader.classList.remove(this.classes[0]);
 			this.nodes.preloader.classList.remove(this.classes[1]);
+			this.state = this.STATES.PRELOADING;
 		}
 	}, {
 		key: 'hide',
@@ -810,6 +849,12 @@ var Preloader = (function () {
 			setTimeout(function () {
 				_this.nodes.preloader.classList.add(_this.classes[1]);
 			}, this.transition);
+			this.state = this.STATES.LOADED;
+		}
+	}, {
+		key: 'getState',
+		value: function getState() {
+			return this.state;
 		}
 	}]);
 
@@ -996,8 +1041,9 @@ var Storage = (function () {
 
 	_createClass(Storage, [{
 		key: 'get',
-		value: function get(name) {
+		value: function get(name, type) {
 			if (localStorage.getItem(name) !== null && typeof localStorage.getItem(name) !== 'undefined') {
+				if (type === String) return localStorage.getItem(name);
 				return JSON.parse(localStorage.getItem(name));
 			} else {
 				return false;
@@ -1025,7 +1071,7 @@ var VersionController = (function () {
 	_createClass(VersionController, [{
 		key: 'check',
 		value: function check() {
-			this.version = App.manager.Storage.get('JV');
+			this.version = App.manager.Storage.get('JV', String);
 			if (this.version === false) {
 				this.load();
 				return;
@@ -1045,6 +1091,7 @@ var VersionController = (function () {
 			var requestFailed = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
 
 			var request = new XMLHttpRequest();
+			App.isLoading = true;
 			request.open('GET', 'data/response.json', true);
 			request.send();
 			request.onreadystatechange = function () {
@@ -1054,12 +1101,17 @@ var VersionController = (function () {
 					App.manager.Storage.set('JV', JV);
 					App.manager.Storage.set('content', request.responseText);
 					App.manager.Content.set(JSON.parse(request.responseText));
-					App.manager.Preloader.hide();
+					if (App.manager.Preloader.getState() === App.manager.Preloader.STATES.PRELOADING) {
+						App.manager.Preloader.hide();
+						App.manager.Modals.hide();
+						App.manager.Game.start();
+					}
+					// App.manager.Preloader.hide(); // Rework this on background loading
 				} else if (_this.version !== false && requestFailed === false) {
-					_this.storage(true);
-				} else if (_this.version === false && requestFailed === false) {
-					App.manager.Alert.show('error', Language[App.language].badinternet, true);
-				}
+						_this.storage(true);
+					} else if (_this.version === false && requestFailed === false) {
+						App.manager.Alert.show('error', Language[App.language].badinternet, true);
+					}
 			};
 		}
 	}, {
@@ -2920,8 +2972,12 @@ var RulesModal = (function (_Modal) {
 	_createClass(RulesModal, [{
 		key: 'start',
 		value: function start() {
-			App.manager.Modals.hide();
-			App.manager.Game.start();
+			if (App.isUpdated) {
+				App.manager.Modals.hide();
+				App.manager.Game.start();
+			} else {
+				App.manager.Preloader.show();
+			}
 		}
 	}]);
 
@@ -3017,6 +3073,12 @@ var SettingsModal = (function (_Modal) {
 
 	return SettingsModal;
 })(Modal);
+var Content_Test = {
+	set: function set(data) {
+		App.manager.Content.set(data);
+		return App.manager.Content.inGame.truth.length === 6 && App.manager.Content.inGame.action.length === 5;
+	}
+};
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }

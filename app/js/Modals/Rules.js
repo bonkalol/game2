@@ -3,7 +3,11 @@ class RulesModal extends Modal {
 		super('data-rules-modal');
 	}
 	start() {
-		App.manager.Modals.hide();
-		App.manager.Game.start();
+		if (App.isUpdated) {
+			App.manager.Modals.hide();
+			App.manager.Game.start();
+		} else {
+			App.manager.Preloader.show();
+		}
 	}
 }

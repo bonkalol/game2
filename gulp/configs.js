@@ -1,4 +1,5 @@
-var gutil = require('gulp-util');
+var gutil = require('gulp-util'),
+	yargs = require('yargs');
 
 module.exports = {
 
@@ -8,6 +9,7 @@ module.exports = {
 	// but be carefull, it takes a lot of compilation time
 	htmlValidator: false,
 	webp: true,
+	release: yargs.argv.release,
 
 	autoprefixer: {
 		android: 4,
