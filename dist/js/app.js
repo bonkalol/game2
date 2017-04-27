@@ -251,9 +251,9 @@ var Content = (function () {
 			var _this5 = this;
 
 			var target = Array.isArray(arr) ? arr : Object.keys(arr);
-			target.forEach(function (rubric) {
+			target.forEach(function (key) {
 				_this5.CONTENT_ACTIONS.forEach(function (type) {
-					callback(rubric, type);
+					callback(key, type);
 				});
 			});
 		}
@@ -265,10 +265,13 @@ var Content = (function () {
 				return !question.disabled;
 			}),
 			    question = questions[_.getRandomInt(0, questions.length - 1)];
-			question.disabled = true;
-			if (questions.length === 1) {
-				this.inGame[type] = [];
-				this.init(type);
+			if (!App.data.settings.repeatContent) {
+				question.disabled = true;
+				if (questions.length === 1) {
+					this.inGame[type].forEach(function (question) {
+						question.disabled = false;
+					});
+				}
 			}
 			return question;
 		}
