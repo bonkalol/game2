@@ -108,6 +108,7 @@ var App = (function () {
 				players: [],
 				previousPlayer: null,
 				currentPlayer: null,
+				queue: [],
 				settings: {
 					repeatContent: false,
 					alco: true,
@@ -267,8 +268,9 @@ var Content = (function () {
 			    question = questions[_.getRandomInt(0, questions.length - 1)];
 			question.disabled = true;
 			if (questions.length === 1) {
-				this.inGame[type] = [];
-				this.init(type);
+				this.inGame[type].forEach(function (question) {
+					question.disabled = false;
+				});
 			}
 			return question;
 		}
@@ -288,7 +290,9 @@ var Game = (function () {
 		this.attr = {
 			self: 'data-game-view',
 			container: 'data-game-container',
-			stats: 'data-game-stats'
+			stats: 'data-game-stats',
+			action: 'data-game-action',
+			card: 'data-card-container'
 		};
 		this.nodes = {
 			self: $('[' + this.attr.self + ']'),
@@ -298,6 +302,7 @@ var Game = (function () {
 		this.classes = {
 			hidden: 'js-hidden'
 		};
+		this._events();
 	}
 
 	_createClass(Game, [{
@@ -356,6 +361,25 @@ var Game = (function () {
 			} else {
 				App.data.currentPlayer = App.manager.PlayerController.get(0);
 			}
+		}
+	}, {
+		key: 'get',
+		value: function get(type) {
+			var question = App.manager.Content.get(type),
+			    cards = new CardConstructor(question);
+			this.nodes.card.innerHTML = cards.html;
+		}
+	}, {
+		key: '_events',
+		value: function _events() {
+			var _this = this;
+
+			document.addEventListener('mousedown', function (event) {
+				var target = event.target.closest('[' + _this.attr.action + ']');
+				if (target) {
+					_this.get(target.getAttribute(_this.attr.action));
+				}
+			}, false);
 		}
 	}]);
 
@@ -704,6 +728,7 @@ var PlayerController = (function () {
 				less: 'less'
 			}
 		};
+		this.queue = new Queue();
 	}
 
 	_createClass(PlayerController, [{
@@ -809,6 +834,32 @@ var PlayerController = (function () {
 	}]);
 
 	return PlayerController;
+})();
+
+var Queue = (function () {
+	function Queue() {
+		_classCallCheck(this, Queue);
+	}
+
+	_createClass(Queue, [{
+		key: 'check',
+		value: function check() {
+			if (App.data.queue.length === 0) return false;
+		}
+	}, {
+		key: 'add',
+		value: function add(player, till) {}
+	}, {
+		key: 'remove',
+		value: function remove() {}
+	}, {
+		key: 'get',
+		value: function get() {
+			return App.data.queue;
+		}
+	}]);
+
+	return Queue;
 })();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
@@ -1132,6 +1183,371 @@ var VersionController = (function () {
 
 	return VersionController;
 })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+var CardConstructor = (function () {
+	function CardConstructor(question) {
+		_classCallCheck(this, CardConstructor);
+
+		this.cards = [];
+		this.question = question;
+		// App.manager.PlayerController.queue();
+		this.parseQuestion();
+	}
+
+	_createClass(CardConstructor, [{
+		key: "parseQuestion",
+		value: function parseQuestion() {}
+	}, {
+		key: "buildCard",
+		value: function buildCard() {}
+	}, {
+		key: "buildView",
+		value: function buildView(cards /*@ array of cards*/) {}
+	}, {
+		key: "html",
+		value: function html() {
+			return this.html;
+		}
+	}]);
+
+	return CardConstructor;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var ContinueModal = (function (_Modal) {
+	_inherits(ContinueModal, _Modal);
+
+	function ContinueModal() {
+		_classCallCheck(this, ContinueModal);
+
+		_get(Object.getPrototypeOf(ContinueModal.prototype), 'constructor', this).call(this, 'data-continue-modal');
+	}
+
+	_createClass(ContinueModal, [{
+		key: 'restart',
+		value: function restart() {}
+	}, {
+		key: 'continue',
+		value: function _continue() {}
+	}]);
+
+	return ContinueModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var LanguageModal = (function (_Modal) {
+	_inherits(LanguageModal, _Modal);
+
+	function LanguageModal() {
+		_classCallCheck(this, LanguageModal);
+
+		_get(Object.getPrototypeOf(LanguageModal.prototype), 'constructor', this).call(this, 'data-language-modal');
+	}
+
+	_createClass(LanguageModal, [{
+		key: 'save',
+		value: function save() {}
+	}]);
+
+	return LanguageModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var PlayerModal = (function (_Modal) {
+	_inherits(PlayerModal, _Modal);
+
+	function PlayerModal() {
+		_classCallCheck(this, PlayerModal);
+
+		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
+		this.selfAttributes = {
+			input: 'data-player-input',
+			button: 'data-player-create',
+			sortable: 'data-player-sortable',
+			sortableHandle: 'data-player-sortable-handle',
+			player: 'data-playerlist-player'
+		};
+		this.sortableNode = null;
+		this.attr = Object.assign(this.attr, this.selfAttributes);
+		this.players = 'data-playerlist-player';
+		this.classes = ['disabled'];
+	}
+
+	_createClass(PlayerModal, [{
+		key: 'add',
+		value: function add(event) {
+			event.preventDefault();
+			var name = $('[' + this.attr.input + ']').value,
+			    gender = this.getGender().value,
+			    player = null;
+			if (App.manager.PlayerController.exist(name)) {
+				App.manager.Alert.show('error', Language[App.language].players.exist);
+				return false;
+			}
+			App.manager.PlayerController.create(name, gender);
+			this.render();
+		}
+	}, {
+		key: 'remove',
+		value: function remove(event) {
+			var id = event.target.closest('[' + this.attr.player + ']').getAttribute(this.attr.player);
+			App.manager.PlayerController.remove(id);
+			this.render();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			$('[' + this.attr.self + ']').outerHTML = App.manager.Render.modalPlayers();
+			this.sortable();
+		}
+	}, {
+		key: 'sortable',
+		value: function sortable() {
+			this.sortableNode = new Sortable($('[' + this.attr.sortable + ']'), {
+				animation: 150
+			});
+		}
+	}, {
+		key: 'eventCondition',
+		// TODO Sort player on sort
+		value: function eventCondition(node) {
+			return node.hasAttribute('data-player-input') && node.value.length > 0 && this.getGender();
+		}
+	}, {
+		key: 'checkButton',
+		value: function checkButton(event) {
+			var input = $('[' + this.attr.input + ']');
+			if (this.eventCondition(input)) $('[' + this.attr.button + ']').classList.remove(this.classes[0]);else $('[' + this.attr.button + ']').classList.add(this.classes[0]);
+		}
+	}, {
+		key: 'getGender',
+		value: function getGender() {
+			return $('[name="players_gender"]:checked');
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			['keyup', 'mousedown', 'change'].forEach(function (e) {
+				document.addEventListener(e, function (event) {
+					_this.checkButton();
+				});
+			});
+		}
+	}]);
+
+	return PlayerModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RubricsModal = (function (_Modal) {
+	_inherits(RubricsModal, _Modal);
+
+	function RubricsModal() {
+		_classCallCheck(this, RubricsModal);
+
+		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubric-modal');
+		this.selfAttributes = {
+			rubrics: 'name="rubrics"',
+			name: 'name'
+		};
+		this.nameValue = 'rubrics';
+		this.attr = Object.assign(this.attr, this.selfAttributes);
+	}
+
+	_createClass(RubricsModal, [{
+		key: 'save',
+		value: function save() {}
+	}, {
+		key: 'change',
+		value: function change() {
+			App.data.rubrics = [];
+			$$('[' + this.attr.rubrics + ']:checked').array().forEach(function (checked) {
+				App.data.rubrics.push(checked.value);
+			});
+			this.updateView();
+		}
+	}, {
+		key: 'beforeNext',
+		value: function beforeNext() {
+			this.save();
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			this.getView().outerHTML = App.manager.Render.modalRubrics();
+		}
+	}, {
+		key: 'updateView',
+		value: function updateView() {
+			var view = this.getView();
+			view.$('footer').outerHTML = App.manager.Render.rubricsFooter();
+			view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this = this;
+
+			document.addEventListener('change', function (e) {
+				if (e.target.getAttribute(_this.attr.name) === _this.nameValue) {
+					_this.change();
+				}
+			});
+		}
+	}]);
+
+	return RubricsModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var RulesModal = (function (_Modal) {
+	_inherits(RulesModal, _Modal);
+
+	function RulesModal() {
+		_classCallCheck(this, RulesModal);
+
+		_get(Object.getPrototypeOf(RulesModal.prototype), 'constructor', this).call(this, 'data-rules-modal');
+	}
+
+	_createClass(RulesModal, [{
+		key: 'start',
+		value: function start() {
+			if (App.isUpdated) {
+				App.manager.Modals.hide();
+				App.manager.Game.start();
+			} else {
+				App.manager.Preloader.show();
+			}
+		}
+	}]);
+
+	return RulesModal;
+})(Modal);
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var SettingsModal = (function (_Modal) {
+	_inherits(SettingsModal, _Modal);
+
+	function SettingsModal() {
+		_classCallCheck(this, SettingsModal);
+
+		_get(Object.getPrototypeOf(SettingsModal.prototype), 'constructor', this).call(this, 'data-settings-modal');
+		this.selfAttributes = {
+			binded: 'data-bind',
+			type: 'type'
+		};
+		this.INPUT_TYPES = Object.freeze({
+			CHECKBOX: 'checkbox'
+		});
+		this.attr = Object.assign(this.attr, this.selfAttributes);
+		this.__events();
+	}
+
+	_createClass(SettingsModal, [{
+		key: 'handleBind',
+		value: function handleBind(binded) {
+			var parsed = this.parse(binded.getAttribute(this.attr.binded)),
+			    value = null;
+			try {
+				value = JSON.parse(binded.value);
+			} catch (e) {
+				value = binded.value;
+			}
+			if (Array.isArray(parsed)) {
+				App.data.settings[parsed[0]][parsed[1]] = value;
+			} else {
+				App.data.settings[parsed] = value;
+			}
+		}
+	}, {
+		key: 'beforeNext',
+		value: function beforeNext() {
+			App.manager.Content.filter();
+		}
+	}, {
+		key: 'parse',
+		value: function parse(attr) {
+			var splited = attr.split('-');
+			return splited.length === 1 ? splited[0] : splited;
+		}
+	}, {
+		key: 'setSettings',
+		value: function setSettings() {
+			var _this = this;
+
+			var binded = $$('\n\t\t\t[' + this.attr.binded + ']:checked,\n\t\t\t[' + this.attr.binded + '][' + this.attr.type + '="' + this.INPUT_TYPES.CHECKBOX + '"]\n\t\t').array();
+			binded.forEach(function (bind) {
+				_this.handleBind(bind);
+			});
+		}
+	}, {
+		key: 'setValue',
+		value: function setValue(node) {
+			node.value = node.checked;
+		}
+	}, {
+		key: 'render',
+		value: function render() {
+			this.getView().outerHTML = App.manager.Render.modalSettings();
+		}
+	}, {
+		key: '__events',
+		value: function __events() {
+			var _this2 = this;
+
+			document.addEventListener('change', function (event) {
+				var target = event.target;
+				if (target.hasAttribute(_this2.attr.binded)) {
+					if (target.getAttribute(_this2.attr.type) === _this2.INPUT_TYPES.CHECKBOX) _this2.setValue(target);
+					_this2.setSettings();
+				}
+			}, false);
+		}
+	}]);
+
+	return SettingsModal;
+})(Modal);
 if (typeof Element.prototype.matches !== 'function') {
 	Element.prototype.matches = Element.prototype.msMatchesSelector || Element.prototype.mozMatchesSelector || Element.prototype.webkitMatchesSelector || function matches(selector) {
 		var element = this;
@@ -2719,360 +3135,6 @@ NodeList.prototype.array = function () {
 	Sortable.version = '1.5.0-rc1';
 	return Sortable;
 });
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-var CardConstructor = (function () {
-	function CardConstructor(question) {
-		_classCallCheck(this, CardConstructor);
-
-		this.cards = [];
-	}
-
-	_createClass(CardConstructor, [{
-		key: "buildCard",
-		value: function buildCard() {}
-	}, {
-		key: "buildView",
-		value: function buildView(cards /*@ array of cards*/) {}
-	}]);
-
-	return CardConstructor;
-})();
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var ContinueModal = (function (_Modal) {
-	_inherits(ContinueModal, _Modal);
-
-	function ContinueModal() {
-		_classCallCheck(this, ContinueModal);
-
-		_get(Object.getPrototypeOf(ContinueModal.prototype), 'constructor', this).call(this, 'data-continue-modal');
-	}
-
-	_createClass(ContinueModal, [{
-		key: 'restart',
-		value: function restart() {}
-	}, {
-		key: 'continue',
-		value: function _continue() {}
-	}]);
-
-	return ContinueModal;
-})(Modal);
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var LanguageModal = (function (_Modal) {
-	_inherits(LanguageModal, _Modal);
-
-	function LanguageModal() {
-		_classCallCheck(this, LanguageModal);
-
-		_get(Object.getPrototypeOf(LanguageModal.prototype), 'constructor', this).call(this, 'data-language-modal');
-	}
-
-	_createClass(LanguageModal, [{
-		key: 'save',
-		value: function save() {}
-	}]);
-
-	return LanguageModal;
-})(Modal);
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var PlayerModal = (function (_Modal) {
-	_inherits(PlayerModal, _Modal);
-
-	function PlayerModal() {
-		_classCallCheck(this, PlayerModal);
-
-		_get(Object.getPrototypeOf(PlayerModal.prototype), 'constructor', this).call(this, 'data-player-modal');
-		this.selfAttributes = {
-			input: 'data-player-input',
-			button: 'data-player-create',
-			sortable: 'data-player-sortable',
-			sortableHandle: 'data-player-sortable-handle',
-			player: 'data-playerlist-player'
-		};
-		this.sortableNode = null;
-		this.attr = Object.assign(this.attr, this.selfAttributes);
-		this.players = 'data-playerlist-player';
-		this.classes = ['disabled'];
-	}
-
-	_createClass(PlayerModal, [{
-		key: 'add',
-		value: function add(event) {
-			event.preventDefault();
-			var name = $('[' + this.attr.input + ']').value,
-			    gender = this.getGender().value,
-			    player = null;
-			if (App.manager.PlayerController.exist(name)) {
-				App.manager.Alert.show('error', Language[App.language].players.exist);
-				return false;
-			}
-			App.manager.PlayerController.create(name, gender);
-			this.render();
-		}
-	}, {
-		key: 'remove',
-		value: function remove(event) {
-			var id = event.target.closest('[' + this.attr.player + ']').getAttribute(this.attr.player);
-			App.manager.PlayerController.remove(id);
-			this.render();
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			$('[' + this.attr.self + ']').outerHTML = App.manager.Render.modalPlayers();
-			this.sortable();
-		}
-	}, {
-		key: 'sortable',
-		value: function sortable() {
-			this.sortableNode = new Sortable($('[' + this.attr.sortable + ']'), {
-				animation: 150
-			});
-		}
-	}, {
-		key: 'eventCondition',
-		// TODO Sort player on sort
-		value: function eventCondition(node) {
-			return node.hasAttribute('data-player-input') && node.value.length > 0 && this.getGender();
-		}
-	}, {
-		key: 'checkButton',
-		value: function checkButton(event) {
-			var input = $('[' + this.attr.input + ']');
-			if (this.eventCondition(input)) $('[' + this.attr.button + ']').classList.remove(this.classes[0]);else $('[' + this.attr.button + ']').classList.add(this.classes[0]);
-		}
-	}, {
-		key: 'getGender',
-		value: function getGender() {
-			return $('[name="players_gender"]:checked');
-		}
-	}, {
-		key: '__events',
-		value: function __events() {
-			var _this = this;
-
-			['keyup', 'mousedown', 'change'].forEach(function (e) {
-				document.addEventListener(e, function (event) {
-					_this.checkButton();
-				});
-			});
-		}
-	}]);
-
-	return PlayerModal;
-})(Modal);
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RubricsModal = (function (_Modal) {
-	_inherits(RubricsModal, _Modal);
-
-	function RubricsModal() {
-		_classCallCheck(this, RubricsModal);
-
-		_get(Object.getPrototypeOf(RubricsModal.prototype), 'constructor', this).call(this, 'data-rubric-modal');
-		this.selfAttributes = {
-			rubrics: 'name="rubrics"',
-			name: 'name'
-		};
-		this.nameValue = 'rubrics';
-		this.attr = Object.assign(this.attr, this.selfAttributes);
-	}
-
-	_createClass(RubricsModal, [{
-		key: 'save',
-		value: function save() {}
-	}, {
-		key: 'change',
-		value: function change() {
-			App.data.rubrics = [];
-			$$('[' + this.attr.rubrics + ']:checked').array().forEach(function (checked) {
-				App.data.rubrics.push(checked.value);
-			});
-			this.updateView();
-		}
-	}, {
-		key: 'beforeNext',
-		value: function beforeNext() {
-			this.save();
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			this.getView().outerHTML = App.manager.Render.modalRubrics();
-		}
-	}, {
-		key: 'updateView',
-		value: function updateView() {
-			var view = this.getView();
-			view.$('footer').outerHTML = App.manager.Render.rubricsFooter();
-			view.setAttribute(this.attr.status, App.data.rubrics.length >= 1);
-		}
-	}, {
-		key: '__events',
-		value: function __events() {
-			var _this = this;
-
-			document.addEventListener('change', function (e) {
-				if (e.target.getAttribute(_this.attr.name) === _this.nameValue) {
-					_this.change();
-				}
-			});
-		}
-	}]);
-
-	return RubricsModal;
-})(Modal);
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var RulesModal = (function (_Modal) {
-	_inherits(RulesModal, _Modal);
-
-	function RulesModal() {
-		_classCallCheck(this, RulesModal);
-
-		_get(Object.getPrototypeOf(RulesModal.prototype), 'constructor', this).call(this, 'data-rules-modal');
-	}
-
-	_createClass(RulesModal, [{
-		key: 'start',
-		value: function start() {
-			if (App.isUpdated) {
-				App.manager.Modals.hide();
-				App.manager.Game.start();
-			} else {
-				App.manager.Preloader.show();
-			}
-		}
-	}]);
-
-	return RulesModal;
-})(Modal);
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
-
-var _get = function get(_x, _x2, _x3) { var _again = true; _function: while (_again) { var object = _x, property = _x2, receiver = _x3; _again = false; if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { _x = parent; _x2 = property; _x3 = receiver; _again = true; desc = parent = undefined; continue _function; } } else if ('value' in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } } };
-
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
-
-function _inherits(subClass, superClass) { if (typeof superClass !== 'function' && superClass !== null) { throw new TypeError('Super expression must either be null or a function, not ' + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-var SettingsModal = (function (_Modal) {
-	_inherits(SettingsModal, _Modal);
-
-	function SettingsModal() {
-		_classCallCheck(this, SettingsModal);
-
-		_get(Object.getPrototypeOf(SettingsModal.prototype), 'constructor', this).call(this, 'data-settings-modal');
-		this.selfAttributes = {
-			binded: 'data-bind',
-			type: 'type'
-		};
-		this.INPUT_TYPES = Object.freeze({
-			CHECKBOX: 'checkbox'
-		});
-		this.attr = Object.assign(this.attr, this.selfAttributes);
-		this.__events();
-	}
-
-	_createClass(SettingsModal, [{
-		key: 'handleBind',
-		value: function handleBind(binded) {
-			var parsed = this.parse(binded.getAttribute(this.attr.binded)),
-			    value = null;
-			try {
-				value = JSON.parse(binded.value);
-			} catch (e) {
-				value = binded.value;
-			}
-			if (Array.isArray(parsed)) {
-				App.data.settings[parsed[0]][parsed[1]] = value;
-			} else {
-				App.data.settings[parsed] = value;
-			}
-		}
-	}, {
-		key: 'beforeNext',
-		value: function beforeNext() {
-			App.manager.Content.filter();
-		}
-	}, {
-		key: 'parse',
-		value: function parse(attr) {
-			var splited = attr.split('-');
-			return splited.length === 1 ? splited[0] : splited;
-		}
-	}, {
-		key: 'setSettings',
-		value: function setSettings() {
-			var _this = this;
-
-			var binded = $$('\n\t\t\t[' + this.attr.binded + ']:checked,\n\t\t\t[' + this.attr.binded + '][' + this.attr.type + '="' + this.INPUT_TYPES.CHECKBOX + '"]\n\t\t').array();
-			binded.forEach(function (bind) {
-				_this.handleBind(bind);
-			});
-		}
-	}, {
-		key: 'setValue',
-		value: function setValue(node) {
-			node.value = node.checked;
-		}
-	}, {
-		key: 'render',
-		value: function render() {
-			this.getView().outerHTML = App.manager.Render.modalSettings();
-		}
-	}, {
-		key: '__events',
-		value: function __events() {
-			var _this2 = this;
-
-			document.addEventListener('change', function (event) {
-				var target = event.target;
-				if (target.hasAttribute(_this2.attr.binded)) {
-					if (target.getAttribute(_this2.attr.type) === _this2.INPUT_TYPES.CHECKBOX) _this2.setValue(target);
-					_this2.setSettings();
-				}
-			}, false);
-		}
-	}]);
-
-	return SettingsModal;
-})(Modal);
 var Content_Test = {
 	set: function set(data) {
 		App.manager.Content.set(data);
@@ -3093,7 +3155,6 @@ var Card = (function () {
 			last: false,
 			self: null, /* required */
 			template: null /* required */
-
 		};
 		this.options = Object.assign(this["default"], this.options);
 		this.view = null;

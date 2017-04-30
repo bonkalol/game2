@@ -80,12 +80,13 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 <script type="text/tempalte" id="game">
 	<div class="game_view_name"><span class="game_view_inner-name" data-currentplayer>{{=it.currentPlayer.name}}<span class="game_view_inner-score {{=App.manager.PlayerController.getScoreClass(it.currentPlayer.score)}}">{{=it.currentPlayer.score}}</span></span></div>
 	<div class="game_view_buttons">
-		<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.settings.streak.truth}}js-disabled{{?}}" data-game="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
+		<span role="button" class="game_view_button game_view_button--truth {{?it.currentPlayer.streak.truth >= it.settings.streak.truth}}js-disabled{{?}}" data-game-action="truth"><span>Правда</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#truth"></svg></span>
 		<span class="game_view_buttons_separator">или</span>
-		<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.settings.streak.action}}js-disabled{{?}}" data-game="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
+		<span role="button" class="game_view_button game_view_button--action {{?it.currentPlayer.streak.action >= it.settings.streak.action}}js-disabled{{?}}" data-game-action="action"><span>Действие</span><svg class="game_view_button_icon" width="40" height="40"><use xlink:href="#action"></svg></span>
 	</div>
 </script>
 		</div>
+		<div class="card_container" data-card-container></div>
 		<div class="overlay hidden" data-overlay></div>
 		<div class="game_sidebar" data-sidebar>
 	<ul class="game_sidebar_list">

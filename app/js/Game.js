@@ -4,7 +4,9 @@ class Game {
 		this.attr = {
 			self: 'data-game-view',
 			container: 'data-game-container',
-			stats: 'data-game-stats'
+			stats: 'data-game-stats',
+			action: 'data-game-action',
+			card: 'data-card-container'
 		};
 		this.nodes = {
 			self: $(`[${this.attr.self}]`),
@@ -14,6 +16,7 @@ class Game {
 		this.classes = {
 			hidden: 'js-hidden'
 		};
+		this._events();
 	}
 	check() {
 		if (App.manager.Storage.get('Game') !== false) {
@@ -59,5 +62,18 @@ class Game {
 		} else {
 			App.data.currentPlayer = App.manager.PlayerController.get(0);
 		}
+	}
+	get(type) {
+		const question = App.manager.Content.get(type),
+				cards = new CardConstructor(question);
+		this.nodes.card.innerHTML = cards.html;
+	}
+	_events() {
+		document.addEventListener('mousedown', (event) => {
+			let target = event.target.closest(`[${this.attr.action}]`);
+			if (target) {
+				this.get(target.getAttribute(this.attr.action));
+			}
+		}, false);
 	}
 }

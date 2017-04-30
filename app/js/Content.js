@@ -99,8 +99,9 @@ class Content {
 			question = questions[_.getRandomInt(0, questions.length - 1)];
 			question.disabled = true;
 		if (questions.length === 1) {
-			this.inGame[type] = [];
-			this.init(type);
+			this.inGame[type].forEach(question => {
+				question.disabled = false;
+			});
 		}
 		return question;
 	}

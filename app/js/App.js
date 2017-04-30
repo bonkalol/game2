@@ -37,6 +37,7 @@ class App {
 			players: [],
 			previousPlayer: null,
 			currentPlayer: null,
+			queue: [],
 			settings: {
 				repeatContent: false,
 				alco: true,

@@ -7,6 +7,7 @@ class PlayerController {
 				less: 'less'
 			}
 		}
+		this.queue = new Queue();
 	}
 	create(name, gender) {
 		return App.data.players.push(new Player({
@@ -84,5 +85,23 @@ class PlayerController {
 		return App.data.players.sort((x, y) => {
 			return x.score > y.score;
 		})[0];
+	}
+}
+
+class Queue {
+	constructor() {
+	}
+	check() {
+		if (App.data.queue.length === 0) return false;
+		
+	}
+	add(player, till) {
+
+	}
+	remove() {
+
+	}
+	get() {
+		return App.data.queue;
 	}
 }

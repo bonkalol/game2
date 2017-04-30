@@ -4,7 +4,6 @@ class Card {
 			last: false,
 			self: null, /* required */
 			template: null /* required */
-
 		};
 		this.options = Object.assign(this.default, this.options);
 		this.view = null;
