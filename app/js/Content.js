@@ -87,9 +87,9 @@ class Content {
 	}
 	iterate(arr, callback) {
 		let target = Array.isArray(arr) ? arr : Object.keys(arr);
-		target.forEach(rubric => {
+		target.forEach(key => {
 			this.CONTENT_ACTIONS.forEach(type => {
-				callback(rubric, type);
+				callback(key, type);
 			});
 		});
 	}
@@ -97,11 +97,13 @@ class Content {
 		// Get truth or action.
 		let questions = this.inGame[type].filter(question => { return !question.disabled; }),
 			question = questions[_.getRandomInt(0, questions.length - 1)];
+		if (!App.data.settings.repeatContent) {
 			question.disabled = true;
-		if (questions.length === 1) {
-			this.inGame[type].forEach(question => {
-				question.disabled = false;
-			});
+			if (questions.length === 1) {
+				this.inGame[type].forEach(question => {
+					question.disabled = false;
+				});
+			}
 		}
 		return question;
 	}
