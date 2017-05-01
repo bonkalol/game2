@@ -66,7 +66,12 @@ class Game {
 	get(type) {
 		const question = App.manager.Content.get(type),
 				cards = new CardConstructor(question);
+		this.updateState(question);
 		this.nodes.card.innerHTML = cards.html;
+	}
+	updateState(question) {
+		App.manager.PlayerController.queue.update(question);
+		// 
 	}
 	_events() {
 		document.addEventListener('mousedown', (event) => {

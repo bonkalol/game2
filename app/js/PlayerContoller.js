@@ -90,18 +90,31 @@ class PlayerController {
 
 class Queue {
 	constructor() {
+		this.TILL_TYPES = {
+			TURN: 'turn'
+		}
 	}
-	check() {
-		if (App.data.queue.length === 0) return false;
-		
+	update(question) {
+		const queuedPlayers = this.getQueuePlayers();
+		queuedPlayers.forEach(player => {
+			if (player.queue > 0) {
+				player.queue--;
+			} else {
+				player.queue = null;
+			}
+		});
+		if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
+			//
+		}
 	}
-	add(player, till) {
-
+	getQueuePlayers() {
+		return App.data.players.filter(player => {
+			return player.queue !== null;
+		});
 	}
-	remove() {
-
-	}
-	get() {
-		return App.data.queue;
+	getQueueDonePlayers() {
+		return App.data.players.filter(player => {
+			return player.queue === 0;
+		});
 	}
 }

@@ -119,8 +119,8 @@ var App = (function () {
 					randomPlayers: true,
 					skip: false,
 					cards: {
-						gray: true,
-						yellow: true,
+						hidden: true,
+						all: true,
 						special: true
 					}
 				}
@@ -158,8 +158,8 @@ var Content = (function () {
 		this.CONTENT_TYPES = Object.freeze({
 			ALCO: 'alco',
 			PARTNER: 'partner',
-			HIDDEN: 'gray',
-			ALL: 'yellow',
+			HIDDEN: 'hidden',
+			ALL: 'all',
 			SPECIAL: 'special'
 		});
 	}
@@ -369,7 +369,14 @@ var Game = (function () {
 		value: function get(type) {
 			var question = App.manager.Content.get(type),
 			    cards = new CardConstructor(question);
+			this.updateState(question);
 			this.nodes.card.innerHTML = cards.html;
+		}
+	}, {
+		key: 'updateState',
+		value: function updateState(question) {
+			App.manager.PlayerController.queue.update(question);
+			//
 		}
 	}, {
 		key: '_events',
@@ -704,7 +711,7 @@ var Player = (function () {
 			this.gender = props.gender;
 			this.pickRate = 0;
 			this.score = 0;
-			this.awaiting = null;
+			this.queue = null;
 			this.id = _.getRandom();
 			this.streak = {
 				action: 0,
@@ -841,23 +848,40 @@ var PlayerController = (function () {
 var Queue = (function () {
 	function Queue() {
 		_classCallCheck(this, Queue);
+
+		this.TILL_TYPES = {
+			TURN: 'turn'
+		};
 	}
 
 	_createClass(Queue, [{
-		key: 'check',
-		value: function check() {
-			if (App.data.queue.length === 0) return false;
+		key: 'update',
+		value: function update(question) {
+			var queuedPlayers = this.getQueuePlayers();
+			queuedPlayers.forEach(function (player) {
+				if (player.queue > 0) {
+					player.queue--;
+				} else {
+					player.queue = null;
+				}
+			});
+			if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
+				//
+			}
 		}
 	}, {
-		key: 'add',
-		value: function add(player, till) {}
+		key: 'getQueuePlayers',
+		value: function getQueuePlayers() {
+			return App.data.players.filter(function (player) {
+				return player.queue !== null;
+			});
+		}
 	}, {
-		key: 'remove',
-		value: function remove() {}
-	}, {
-		key: 'get',
-		value: function get() {
-			return App.data.queue;
+		key: 'getQueueDonePlayers',
+		value: function getQueueDonePlayers() {
+			return App.data.players.filter(function (player) {
+				return player.queue === 0;
+			});
 		}
 	}]);
 
@@ -2772,31 +2796,41 @@ NodeList.prototype.array = function () {
 	Sortable.version = '1.5.0-rc1';
 	return Sortable;
 });
-var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
 var CardConstructor = (function () {
 	function CardConstructor(question) {
 		_classCallCheck(this, CardConstructor);
 
-		this.cards = [];
+		this.CARD_TYPES = {
+			HIDDEN: 'hidden',
+			ALL: 'all',
+			SPECIAL: 'special'
+		};
+		this.cardsMap = {
+			question: null,
+			additional: null,
+			rating: null,
+			queue: []
+		};
 		this.question = question;
-		// App.manager.PlayerController.queue();
+		this.queuedPlayers = App.manager.PlayerController.queue.getQueueDonePlayers();
 		this.parseQuestion();
 	}
 
 	_createClass(CardConstructor, [{
-		key: "parseQuestion",
+		key: 'parseQuestion',
 		value: function parseQuestion() {}
 	}, {
-		key: "buildCard",
+		key: 'buildCard',
 		value: function buildCard() {}
 	}, {
-		key: "buildView",
-		value: function buildView(cards /*@ array of cards*/) {}
+		key: 'buildView',
+		value: function buildView(cards) {}
 	}, {
-		key: "html",
+		key: 'html',
 		value: function html() {
 			return this.html;
 		}

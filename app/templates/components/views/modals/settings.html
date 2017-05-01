@@ -90,11 +90,11 @@
 			<div class="settings settings_cards">
 				<span class="settings_name">Карточки:</span>
 				<div class="settings_switcher settings_switcher--x3">
-					<input class="settings_switcher_input" data-bind="cards-gray" type="checkbox" name="cards" id="cards:gray" value="{{? it.settings.gray === true || it.started !== true}}true{{?}}" {{? it.settings.gray === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:gray">Серая</label>
-					<input class="settings_switcher_input" data-bind="cards-yellow" type="checkbox" name="cards" id="cards:yellow" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.yellow === true || it.started !== true}}checked{{?}}>
-					<label class="settings_switcher_element" for="cards:yellow">Желтая</label>
-					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.yellow === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
+					<input class="settings_switcher_input" data-bind="cards-hidden" type="checkbox" name="cards" id="cards:hidden" value="{{? it.settings.hidden === true || it.started !== true}}true{{?}}" {{? it.settings.hidden === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:hidden">Серая</label>
+					<input class="settings_switcher_input" data-bind="cards-all" type="checkbox" name="cards" id="cards:all" value="{{? it.settings.all === true || it.started !== true}}true{{?}}" {{? it.settings.all === true || it.started !== true}}checked{{?}}>
+					<label class="settings_switcher_element" for="cards:all">Желтая</label>
+					<input class="settings_switcher_input" data-bind="cards-special" type="checkbox" name="cards" id="cards:special" value="{{? it.settings.all === true || it.started !== true}}true{{?}}" {{? it.settings.special === true || it.started !== true}}checked{{?}}>
 					<label class="settings_switcher_element" for="cards:special">Специ&shy;альная</label>
 				</div>
 			</div>

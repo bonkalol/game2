@@ -9,14 +9,14 @@ class Content {
 		this.truth = [];
 		this.action = [];
 		this.CONTENT_ACTIONS = [
-				'action',
-				'truth'
+			'action',
+			'truth'
 		];
 		this.CONTENT_TYPES = Object.freeze({
 			ALCO: 'alco',
 			PARTNER: 'partner',
-			HIDDEN: 'gray',
-			ALL: 'yellow',
+			HIDDEN: 'hidden',
+			ALL: 'all',
 			SPECIAL: 'special'
 		});
 	}

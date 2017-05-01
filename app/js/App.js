@@ -48,8 +48,8 @@ class App {
 				randomPlayers: true,
 				skip: false,
 				cards: {
-					gray: true,
-					yellow: true,
+					hidden: true,
+					all: true,
 					special: true
 				}
 			}

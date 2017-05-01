@@ -1,8 +1,18 @@
 class CardConstructor {
 	constructor(question) {
-		this.cards = [];
+		this.CARD_TYPES = {
+			HIDDEN: 'hidden',
+			ALL: 'all',
+			SPECIAL: 'special'
+		}
+		this.cardsMap = {
+			question: null,
+			additional: null,
+			rating: null,
+			queue: []
+		};
 		this.question = question;
-		// App.manager.PlayerController.queue();
+		this.queuedPlayers = App.manager.PlayerController.queue.getQueueDonePlayers();
 		this.parseQuestion();
 	}
 	parseQuestion() {
@@ -11,7 +21,7 @@ class CardConstructor {
 	buildCard() {
 
 	}
-	buildView(cards /*@ array of cards*/) {
+	buildView(cards) {
 
 	}
 	html() {
