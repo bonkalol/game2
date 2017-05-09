@@ -93,6 +93,9 @@ class Content {
 			});
 		});
 	}
+	parse() {
+
+	}
 	get(type) {
 		// Get truth or action.
 		let questions = this.inGame[type].filter(question => { return !question.disabled; }),
@@ -105,6 +108,8 @@ class Content {
 				});
 			}
 		}
+		this.parse(question);
 		return question;
 	}
+
 }

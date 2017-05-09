@@ -90,22 +90,44 @@ class PlayerController {
 
 class Queue {
 	constructor() {
-		this.TILL_TYPES = {
+		this.TILL_TYPES = Object.freeze({
 			TURN: 'turn'
-		}
+		});
 	}
 	update(question) {
 		const queuedPlayers = this.getQueuePlayers();
 		queuedPlayers.forEach(player => {
-			if (player.queue > 0) {
-				player.queue--;
-			} else {
-				player.queue = null;
-			}
+			if (player.queue.length === 0) return;
+			player.queue.forEach((queue, i) => {
+				if (queue.count === this.TILL_TYPES.TURN && App.data.currentPlayer === player) {
+					player.queue[i].count = 0;
+					return;
+				}
+				if (player.queue.count > 0) {
+					player.queue.count--;
+				} else {
+					player.queue.splice(i, 1);
+				}
+			});
 		});
 		if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
-			//
+			// App.data.currentPlayer.queue.push({
+			// 	content: 
+			// });
 		}
+
+		// 	if (player.queue === this.TILL_TYPES.TURN) {
+		// 		player.queue = 0;
+		// 		return;
+		// 	}
+		// 	if (player.queue > 0) {
+		// 		player.queue--;
+		// 	} else {
+		// 		player.queue = null;
+		// 	}
+		// if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
+		// 	App.data.currentPlayer.queue = 
+		// }
 	}
 	getQueuePlayers() {
 		return App.data.players.filter(player => {

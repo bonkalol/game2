@@ -259,6 +259,9 @@ var Content = (function () {
 			});
 		}
 	}, {
+		key: 'parse',
+		value: function parse() {}
+	}, {
 		key: 'get',
 		value: function get(type) {
 			// Get truth or action.
@@ -274,6 +277,7 @@ var Content = (function () {
 					});
 				}
 			}
+			this.parse(question);
 			return question;
 		}
 	}]);
@@ -367,10 +371,9 @@ var Game = (function () {
 	}, {
 		key: 'get',
 		value: function get(type) {
-			var question = App.manager.Content.get(type),
-			    cards = new CardConstructor(question);
+			var question = App.manager.Content.get(type);
+			this.nodes.card.innerHTML = new CardConstructor(question).html;
 			this.updateState(question);
-			this.nodes.card.innerHTML = cards.html;
 		}
 	}, {
 		key: 'updateState',
@@ -711,7 +714,7 @@ var Player = (function () {
 			this.gender = props.gender;
 			this.pickRate = 0;
 			this.score = 0;
-			this.queue = null;
+			this.queue = [];
 			this.id = _.getRandom();
 			this.streak = {
 				action: 0,
@@ -849,25 +852,48 @@ var Queue = (function () {
 	function Queue() {
 		_classCallCheck(this, Queue);
 
-		this.TILL_TYPES = {
+		this.TILL_TYPES = Object.freeze({
 			TURN: 'turn'
-		};
+		});
 	}
 
 	_createClass(Queue, [{
 		key: 'update',
 		value: function update(question) {
+			var _this = this;
+
 			var queuedPlayers = this.getQueuePlayers();
 			queuedPlayers.forEach(function (player) {
-				if (player.queue > 0) {
-					player.queue--;
-				} else {
-					player.queue = null;
-				}
+				if (player.queue.length === 0) return;
+				player.queue.forEach(function (queue, i) {
+					if (queue.count === _this.TILL_TYPES.TURN && App.data.currentPlayer === player) {
+						player.queue[i].count = 0;
+						return;
+					}
+					if (player.queue.count > 0) {
+						player.queue.count--;
+					} else {
+						player.queue.splice(i, 1);
+					}
+				});
 			});
-			if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
-				//
-			}
+			if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {}
+			// App.data.currentPlayer.queue.push({
+			// 	content:
+			// });
+
+			// 	if (player.queue === this.TILL_TYPES.TURN) {
+			// 		player.queue = 0;
+			// 		return;
+			// 	}
+			// 	if (player.queue > 0) {
+			// 		player.queue--;
+			// 	} else {
+			// 		player.queue = null;
+			// 	}
+			// if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
+			// 	App.data.currentPlayer.queue =
+			// }
 		}
 	}, {
 		key: 'getQueuePlayers',
@@ -1475,6 +1501,13 @@ if (![].includes) {
 			k++;
 		}
 		return false;
+	};
+}
+
+if (!String.prototype.includes) {
+	String.prototype.includes = function () {
+		'use strict';
+		return String.prototype.indexOf.apply(this, arguments) !== -1;
 	};
 }
 

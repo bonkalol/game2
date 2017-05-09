@@ -64,10 +64,9 @@ class Game {
 		}
 	}
 	get(type) {
-		const question = App.manager.Content.get(type),
-				cards = new CardConstructor(question);
+		const question = App.manager.Content.get(type);
+		this.nodes.card.innerHTML = (new CardConstructor(question)).html;
 		this.updateState(question);
-		this.nodes.card.innerHTML = cards.html;
 	}
 	updateState(question) {
 		App.manager.PlayerController.queue.update(question);
