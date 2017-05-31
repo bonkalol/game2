@@ -18,7 +18,7 @@ gulp.task('build', function(callback) {
 	runSequence(
 		'template',
 		'sprite',
-		'sass',
+		// 'sass',
 		'concat',
 		'copyStuff',
 		'imagemin:all',
@@ -33,7 +33,7 @@ gulp.task('build-sprite', function(callback) {
 
 	runSequence(
 		'sprite',
-		'sass',
+		// 'sass',
 		callback);
 
 });

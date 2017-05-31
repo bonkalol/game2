@@ -372,7 +372,8 @@ var Game = (function () {
 		key: 'get',
 		value: function get(type) {
 			var question = App.manager.Content.get(type);
-			this.nodes.card.innerHTML = new CardConstructor(question).html;
+			this.card = new CardConstructor(question);
+			this.nodes.card.innerHTML = this.card.html;
 			this.updateState(question);
 		}
 	}, {
@@ -847,72 +848,6 @@ var PlayerController = (function () {
 
 	return PlayerController;
 })();
-
-var Queue = (function () {
-	function Queue() {
-		_classCallCheck(this, Queue);
-
-		this.TILL_TYPES = Object.freeze({
-			TURN: 'turn'
-		});
-	}
-
-	_createClass(Queue, [{
-		key: 'update',
-		value: function update(question) {
-			var _this = this;
-
-			var queuedPlayers = this.getQueuePlayers();
-			queuedPlayers.forEach(function (player) {
-				if (player.queue.length === 0) return;
-				player.queue.forEach(function (queue, i) {
-					if (queue.count === _this.TILL_TYPES.TURN && App.data.currentPlayer === player) {
-						player.queue[i].count = 0;
-						return;
-					}
-					if (player.queue.count > 0) {
-						player.queue.count--;
-					} else {
-						player.queue.splice(i, 1);
-					}
-				});
-			});
-			if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {}
-			// App.data.currentPlayer.queue.push({
-			// 	content:
-			// });
-
-			// 	if (player.queue === this.TILL_TYPES.TURN) {
-			// 		player.queue = 0;
-			// 		return;
-			// 	}
-			// 	if (player.queue > 0) {
-			// 		player.queue--;
-			// 	} else {
-			// 		player.queue = null;
-			// 	}
-			// if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
-			// 	App.data.currentPlayer.queue =
-			// }
-		}
-	}, {
-		key: 'getQueuePlayers',
-		value: function getQueuePlayers() {
-			return App.data.players.filter(function (player) {
-				return player.queue !== null;
-			});
-		}
-	}, {
-		key: 'getQueueDonePlayers',
-		value: function getQueueDonePlayers() {
-			return App.data.players.filter(function (player) {
-				return player.queue === 0;
-			});
-		}
-	}]);
-
-	return Queue;
-})();
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -967,6 +902,68 @@ var _createClass = (function () { function defineProperties(target, props) { for
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
 
+var Queue = (function () {
+	function Queue() {
+		_classCallCheck(this, Queue);
+
+		this.TILL_TYPES = Object.freeze({
+			TURN: 'turn'
+		});
+	}
+
+	_createClass(Queue, [{
+		key: 'update',
+		value: function update(question) {
+			var _this = this;
+
+			var queuedPlayers = this.getQueuePlayers();
+			/*
+   	Update current players queue
+   */
+			queuedPlayers.forEach(function (player) {
+				// if (player.queue.length === 0) return;
+				player.queue.forEach(function (queue, i) {
+					if (queue.count === _this.TILL_TYPES.TURN && App.data.currentPlayer === player) {
+						player.queue[i].count = 0;
+						return;
+					}
+					if (player.queue.count > 0) {
+						player.queue.count--;
+					} else {
+						player.queue.splice(i, 1);
+					}
+				});
+			});
+
+			if (question.type.includes(App.manager.Content.CONTENT_TYPES.HIDDEN)) {
+				App.data.currentPlayer.queue.push({
+					content: App.manager.Game.card.content,
+					count: App.manager.Game.card.queue
+				});
+			}
+		}
+	}, {
+		key: 'getQueuePlayers',
+		value: function getQueuePlayers() {
+			return App.data.players.filter(function (player) {
+				return player.queue !== null;
+			});
+		}
+	}, {
+		key: 'getQueueDonePlayers',
+		value: function getQueueDonePlayers() {
+			return App.data.players.filter(function (player) {
+				return player.queue === 0;
+			});
+		}
+	}]);
+
+	return Queue;
+})();
+var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
+
 var Render = (function () {
 	function Render() {
 		_classCallCheck(this, Render);
@@ -983,7 +980,12 @@ var Render = (function () {
 			settings: $('#modal_settings'),
 			rules: $('#modal_rules'),
 			'continue': $('#modal_continue'),
-			card: $('#modal_card'),
+			cards: {
+				question: $('#modal_card_question'),
+				additional: $('#modal_card_additional'),
+				rate: $('#modal_card_rate'),
+				queueDone: $('#modal_card_queuedone')
+			},
 			stats: $('#stats'),
 			game: $('#game')
 		};
@@ -2829,6 +2831,8 @@ NodeList.prototype.array = function () {
 	Sortable.version = '1.5.0-rc1';
 	return Sortable;
 });
+var _slicedToArray = (function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i['return']) _i['return'](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError('Invalid attempt to destructure non-iterable instance'); } }; })();
+
 var _createClass = (function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ('value' in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; })();
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError('Cannot call a class as a function'); } }
@@ -2845,23 +2849,57 @@ var CardConstructor = (function () {
 		this.cardsMap = {
 			question: null,
 			additional: null,
-			rating: null,
-			queue: []
+			rate: null,
+			queueDone: []
 		};
 		this.question = question;
 		this.queuedPlayers = App.manager.PlayerController.queue.getQueueDonePlayers();
+		this.content = '';
+		this.type = [];
 		this.parseQuestion();
 	}
 
 	_createClass(CardConstructor, [{
 		key: 'parseQuestion',
-		value: function parseQuestion() {}
+		value: function parseQuestion() {
+			// parse here and save text content into this.content
+			this.parseType();
+			this.parseText();
+		}
 	}, {
-		key: 'buildCard',
-		value: function buildCard() {}
+		key: 'parseType',
+		value: function parseType() {
+			var _this = this;
+
+			if (this.question.type) {
+				this.question.type.split(',').forEach(function (type) {
+					var _type$split = type.split('=');
+
+					var _type$split2 = _slicedToArray(_type$split, 2);
+
+					var name = _type$split2[0];
+					var value = _type$split2[1];
+
+					if (name === App.manager.Content.CONTENT_TYPES.hidden) {
+						_this.queue = value;
+					} else {}
+					_this.type.push([name, value]);
+				});
+			}
+		}
+	}, {
+		key: 'parseText',
+		value: function parseText() {}
+	}, {
+		key: 'buildCards',
+		value: function buildCards() {
+			c;
+		}
 	}, {
 		key: 'buildView',
-		value: function buildView(cards) {}
+		value: function buildView(cards) {
+			// Build using doT
+		}
 	}, {
 		key: 'html',
 		value: function html() {

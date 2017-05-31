@@ -2,8 +2,8 @@ class Render {
 
 	constructor() {
 		this.views = {
-			modals:      $('[data-modals-view]'),
-			gamePlayers: $('[data-game-players]'),
+			modals:      	$('[data-modals-view]'),
+			gamePlayers: 	$('[data-game-players]'),
 			main: null
 		};
 		this.templates = {
@@ -13,7 +13,12 @@ class Render {
 			settings:    	$('#modal_settings'),
 			rules:       	$('#modal_rules'),
 			continue:    	$('#modal_continue'),
-			card:        	$('#modal_card'),
+			cards:        	{
+				question: 	$('#modal_card_question'),
+				additional: $('#modal_card_additional'),
+				rate: 		$('#modal_card_rate'),
+				queueDone: 	$('#modal_card_queuedone')
+			},
 			stats:       	$('#stats'),
 			game:			$('#game')
 		};

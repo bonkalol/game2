@@ -65,7 +65,8 @@ class Game {
 	}
 	get(type) {
 		const question = App.manager.Content.get(type);
-		this.nodes.card.innerHTML = (new CardConstructor(question)).html;
+		this.card = new CardConstructor(question);
+		this.nodes.card.innerHTML = this.card.html;
 		this.updateState(question);
 	}
 	updateState(question) {
