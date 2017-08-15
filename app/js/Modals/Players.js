@@ -24,6 +24,11 @@ class PlayerModal extends Modal {
 		}
 		App.manager.PlayerController.create(name, gender);
 		this.render();
+		$(`[${this.attr.input}]`).focus();
+	}
+	setGender(event) {
+		event.preventDefault();
+		$(`[${this.attr.input}]`).focus();
 	}
 	remove(event) {
 		let id = event.target.closest(`[${this.attr.player}]`).getAttribute(this.attr.player);

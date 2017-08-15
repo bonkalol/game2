@@ -111,13 +111,13 @@ loadFont('font-1', 'assets/Roboto.woff.css', 'assets/Roboto.woff2.css');
 				</div>
 				<div class="players_gender">
 					<input type="radio" name="players_gender" value="m" class="players_gender_input players_gender_input--m hidden-checkbox" id="gender_m">
-					<label for="gender_m" class="players_gender_label">
+					<label data-modal-action="players:setGender" for="gender_m" class="players_gender_label">
 						<svg width="30" height="30">
 							<use xlink:href="#male">
 						</svg>
 					</label>
 					<input type="radio" name="players_gender" value="f" class="players_gender_input players_gender_input--f hidden-checkbox" id="gender_f">
-					<label for="gender_f" class="players_gender_label">
+					<label data-modal-action="players:setGender" for="gender_f" class="players_gender_label">
 						<svg width="30" height="30">
 							<use xlink:href="#female">
 						</svg>
