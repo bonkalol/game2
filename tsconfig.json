@@ -1,0 +1,19 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "baseUrl": "./app",
+    "module": "commonjs",
+    "target": "es5",
+    "moduleResolution": "node",
+    "newLine": "LF",
+    "allowJs": true,
+    "noLib": true,
+    "experimentalDecorators": true,
+    "declaration": false
+  },
+
+  "include": [
+    "./ts-definitions/index.d.ts",
+    "./app/**/*.ts"
+  ]
+}
